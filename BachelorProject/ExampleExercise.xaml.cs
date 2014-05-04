@@ -42,8 +42,11 @@ namespace BachelorProject
         private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (this.current.InputElement != null)
+            {
+                this.current.IsDragging = false;
                 this.current.InputElement.ReleaseMouseCapture();
-            this.current.IsDragging = false;
+                this.current.InputElement = null;
+            }
         }
 
 
