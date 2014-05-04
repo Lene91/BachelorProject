@@ -4,9 +4,47 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d"
-      Width="1200" Height="800" Background="SandyBrown">
+      Width="1200" Height="800" Background="LightGray">
 
-    <Grid>
-        
-    </Grid>
+
+    <Canvas Name="FullCanvas" MouseDown="Canvas_MouseDown"
+
+            MouseUp="Canvas_MouseUp"
+
+            MouseMove="Canvas_MouseMove">
+        <Line
+            X1="800" Y1="0"
+            X2="800" Y2="800"
+            Stroke="Black"
+            StrokeThickness="4" />
+        <Line
+            X1="800" Y1="300"
+            X2="1200" Y2="300"
+            Stroke="Black"
+            StrokeThickness="4" />
+        <Ellipse
+            Name="Table"
+            Fill="Gray"
+            Width="250"
+            Height="250"
+            StrokeThickness="4"
+            Stroke="Black"
+            Margin="275,275,675,275"/>
+        <Ellipse
+            Name="Person"
+            Fill="BlueViolet"
+            Width="100"
+            Height="100"
+            StrokeThickness="4"
+            Stroke="Black"
+            Margin="57,85,993,565"
+            Cursor="Hand"
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown"
+             >
+        <Ellipse.RenderTransform>
+            <TranslateTransform/>
+        </Ellipse.RenderTransform>
+        </Ellipse>
+
+    </Canvas>
 </UserControl>

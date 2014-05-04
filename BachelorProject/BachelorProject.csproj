@@ -49,6 +49,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Element.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="ExampleExercise.xaml.cs">
       <DependentUpon>ExampleExercise.xaml</DependentUpon>
