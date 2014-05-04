@@ -15,6 +15,11 @@ namespace BachelorProject
         {
             var Tracker = new MouseTracker();
             var experiment = new Experiment(Tracker);
+
+            experiment.AddTrial(new TrialExampleExercise());
+            experiment.ConfigureTracker();
+            experiment.DoCalibration();
+
             experiment.Run();
         }
     }
