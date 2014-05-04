@@ -49,24 +49,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -91,7 +74,18 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\..\code\ExperimentTemplate\ExperimentTemplate\ExperimentTemplate.csproj">
+      <Project>{4732f757-6951-464e-a06d-e6a696db574b}</Project>
+      <Name>ExperimentTemplate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\code\ExperimentTemplate\Eyetracker\Eyetracker.csproj">
+      <Project>{fae1d5d9-5bc7-4102-aed5-85a08c049d4d}</Project>
+      <Name>Eyetracker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\code\ExperimentTemplate\Logging\Logging.csproj">
+      <Project>{50f77cdb-d70c-40f0-a668-c864cbef675d}</Project>
+      <Name>Logging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
