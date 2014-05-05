@@ -46,8 +46,6 @@ namespace BachelorProject
 
                 this.inputElement = value;
 
-                /* every time inputElement resets, the draggin stops (you actually don't even need to track it, but it made things easier in the begining, I'll change it next time I get to play with it. */
-
                 this.isDragging = false;
 
             }
