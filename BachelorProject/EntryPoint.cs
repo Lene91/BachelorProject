@@ -13,8 +13,12 @@ namespace BachelorProject
         [STAThread]
         static void Main()
         {
-            var Tracker = new MouseTracker();
-            var experiment = new Experiment(Tracker);
+            var experiment = new Experiment(new MouseTracker())
+            {
+                ShowDefaultStartScreen = false,
+                ShowDebugEndScreen = false,
+                HideMouseCursor = false
+            };
 
             experiment.AddTrial(new TrialExampleExercise());
             experiment.ConfigureTracker();

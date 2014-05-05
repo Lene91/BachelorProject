@@ -27,7 +27,15 @@ namespace BachelorProject
         public ExampleExercise()
         {
             InitializeComponent();
+            Circle c1 = new Circle(Person1);
+            Circle c2 = new Circle(Person2);
         }
+
+
+
+
+
+        // REALIZING DRAGGING
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -38,7 +46,6 @@ namespace BachelorProject
             this.current.InputElement.CaptureMouse();
         }
 
-
         private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (this.current.InputElement != null)
@@ -48,7 +55,6 @@ namespace BachelorProject
                 this.current.InputElement = null;
             }
         }
-
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
@@ -64,7 +70,6 @@ namespace BachelorProject
   
                 // Reset the location of the object (add to sender's renderTransform
                 // newPosition minus currentElement's position
-
                 var rt = ((UIElement)this.current.InputElement).RenderTransform;
                 var offsetX = rt.Value.OffsetX;
                 var offsetY = rt.Value.OffsetY;
@@ -77,12 +82,10 @@ namespace BachelorProject
             }
         }
 
-
         private void ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.current.InputElement = (IInputElement)sender;
         }
-
     }
 
 }

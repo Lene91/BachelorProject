@@ -7,10 +7,9 @@
       Width="1200" Height="800" Background="LightGray">
 
 
-    <Canvas Name="FullCanvas" MouseDown="Canvas_MouseDown"
-
+    <Canvas Name="MyCanvas" 
+            MouseDown="Canvas_MouseDown"
             MouseUp="Canvas_MouseUp"
-
             MouseMove="Canvas_MouseMove">
         <Line
             X1="800" Y1="0"
@@ -31,19 +30,34 @@
             Stroke="Black"
             Margin="275,275,675,275"/>
         <Ellipse
-            Name="Person"
+            Name="Person1"
             Fill="BlueViolet"
+            Opacity="0.8"
             Width="100"
             Height="100"
             StrokeThickness="4"
             Stroke="Black"
             Margin="57,85,993,565"
             Cursor="Hand"
-            MouseLeftButtonDown="ellipse_MouseLeftButtonDown"
-             >
-        <Ellipse.RenderTransform>
-            <TranslateTransform/>
-        </Ellipse.RenderTransform>
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
+            <Ellipse.RenderTransform>
+                <TranslateTransform/>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse
+            Name="Person2"
+            Fill="Bisque"
+            Opacity="0.8"
+            Width="100"
+            Height="100"
+            StrokeThickness="4"
+            Stroke="Black"
+            Margin="257,85,793,565"
+            Cursor="Hand"
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
+            <Ellipse.RenderTransform>
+                <TranslateTransform/>
+            </Ellipse.RenderTransform>
         </Ellipse>
 
     </Canvas>
