@@ -28,11 +28,23 @@ namespace BachelorProject
         private Circle currentCircle;
         private Circle p1;
         private Circle p2;
+        private int circleRadius = 50;
         private bool constraints = false;
+        private Point oldPos;
+        private Point oldMargin;
+        private double deltaX;
+        private double deltaY;
+        private Point newPos;
+        private double screenWidth = SystemParameters.FullPrimaryScreenWidth;
+        private double screenHeight = SystemParameters.FullPrimaryScreenHeight;
+        private double xOffSet;
+        private double yOffSet; 
 
         public ExampleExercise()
         {
             InitializeComponent();
+            xOffSet = 0.5 * (screenWidth - this.Width);
+            yOffSet = 0.5 * (screenHeight - this.Height);
             table = new Circle(Table);
             p1 = new Circle(Person1);
             p2 = new Circle(Person2);
@@ -55,6 +67,12 @@ namespace BachelorProject
             }
 
             constraints = true;
+            /*var diff = p1.getDiff(table);
+            c1.Content = diff;
+            var diff2 = p2.getDiff(table);
+            c2.Content = diff2;
+            constraints = false;
+             * */
             if (p1.touches(table))
                 c1.Background = Brushes.Green;
             else
@@ -86,15 +104,13 @@ namespace BachelorProject
 
         private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            currentCircle.updatePosition(new Point(current.X,current.Y));
-
             if (this.current.InputElement != null)
             {
                 this.current.IsDragging = false;
                 this.current.InputElement.ReleaseMouseCapture();
                 this.current.InputElement = null;
             }
-            var pos = e.GetPosition(null);
+            var pos = e.GetPosition(MyCanvas);
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
@@ -120,11 +136,25 @@ namespace BachelorProject
                 // Update position of the mouse
                 current.X = newX;
                 current.Y = newY;
+
+                var mousePos = e.GetPosition(MyCanvas);
+
+                //c1.Content = mousePos;
+                var newCenterX = mousePos.X + deltaX;
+                var newCenterY = mousePos.Y + deltaY;
+                currentCircle.updatePosition(new Point(newCenterX, newCenterY));
+                //c2.Content = currentCircle.getPosition();
+                c1.Content = p1.getDiff(table);
+                c2.Content = p2.getDiff(table);
             }
         }
 
         private void ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            // Abstand des Mausklicks zum Kreismittelpunkt
+            deltaX = ((Ellipse)sender).Margin.Left + circleRadius - e.GetPosition(MyCanvas).X;
+            deltaY = ((Ellipse)sender).Margin.Top + circleRadius - e.GetPosition(MyCanvas).Y;
+
             this.current.InputElement = (IInputElement)sender;
             foreach (Circle c in persons) {
                 if (c.getName().Equals(((Ellipse)sender).Name))

@@ -22,17 +22,29 @@
             Stroke="Black"
             StrokeThickness="4" />
 
-        <Label Name="c1" Canvas.Left="832" Canvas.Top="346" BorderBrush="Black" BorderThickness="2" FontSize="25">
+        <Label Name="c1" Canvas.Left="821" Canvas.Top="346" BorderBrush="Black" BorderThickness="2" FontSize="25" MaxWidth="360" >
+            <AccessText TextWrapping="WrapWithOverflow">
+                Constraint 1: Dunkel möchte am Tisch sitzen.
+            </AccessText>
             <Label.Background>
                 <SolidColorBrush Color="Red"/>
             </Label.Background>
-            Dunkel möchte am Tisch sitzen.
         </Label>
-        <Label Name="c2" Canvas.Left="829" Canvas.Top="443" BorderBrush="Black" BorderThickness="2" FontSize="25">
+        <Label Name="c2" Canvas.Left="821" Canvas.Top="443" BorderBrush="Black" BorderThickness="2" FontSize="25" MaxWidth="360">
+            <AccessText TextWrapping="WrapWithOverflow">
+                Constraint 2: Hell möchte am Tisch sitzen.
+            </AccessText>
             <Label.Background>
                 <SolidColorBrush Color="Red"/>
             </Label.Background>
-            Hell möchte am Tisch sitzen.
+        </Label>
+        <Label Name="c3" Canvas.Left="821" Canvas.Top="540" BorderBrush="Black" BorderThickness="2" FontSize="25" MaxWidth="360" >
+            <AccessText TextWrapping="WrapWithOverflow">
+                Constraint 1: Dunkel möchte am Tisch sitzen.
+            </AccessText>
+            <Label.Background>
+                <SolidColorBrush Color="Red"/>
+            </Label.Background>
         </Label>
         <Ellipse
             Name="Table"

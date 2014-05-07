@@ -13,7 +13,7 @@ using System.Diagnostics;
 namespace BachelorProject
 {
     /// <summary>
-    /// 
+    /// Hilfsklasse Kreis, repräsentiert eine Person, die am Tisch platziert werden muss, bzw. den Tisch
     /// </summary>
     class Circle
     {
@@ -29,6 +29,14 @@ namespace BachelorProject
             this.name = ellipse.Name;
             this.radius = ellipse.Width/2;
             this.position = new Point(ellipse.Margin.Left + radius, ellipse.Margin.Top + radius);
+        }
+
+        public double getDiff(Circle c)
+        {
+            var actualDist = distance(c.getPosition(), position);
+            var touchDist = c.radius + radius;
+            var dist = actualDist-touchDist;
+            return dist;
         }
 
         public Point getPosition()
@@ -51,14 +59,15 @@ namespace BachelorProject
             var actualDist = distance(c.getPosition(), position);
             var touchDist = c.radius + radius;
             var dist = Math.Max(actualDist, touchDist) - Math.Min(actualDist, touchDist);
-            if (dist < epsilon)
+            //if (dist < epsilon)
+            if( (actualDist-touchDist) < epsilon)
                 return true;
             return false;
         }
 
         private double distance(Point p1, Point p2)
         {
-            return Math.Sqrt( Math.Pow(p1.X-p2.X,2) + Math.Pow(p1.Y-p2.Y,2) );
+            return Math.Sqrt( Math.Pow(p2.X-p1.X,2) + Math.Pow(p2.Y-p1.Y,2) );
         }
 
     }
