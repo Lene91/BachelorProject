@@ -21,8 +21,19 @@
             X2="1200" Y2="300"
             Stroke="Black"
             StrokeThickness="4" />
-        <TextBlock Name="t1" Text="Hallo" Canvas.Left="876" Canvas.Top="346"/>
-        <TextBlock Name="t2" Text="Hallo" Canvas.Left="876" Canvas.Top="446"/>
+
+        <Label Name="c1" Canvas.Left="832" Canvas.Top="346" BorderBrush="Black" BorderThickness="2" FontSize="25">
+            <Label.Background>
+                <SolidColorBrush Color="Red"/>
+            </Label.Background>
+            Dunkel möchte am Tisch sitzen.
+        </Label>
+        <Label Name="c2" Canvas.Left="829" Canvas.Top="443" BorderBrush="Black" BorderThickness="2" FontSize="25">
+            <Label.Background>
+                <SolidColorBrush Color="Red"/>
+            </Label.Background>
+            Hell möchte am Tisch sitzen.
+        </Label>
         <Ellipse
             Name="Table"
             Fill="Gray"
@@ -32,9 +43,6 @@
             Stroke="Black"
             Margin="275,275"
             MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
-            <Ellipse.RenderTransform>
-            <TranslateTransform/>
-            </Ellipse.RenderTransform>
         </Ellipse>
         <Ellipse
             Name="Person1"

@@ -26,23 +26,42 @@ namespace BachelorProject
         private Circle table;
         private List <Circle> persons = new List<Circle>();
         private Circle currentCircle;
+        private Circle p1;
+        private Circle p2;
 
         public ExampleExercise()
         {
             InitializeComponent();
             table = new Circle(Table);
-            Circle c1 = new Circle(Person1);
-            Circle c2 = new Circle(Person2);
-            persons.Add(c1);
-            persons.Add(c2);
-            if (c1.touches(table))
-                t1.Text = "lila am Tisch";
+            p1 = new Circle(Person1);
+            p2 = new Circle(Person2);
+            persons.Add(p1);
+            persons.Add(p2);
+        }
+
+        private bool checkConstraints()
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => checkConstraints());
+            }
+
+            bool constraintsFullfilled = true;
+            if (p1.touches(table))
+                c1.Background = Brushes.Green;
             else
-                t1.Text = "lila nicht am Tisch";
-            if (c2.touches(table))
-                t2.Text = "hell am Tisch";
+            {
+                c1.Background = Brushes.Red;
+                constraintsFullfilled = false;
+            }
+            if (p2.touches(table))
+                c2.Background = Brushes.Green;
             else
-                t2.Text = "hell nicht am Tisch";
+            {
+                c2.Background = Brushes.Red;
+                constraintsFullfilled = false;
+            }
+            return constraintsFullfilled;
         }
 
 
@@ -60,12 +79,9 @@ namespace BachelorProject
 
         private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Debug.WriteLine(currentCircle.getName());
             currentCircle.updatePosition(new Point(current.X,current.Y));
-            if (currentCircle.touches(table))
-                t1.Text = "Person am Tisch";
-            else
-                t1.Text = "Person nicht am Tisch";
+            if (checkConstraints())
+                Debug.WriteLine(":)");
             if (this.current.InputElement != null)
             {
                 this.current.IsDragging = false;
