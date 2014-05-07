@@ -28,6 +28,7 @@ namespace BachelorProject
         private Circle currentCircle;
         private Circle p1;
         private Circle p2;
+        private bool constraints = false;
 
         public ExampleExercise()
         {
@@ -39,29 +40,35 @@ namespace BachelorProject
             persons.Add(p2);
         }
 
-        private bool checkConstraints()
+        public bool ConstraintsFullfilled()
+        {
+            CheckConstraints();
+            return constraints;
+        }
+
+        private void CheckConstraints()
         {
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() => checkConstraints());
+                Dispatcher.Invoke(() => CheckConstraints());
+                return;
             }
 
-            bool constraintsFullfilled = true;
+            constraints = true;
             if (p1.touches(table))
                 c1.Background = Brushes.Green;
             else
             {
                 c1.Background = Brushes.Red;
-                constraintsFullfilled = false;
+                constraints = false;
             }
             if (p2.touches(table))
                 c2.Background = Brushes.Green;
             else
             {
                 c2.Background = Brushes.Red;
-                constraintsFullfilled = false;
+                constraints = false;
             }
-            return constraintsFullfilled;
         }
 
 
@@ -80,8 +87,7 @@ namespace BachelorProject
         private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             currentCircle.updatePosition(new Point(current.X,current.Y));
-            if (checkConstraints())
-                Debug.WriteLine(":)");
+
             if (this.current.InputElement != null)
             {
                 this.current.IsDragging = false;
