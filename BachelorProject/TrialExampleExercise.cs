@@ -14,12 +14,15 @@ namespace BachelorProject
         private static readonly ExampleExercise screen = new ExampleExercise();
         private static readonly Logger Log = Logger.GetLogger(typeof(TrialExampleExercise));
         private bool constraintsThreadIsRunning = false;
+        private string constraints;
 
-        public TrialExampleExercise()
+        public TrialExampleExercise(string constraints)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = true;
             Screen = screen;
+            this.constraints = constraints;
+            screen.InitializeConstraints(constraints);
         }
 
         protected override void OnShowing()
@@ -42,7 +45,7 @@ namespace BachelorProject
             while (constraintsThreadIsRunning)
             {
                 if (screen.ConstraintsFullfilled())
-                    SkipTrial();
+                    //SkipTrial();
                 System.Threading.Thread.Sleep(10);
             }
         }

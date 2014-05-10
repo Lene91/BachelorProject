@@ -30,26 +30,85 @@ namespace BachelorProject
         private Circle p2;
         private int circleRadius = 50;
         private bool constraints = false;
-        private Point oldPos;
-        private Point oldMargin;
         private double deltaX;
         private double deltaY;
-        private Point newPos;
-        private double screenWidth = SystemParameters.FullPrimaryScreenWidth;
-        private double screenHeight = SystemParameters.FullPrimaryScreenHeight;
-        private double xOffSet;
-        private double yOffSet; 
+        //private double screenWidth = SystemParameters.FullPrimaryScreenWidth;
+        //private double screenHeight = SystemParameters.FullPrimaryScreenHeight;
+        //private double xOffSet;
+        //private double yOffSet;
+        StackPanel sp;
 
         public ExampleExercise()
         {
             InitializeComponent();
-            xOffSet = 0.5 * (screenWidth - this.Width);
-            yOffSet = 0.5 * (screenHeight - this.Height);
+            InitializeLeftInterface();
+            InitializeLegend();
+
+            //xOffSet = 0.5 * (screenWidth - this.Width);
+            //yOffSet = 0.5 * (screenHeight - this.Height); 
+        }
+
+        private void InitializeLeftInterface()
+        {
             table = new Circle(Table);
             p1 = new Circle(Person1);
             p2 = new Circle(Person2);
             persons.Add(p1);
             persons.Add(p2);
+        }
+
+        private void InitializeLegend()
+        {
+            // maybe later needed
+        }
+
+        public void InitializeConstraints(string constraints)
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => CheckConstraints());
+                return;
+            }
+            string[] singleConstraints = constraints.Split(new Char[]{';'});
+            sp = new StackPanel 
+            { 
+                Name = "ConstraintPanel", 
+                Orientation = Orientation.Vertical, 
+                Width = 400, 
+                Height = 550, 
+                Margin = new Thickness(800, 250, 0, 0) };
+            this.MyCanvas.Children.Add(sp);
+
+            TextBox tb = new TextBox
+            {
+                Name = "c0",
+                Text = "Regeln",
+                Margin = new Thickness(20, 20, 20, 20),
+                Background = Brushes.Transparent,
+                BorderThickness = new Thickness(0),
+                FontSize = 30,
+                FontWeight = FontWeights.Bold
+            };
+            sp.Children.Add(tb);
+
+            int constraintCounter = 1;
+            foreach (string c in singleConstraints)
+            {
+                string labelName = "c" + constraintCounter;
+                TextBox t = new TextBox 
+                { 
+                    Name = labelName, 
+                    Text = c,
+                    Margin = new Thickness(30, 10, 30, 10),
+                    BorderBrush = Brushes.Black, 
+                    BorderThickness = new Thickness(2),
+                    FontSize = 25,
+                    MaxWidth = 360,
+                    TextWrapping = TextWrapping.WrapWithOverflow
+                };
+                constraintCounter++;
+                sp.Children.Add(t);
+            }
         }
 
         public bool ConstraintsFullfilled()
@@ -73,23 +132,40 @@ namespace BachelorProject
             c2.Content = diff2;
             constraints = false;
              * */
+
+
+
+            
             if (p1.touches(table))
-                c1.Background = Brushes.Green;
+                getConstraint("c1").Background = Brushes.Green;
             else
             {
-                c1.Background = Brushes.Red;
+                getConstraint("c1").Background = Brushes.Red;
                 constraints = false;
             }
             if (p2.touches(table))
-                c2.Background = Brushes.Green;
+                getConstraint("c2").Background = Brushes.Green;
             else
             {
-                c2.Background = Brushes.Red;
+                getConstraint("c2").Background = Brushes.Red;
                 constraints = false;
             }
+             
         }
 
-
+        private TextBox getConstraint(string name)
+        {
+            foreach (UIElement e in sp.Children)
+            {
+                if (e is TextBox)
+                {
+                    TextBox t = e as TextBox;
+                    if (t.Name.Equals(name))
+                        return t;
+                }
+            }
+            return null;
+        }
 
 
 
@@ -144,8 +220,9 @@ namespace BachelorProject
                 var newCenterY = mousePos.Y + deltaY;
                 currentCircle.updatePosition(new Point(newCenterX, newCenterY));
                 //c2.Content = currentCircle.getPosition();
-                c1.Content = p1.getDiff(table);
-                c2.Content = p2.getDiff(table);
+                //c1.Content = Canvas.GetTop(currentCircle.ellipse);// p1.getDiff(table);
+                //c2.Content = p2.getDiff(table);
+
             }
         }
 
