@@ -21,7 +21,7 @@ namespace BachelorProject
         private double radius;
         private Point position;
         private Ellipse ellipse;
-        private int epsilon = 20;
+        private int epsilon = 5;
 
         public Circle(Ellipse ellipse)
         {
@@ -29,14 +29,6 @@ namespace BachelorProject
             this.name = ellipse.Name;
             this.radius = ellipse.Width/2;
             this.position = new Point(ellipse.Margin.Left + radius, ellipse.Margin.Top + radius);
-        }
-
-        public double getDiff(Circle c)
-        {
-            var actualDist = distance(c.getPosition(), position);
-            var touchDist = c.radius + radius;
-            var dist = actualDist-touchDist;
-            return dist;
         }
 
         public Point getPosition()
@@ -59,8 +51,7 @@ namespace BachelorProject
             var actualDist = distance(c.getPosition(), position);
             var touchDist = c.radius + radius;
             var dist = Math.Max(actualDist, touchDist) - Math.Min(actualDist, touchDist);
-            //if (dist < epsilon)
-            if( (actualDist-touchDist) < epsilon)
+            if( dist < epsilon)
                 return true;
             return false;
         }

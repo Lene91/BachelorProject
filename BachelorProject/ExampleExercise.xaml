@@ -90,8 +90,7 @@
             StrokeThickness="4"
             Stroke="Black"
             Cursor="Hand"
-            MouseLeftButtonDown="ellipse_MouseLeftButtonDown"
-            Margin="180,330">
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown" Canvas.Left="0" Canvas.Top="351">
             <Ellipse.RenderTransform>
                 <TranslateTransform/>
             </Ellipse.RenderTransform>

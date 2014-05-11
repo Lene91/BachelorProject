@@ -125,17 +125,7 @@ namespace BachelorProject
                 return;
             }
 
-            constraints = true;
-            /*var diff = p1.getDiff(table);
-            c1.Content = diff;
-            var diff2 = p2.getDiff(table);
-            c2.Content = diff2;
-            constraints = false;
-             * */
-
-
-
-            
+            constraints = true; 
             if (p1.touches(table))
                 getConstraint("c1").Background = Brushes.Green;
             else
@@ -149,8 +139,7 @@ namespace BachelorProject
             {
                 getConstraint("c2").Background = Brushes.Red;
                 constraints = false;
-            }
-             
+            }   
         }
 
         private TextBox getConstraint(string name)
@@ -215,23 +204,12 @@ namespace BachelorProject
 
                 var mousePos = e.GetPosition(MyCanvas);
 
-                //c1.Content = mousePos;
-                var newCenterX = mousePos.X + deltaX;
-                var newCenterY = mousePos.Y + deltaY;
-                currentCircle.updatePosition(new Point(newCenterX, newCenterY));
-                //c2.Content = currentCircle.getPosition();
-                //c1.Content = Canvas.GetTop(currentCircle.ellipse);// p1.getDiff(table);
-                //c2.Content = p2.getDiff(table);
-
+                updatePosition();
             }
         }
 
         private void ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Abstand des Mausklicks zum Kreismittelpunkt
-            deltaX = ((Ellipse)sender).Margin.Left + circleRadius - e.GetPosition(MyCanvas).X;
-            deltaY = ((Ellipse)sender).Margin.Top + circleRadius - e.GetPosition(MyCanvas).Y;
-
             this.current.InputElement = (IInputElement)sender;
             foreach (Circle c in persons) {
                 if (c.getName().Equals(((Ellipse)sender).Name))
@@ -240,6 +218,16 @@ namespace BachelorProject
                     break;
                 }
             }
+        }
+
+        private void updatePosition()
+        {
+            Ellipse el = this.current.InputElement as Ellipse;
+            GeneralTransform generalTransform1 = MyCanvas.TransformToVisual(el);
+            Point currentPoint = generalTransform1.Inverse.Transform(new Point(0, 0));
+            var newCenterX = currentPoint.X + 50;
+            var newCenterY = currentPoint.Y + 50;
+            currentCircle.updatePosition(new Point(newCenterX, newCenterY));
         }
     }
 

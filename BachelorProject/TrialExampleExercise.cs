@@ -34,7 +34,6 @@ namespace BachelorProject
         {
             Log.Info("Screen 1 is shown.");
 
-            //bee.StartFlyAround();
             var constraintsThread = new Thread(CheckConstraints);
             constraintsThreadIsRunning = true;
             constraintsThread.Start();
