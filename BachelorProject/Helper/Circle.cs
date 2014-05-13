@@ -21,7 +21,11 @@ namespace BachelorProject
         private double radius;
         private Point position;
         private Ellipse ellipse;
-        private int epsilon = 5;
+        private int touchEpsilon = 5;
+        private int overlapEpsilon = 20;
+        private int enterEpsilon = 5;
+        private int leaveEpsilon = 40;
+        private static HashSet<Circle> sittingPersons = new HashSet<Circle>();
 
         public Circle(Ellipse ellipse)
         {
@@ -41,6 +45,21 @@ namespace BachelorProject
             return name;
         }
 
+        public Ellipse getEllipse()
+        {
+            return ellipse;
+        }
+
+        public double getRadius()
+        {
+            return radius;
+        }
+
+        public void updateRadius(double r)
+        {
+            this.radius = r;
+        }
+
         public void updatePosition(Point pos)
         {
             this.position = pos;
@@ -51,16 +70,68 @@ namespace BachelorProject
             var actualDist = distance(c.getPosition(), position);
             var touchDist = c.radius + radius;
             var dist = Math.Max(actualDist, touchDist) - Math.Min(actualDist, touchDist);
-            if( dist < epsilon)
+            if (dist < touchEpsilon)
+            {
+                sittingPersons.Add(this);
                 return true;
+            }
+            sittingPersons.Remove(this);
             return false;
         }
 
         public bool overlaps(Circle c)
         {
-            if (distance(c.getPosition(),position) < (c.radius + radius))
+            if (distance(c.getPosition(),position) + overlapEpsilon < (c.getRadius() + radius))
                 return true;
             return false;
+        }
+
+        public bool enters(Circle c)
+        {
+            if (distance(c.getPosition(), position) < enterEpsilon)
+                return true;
+            return false;
+        }
+
+        public void isSittingOn(Circle c)
+        {
+            Canvas.SetZIndex(ellipse, 50);
+            ellipse.Width = 80;
+            ellipse.Height = 80;
+            radius = 40;
+        }
+
+        public bool leaves(Circle c)
+        {
+            if (distance(c.getPosition(), position) > leaveEpsilon && radius < c.getRadius())
+                return true;
+            return false;
+        }
+
+        public void stopsSittingOn(Circle c)
+        {
+            Canvas.SetZIndex(ellipse, 0);
+            ellipse.Width = 100;
+            ellipse.Height = 100;
+            radius = 50;
+        }
+
+        public string sitsNextTo(Circle c, List<Circle> persons)
+        {
+            return sittingPersons.Count().ToString();
+            /*
+            var dist = distance(position, c.getPosition());
+            foreach (Circle p in persons)
+            {
+                if (!p.Equals(c) && !p.Equals(this))
+                {
+                    var tmpDist = distance(position, p.getPosition());
+                    if (tmpDist < dist)
+                        return false;
+                }
+            }
+            return true;
+             */
         }
 
         private double distance(Point p1, Point p2)

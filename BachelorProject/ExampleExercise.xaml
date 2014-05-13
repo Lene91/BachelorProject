@@ -17,12 +17,12 @@
             Stroke="Black"
             StrokeThickness="4" />
         <Line
-            X1="800" Y1="250"
-            X2="1200" Y2="250"
+            X1="800" Y1="270"
+            X2="1200" Y2="270"
             Stroke="Black"
             StrokeThickness="4" />
 
-        <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>
+        <!-- <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>
         <Ellipse
             Name="Legend1"
             Fill="BlueViolet"
@@ -34,7 +34,7 @@
             Cursor="Hand"
             Margin="820,80">
         </Ellipse>
-        <TextBox Name="l1" Text="Name1" Background="Transparent" BorderThickness="0" FontSize="25" Margin="900,85"/>
+        <TextBox Name="l1" Text="Lila" Background="Transparent" BorderThickness="0" FontSize="25" Margin="900,85"/>
         <Ellipse
             Name="Legend2"
             Fill="Bisque"
@@ -46,7 +46,7 @@
             Cursor="Hand"
             Margin="820,150">
         </Ellipse>
-        <TextBox Name="l2" Text="Name2" Background="Transparent" BorderThickness="0" FontSize="25" Margin="900,155"/>
+        <TextBox Name="l2" Text="Hell" Background="Transparent" BorderThickness="0" FontSize="25" Margin="900,155"/> -->
 
         <!--
         <StackPanel Name="ConstraintCanvas" Width="400" Height="550" Margin="800,250" Orientation="Vertical">
@@ -78,33 +78,87 @@
             Height="250"
             StrokeThickness="4"
             Stroke="Black"
-            Margin="275,275"
-            MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
+            Margin="275,275">
         </Ellipse>
         <Ellipse
             Name="Person1"
-            Fill="BlueViolet"
             Opacity="0.8"
             Width="100"
             Height="100"
             StrokeThickness="4"
             Stroke="Black"
             Cursor="Hand"
-            MouseLeftButtonDown="ellipse_MouseLeftButtonDown" Canvas.Left="0" Canvas.Top="351">
+            Margin="2000,2000"
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
             <Ellipse.RenderTransform>
                 <TranslateTransform/>
             </Ellipse.RenderTransform>
         </Ellipse>
         <Ellipse
             Name="Person2"
-            Fill="Bisque"
             Opacity="0.8"
             Width="100"
             Height="100"
             StrokeThickness="4"
             Stroke="Black"
-            Margin="257,85"
+            Margin="2000,2000"
             Cursor="Hand"
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
+            <Ellipse.RenderTransform>
+                <TranslateTransform/>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse
+            Name="Person3"
+            Opacity="0.8"
+            Width="100"
+            Height="100"
+            StrokeThickness="4"
+            Stroke="Black"
+            Margin="2000,2000"
+            Cursor="Hand"
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
+            <Ellipse.RenderTransform>
+                <TranslateTransform/>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse
+            Name="Person4"
+            Opacity="0.8"
+            Width="100"
+            Height="100"
+            StrokeThickness="4"
+            Stroke="Black"
+            Cursor="Hand"
+            Margin="2000,2000"
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
+            <Ellipse.RenderTransform>
+                <TranslateTransform/>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse
+            Name="Person5"
+            Opacity="0.8"
+            Width="100"
+            Height="100"
+            StrokeThickness="4"
+            Stroke="Black"
+            Cursor="Hand"
+            Margin="2000,2000"
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
+            <Ellipse.RenderTransform>
+                <TranslateTransform/>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse
+            Name="Person6"
+            Opacity="0.8"
+            Width="100"
+            Height="100"
+            StrokeThickness="4"
+            Stroke="Black"
+            Cursor="Hand"
+            Margin="2000,2000"
             MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
             <Ellipse.RenderTransform>
                 <TranslateTransform/>

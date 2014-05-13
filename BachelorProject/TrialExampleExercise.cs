@@ -15,14 +15,16 @@ namespace BachelorProject
         private static readonly Logger Log = Logger.GetLogger(typeof(TrialExampleExercise));
         private bool constraintsThreadIsRunning = false;
         private string constraints;
+        private List<string> names;
 
-        public TrialExampleExercise(string constraints)
+        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = true;
             Screen = screen;
             this.constraints = constraints;
-            screen.InitializeConstraints(constraints);
+            this.names = names;
+            screen.Initialize(numberOfPersons,constraints,names);
         }
 
         protected override void OnShowing()
