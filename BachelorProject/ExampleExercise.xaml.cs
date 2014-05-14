@@ -23,42 +23,46 @@ namespace BachelorProject
     /// </summary>
     public partial class ExampleExercise : UserControl
     {
+        private double screenWidth = SystemParameters.FullPrimaryScreenWidth;
+        private double screenHeight = SystemParameters.FullPrimaryScreenHeight;
+
         private Element current = new Element();
-        private Circle table;
-        private List <Circle> persons = new List<Circle>();
         private Circle currentCircle;
+        private Circle table; 
         private Circle p1;
         private Circle p2;
         private Circle p3;
         private int circleRadius = 50;
-        private bool constraints = false;
-        private double screenWidth = SystemParameters.FullPrimaryScreenWidth;
-        private double screenHeight = SystemParameters.FullPrimaryScreenHeight;
-        //private double xOffSet;
-        //private double yOffSet;
-        StackPanel constraintStackPanel;
-        WrapPanel legendStackPanel;
-        Brush[] allBrushes;
-        List<Brush> brushes = new List<Brush>();
-        List<Ellipse> circles = new List<Ellipse>();
+        private List<Circle> persons = new List<Circle>();
+        
+        private bool constraintsFullfilled = false;
+        private StackPanel constraintStackPanel;
+        private WrapPanel legendStackPanel;
+
+        private Brush[] allBrushes;
+        private List<Brush> brushes = new List<Brush>();
+        private List<Ellipse> circles = new List<Ellipse>();
+
+        private int numberOfPersons;
+        private string constraints;
         private List<string> names = new List<string>();
+
 
         public ExampleExercise()
         {
             InitializeComponent();
             InitializeLeftInterface();
-
-            //xOffSet = 0.5 * (screenWidth - this.Width);
-            //yOffSet = 0.5 * (screenHeight - this.Height); 
         }
 
         public void Initialize(int numberOfPersons, string constraints, List<string> names)
         {
-            InitializeColors(numberOfPersons);
-            InitializeLegend(numberOfPersons, names);
-            InitializeConstraints(constraints, names);
+            this.numberOfPersons = numberOfPersons;
+            this.constraints = constraints;
+            this.names = names;
+            InitializeColors();
+            InitializeLegend();
+            InitializeConstraints();
             InitializeBigCircles();
-
         }
 
         private void InitializeLeftInterface()
@@ -72,7 +76,7 @@ namespace BachelorProject
             persons.Add(p3);
         }
 
-        private void InitializeColors(int number)
+        private void InitializeColors()
         {
             Brush[] allBrushes = new Brush[] {
                 Brushes.AliceBlue,
@@ -99,7 +103,7 @@ namespace BachelorProject
             };
 
             Random r = new Random();
-            while (brushes.Count < number)
+            while (brushes.Count < numberOfPersons)
             {
                 int rNumber = r.Next(allBrushes.Length);
                 var brush = allBrushes[rNumber];
@@ -108,7 +112,7 @@ namespace BachelorProject
             }
         }
 
-        private void InitializeLegend(int numberOfPersons, List<string> names)
+        private void InitializeLegend()
         {
             if (!Dispatcher.CheckAccess())
             {
@@ -170,7 +174,7 @@ namespace BachelorProject
         }
 
 
-        public void InitializeConstraints(string constraints, List<string> names)
+        public void InitializeConstraints()
         {
             if (!Dispatcher.CheckAccess())
             {
@@ -179,19 +183,22 @@ namespace BachelorProject
             }
             string[] singleConstraints = constraints.Split(new Char[]{';'});
             string[] newConstraints = new string[singleConstraints.Count()];
-            int counter = 0;
+            
+            // Ersetzen der Platzhalter (Zahlen) in Constraints durch konkrete Namen
+            int index = 0;
             foreach (string s in singleConstraints)
             {
-                var resultString = Regex.Match(s, @"\d+").Value;
-                var resultInt = Int32.Parse(resultString);
-                Debug.WriteLine(resultInt + " " + names[resultInt]);
-                var newS = s.Replace(resultString, names[resultInt-1]);
-                newConstraints[counter] = newS;
-                Debug.WriteLine(newS);
-                counter++;
+                var newString = s;
+                for (int i = 1; i <= numberOfPersons; ++i)
+                {
+                    newString = newString.Replace(i.ToString(), names[i]);
+                }
+                newConstraints[index] = newString;
+                index++;
             }
             singleConstraints = newConstraints;
 
+            // Panel für Constraints
             constraintStackPanel = new StackPanel 
             { 
                 Name = "ConstraintPanel", 
@@ -201,6 +208,7 @@ namespace BachelorProject
                 Margin = new Thickness(800, 270, 0, 0) };
             this.MyCanvas.Children.Add(constraintStackPanel);
 
+            // Überschrift "Regeln"
             TextBox tb = new TextBox
             {
                 Name = "c0",
@@ -213,6 +221,7 @@ namespace BachelorProject
             };
             constraintStackPanel.Children.Add(tb);
 
+            // einzelne Constraints darstellen
             int constraintCounter = 1;
             foreach (string c in singleConstraints)
             {
@@ -235,7 +244,7 @@ namespace BachelorProject
 
         private void InitializeBigCircles()
         {
-            
+            // Liste mit allen Personenkreisen erstellen
             foreach (UIElement e in MyCanvas.Children)
             {
                 if (e is Ellipse)
@@ -243,6 +252,7 @@ namespace BachelorProject
                         circles.Add(e as Ellipse);
             }
 
+            // Positionieren und Einfärben der einzelnen Personenkreise
             int counter = 0;
             int x = 30;
             foreach (Ellipse e in circles)
@@ -257,7 +267,7 @@ namespace BachelorProject
         public bool ConstraintsFullfilled()
         {
             CheckConstraints();
-            return constraints;
+            return constraintsFullfilled;
         }
 
         private void CheckConstraints()
@@ -268,27 +278,27 @@ namespace BachelorProject
                 return;
             }
 
-            constraints = true; 
+            constraintsFullfilled = true; 
             if (p1.touches(table))
                 getConstraint("c1").Background = Brushes.Green;
             else
             {
                 getConstraint("c1").Background = Brushes.Red;
-                constraints = false;
+                constraintsFullfilled = false;
             }
             if (p2.touches(table))
                 getConstraint("c2").Background = Brushes.Green;
             else
             {
                 getConstraint("c2").Background = Brushes.Red;
-                constraints = false;
+                constraintsFullfilled = false;
             }
             if (p1.overlaps(p2))
                 getConstraint("c3").Background = Brushes.Green;
             else
             {
                 getConstraint("c3").Background = Brushes.Red;
-                constraints = false;
+                constraintsFullfilled = false;
             }
             if (p3.enters(p2) && currentCircle != null && currentCircle.Equals(p3))
             {
@@ -299,7 +309,7 @@ namespace BachelorProject
             {
                 p3.stopsSittingOn(p2);
                 getConstraint("c4").Background = Brushes.Red;
-                constraints = false;
+                constraintsFullfilled = false;
             }
             //if (p1.sitsNextTo(p2, persons)) //&& p1.touches(table) && p2.touches(table))
             getConstraint("c5").Text = p1.sitsNextTo(p2,persons);
