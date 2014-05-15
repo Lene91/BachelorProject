@@ -24,11 +24,17 @@ namespace BachelorProject
                 HideMouseCursor = false
             };
 
-            readConstraints("constraints.txt");
-            readNames("names.txt");
-            shuffle();
-            var numberOfPersons = 6;
+            // Dateien, die für alle Trials benötigt werden
+            readConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
+            readNames("names.txt"); // komplett übergeben nach shuffle()-Aufruf
+            shuffleNames();
+
+            // Variablen, die für jeden Trial unterschiedlich sind
+            int numberOfPersons = 4;
+
+
             experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], allNames));
+            
 
             experiment.ConfigureTracker();
             experiment.DoCalibration();
@@ -60,7 +66,7 @@ namespace BachelorProject
             file.Close();
         }
 
-        public static void shuffle()
+        public static void shuffleNames()
         {
             // Source http://stackoverflow.com/questions/5383498/shuffle-rearrange-randomly-a-liststring
             int n = allNames.Count;

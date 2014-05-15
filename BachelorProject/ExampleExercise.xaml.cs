@@ -32,6 +32,10 @@ namespace BachelorProject
         private Circle p1;
         private Circle p2;
         private Circle p3;
+        private Circle p4;
+        private Circle p5;
+        private Circle p6;
+        private List<string> circleNames = new List<string>() {"Person1","Person2","Person3","Person4","Person5","Person6"};
         private int circleRadius = 50;
         private List<Circle> persons = new List<Circle>();
         
@@ -51,7 +55,7 @@ namespace BachelorProject
         public ExampleExercise()
         {
             InitializeComponent();
-            InitializeLeftInterface();
+            //InitializeLeftInterface();
         }
 
         public void Initialize(int numberOfPersons, string constraints, List<string> names)
@@ -62,6 +66,7 @@ namespace BachelorProject
             InitializeColors();
             InitializeLegend();
             InitializeConstraints();
+            InitializeLeftInterface();
             InitializeBigCircles();
         }
 
@@ -71,9 +76,20 @@ namespace BachelorProject
             p1 = new Circle(Person1);
             p2 = new Circle(Person2);
             p3 = new Circle(Person3);
+            p4 = new Circle(Person4);
+            p5 = new Circle(Person5);
+            p6 = new Circle(Person6);
             persons.Add(p1);
             persons.Add(p2);
             persons.Add(p3);
+            persons.Add(p4);
+            persons.Add(p5);
+            persons.Add(p6);
+            for (int i = 5; i > numberOfPersons-1; --i)
+            {
+                persons.Remove(persons[i]);
+                circleNames.Remove(circleNames[i]);
+            }
         }
 
         private void InitializeColors()
@@ -191,7 +207,8 @@ namespace BachelorProject
                 var newString = s;
                 for (int i = 1; i <= numberOfPersons; ++i)
                 {
-                    newString = newString.Replace(i.ToString(), names[i]);
+                    newString = newString.Replace(i.ToString(), names[i-1]);
+                    Debug.WriteLine(names[i]);
                 }
                 newConstraints[index] = newString;
                 index++;
@@ -248,8 +265,13 @@ namespace BachelorProject
             foreach (UIElement e in MyCanvas.Children)
             {
                 if (e is Ellipse)
-                    if (!(e as Ellipse).Name.Equals("Table"))
-                        circles.Add(e as Ellipse);
+                {
+                    Ellipse el = e as Ellipse;
+                    if (!el.Name.Equals("Table") && circleNames.Contains(el.Name))
+                    {
+                        circles.Add(el);
+                    }
+                }
             }
 
             // Positionieren und Einfärben der einzelnen Personenkreise
@@ -312,7 +334,7 @@ namespace BachelorProject
                 constraintsFullfilled = false;
             }
             //if (p1.sitsNextTo(p2, persons)) //&& p1.touches(table) && p2.touches(table))
-            getConstraint("c5").Text = p1.sitsNextTo(p2,persons);
+            //getConstraint("c5").Text = p1.sitsNextTo(p2,persons);
             //else
                 //getConstraint("c5").Background = Brushes.Red;
 
@@ -321,7 +343,7 @@ namespace BachelorProject
                 bool bla = true;
                 if (!p.touches(table))
                     bla = false;
-                getConstraint("c4").Text = bla.ToString();
+                // getConstraint("c4").Text = bla.ToString();
             }
             /*
             foreach(Circle p in persons)
