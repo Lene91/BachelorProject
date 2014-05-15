@@ -43,10 +43,14 @@ namespace BachelorProject
 
         private void CheckConstraints()
         {
+            int counter = 50;
             while (constraintsThreadIsRunning)
             {
                 if (screen.ConstraintsFullfilled())
-                    //SkipTrial();
+                    counter--;
+                if(counter < 0)
+                    SkipTrial();
+
                 System.Threading.Thread.Sleep(10);
             }
         }

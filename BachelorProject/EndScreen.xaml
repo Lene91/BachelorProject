@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="BachelorProject.EndScreen"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d"
+      Width="1200" Height="800" Background="LightGray">
+
+    <Canvas>
+        <TextBox Name="l1" Text="Aufgabe abgeschlossen" Background="Transparent" BorderThickness="0" FontSize="40" Margin="400,380"/>
+    </Canvas>
+</UserControl>

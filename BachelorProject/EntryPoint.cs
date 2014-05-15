@@ -26,14 +26,15 @@ namespace BachelorProject
 
             // Dateien, die für alle Trials benötigt werden
             readConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
-            readNames("names.txt"); // komplett übergeben nach shuffle()-Aufruf
-            shuffleNames();
+            readNames("names.txt"); // shuffle()-Aufruf gibt neu sortierte Liste zurück
 
             // Variablen, die für jeden Trial unterschiedlich sind
-            int numberOfPersons = 4;
+            int numberOfPersons = 5;
 
 
-            experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], allNames));
+            experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], shuffleNames()));
+            experiment.AddTrial(new TrialEndScreen());
+            //experiment.AddTrial(new TrialExampleExercise(4, allConstraints[2], shuffleNames()));
             
 
             experiment.ConfigureTracker();
@@ -66,7 +67,7 @@ namespace BachelorProject
             file.Close();
         }
 
-        public static void shuffleNames()
+        public static List<string> shuffleNames()
         {
             // Source http://stackoverflow.com/questions/5383498/shuffle-rearrange-randomly-a-liststring
             int n = allNames.Count;
@@ -79,6 +80,7 @@ namespace BachelorProject
                 allNames[k] = allNames[n];
                 allNames[n] = value;
             }
+            return allNames;
         }
     }
 }

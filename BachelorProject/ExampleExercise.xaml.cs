@@ -49,7 +49,10 @@ namespace BachelorProject
 
         private int numberOfPersons;
         private string constraints;
+        private string[] singleConstraints;
         private List<string> names = new List<string>();
+
+        bool isSitting = false;
 
 
         public ExampleExercise()
@@ -153,7 +156,7 @@ namespace BachelorProject
             legendStackPanel = new WrapPanel()
             {
                 Name = "LegendPanel",
-                Width = 320,
+                Width = 330,
                 Height = 250,
                 Margin = new Thickness(800, 50, 0, 0)
             };
@@ -197,7 +200,7 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => CheckConstraints());
                 return;
             }
-            string[] singleConstraints = constraints.Split(new Char[]{';'});
+            singleConstraints = constraints.Split(new Char[]{';'});
             string[] newConstraints = new string[singleConstraints.Count()];
             
             // Ersetzen der Platzhalter (Zahlen) in Constraints durch konkrete Namen
@@ -208,7 +211,6 @@ namespace BachelorProject
                 for (int i = 1; i <= numberOfPersons; ++i)
                 {
                     newString = newString.Replace(i.ToString(), names[i-1]);
-                    Debug.WriteLine(names[i]);
                 }
                 newConstraints[index] = newString;
                 index++;
@@ -299,52 +301,41 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => CheckConstraints());
                 return;
             }
-
-            constraintsFullfilled = true; 
+            if (!isSitting)
+                getConstraint("c4").Background = Brushes.Red;
+            initiateRedBrush();
+            
+            constraintsFullfilled = true;
             if (p1.touches(table))
                 getConstraint("c1").Background = Brushes.Green;
-            else
-            {
-                getConstraint("c1").Background = Brushes.Red;
-                constraintsFullfilled = false;
-            }
+            else constraintsFullfilled = false;
+            
             if (p2.touches(table))
                 getConstraint("c2").Background = Brushes.Green;
-            else
-            {
-                getConstraint("c2").Background = Brushes.Red;
-                constraintsFullfilled = false;
-            }
-            if (p1.overlaps(p2))
+            else constraintsFullfilled = false;
+            
+            if (p3.touches(table) && p4.touches(table) && p3.overlaps(p4) && p3.touches(table))
                 getConstraint("c3").Background = Brushes.Green;
-            else
+            else constraintsFullfilled = false;
+            
+            if (p5.enters(p2) && currentCircle != null && currentCircle.Equals(p5) || isSitting)
             {
-                getConstraint("c3").Background = Brushes.Red;
-                constraintsFullfilled = false;
-            }
-            if (p3.enters(p2) && currentCircle != null && currentCircle.Equals(p3))
-            {
-                p3.isSittingOn(p2);
+                p5.isSittingOn(p2);
                 getConstraint("c4").Background = Brushes.Green;
+                isSitting = true;
             }
-            if (p3.leaves(p2) && currentCircle != null && currentCircle.Equals(p3))
+            if (p5.leaves(p2) && currentCircle != null && currentCircle.Equals(p5) || !isSitting)
             {
-                p3.stopsSittingOn(p2);
+                p5.stopsSittingOn(p2);
                 getConstraint("c4").Background = Brushes.Red;
                 constraintsFullfilled = false;
+                isSitting = false;
             }
             //if (p1.sitsNextTo(p2, persons)) //&& p1.touches(table) && p2.touches(table))
             //getConstraint("c5").Text = p1.sitsNextTo(p2,persons);
             //else
                 //getConstraint("c5").Background = Brushes.Red;
 
-            foreach (Circle p in persons)
-            {
-                bool bla = true;
-                if (!p.touches(table))
-                    bla = false;
-                // getConstraint("c4").Text = bla.ToString();
-            }
             /*
             foreach(Circle p in persons)
             {
@@ -359,6 +350,15 @@ namespace BachelorProject
                     }
                 }
             }*/
+        }
+
+        private void initiateRedBrush()
+        {
+            for (int i = 1; i < singleConstraints.Count(); ++i)
+            {
+                string name = "c" + i.ToString();
+                getConstraint(name).Background = Brushes.Red;
+            }
         }
 
         private TextBox getConstraint(string name)
