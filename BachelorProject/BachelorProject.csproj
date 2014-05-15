@@ -52,12 +52,16 @@
     <Compile Include="EndScreen.xaml.cs">
       <DependentUpon>EndScreen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ExampleWindow.xaml.cs">
+      <DependentUpon>ExampleWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helper\Circle.cs" />
     <Compile Include="Helper\Element.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="ExampleExercise.xaml.cs">
       <DependentUpon>ExampleExercise.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HintExampleWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -103,6 +107,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ExampleExercise.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExampleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

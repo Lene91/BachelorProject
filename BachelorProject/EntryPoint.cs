@@ -13,6 +13,7 @@ namespace BachelorProject
     {
         private static Dictionary<int, string> allConstraints = new Dictionary<int, string>();
         private static List<string> allNames = new List<string>();
+        public delegate void Del();
 
         [STAThread]
         static void Main()
@@ -31,9 +32,10 @@ namespace BachelorProject
             // Variablen, die für jeden Trial unterschiedlich sind
             int numberOfPersons = 5;
 
-
-            experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], shuffleNames()));
+            Del handler = DelegateMethod;
+            experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], shuffleNames(),handler));
             experiment.AddTrial(new TrialEndScreen());
+           
             //experiment.AddTrial(new TrialExampleExercise(4, allConstraints[2], shuffleNames()));
             
 
@@ -81,6 +83,11 @@ namespace BachelorProject
                 allNames[n] = value;
             }
             return allNames;
+        }
+
+        public static void DelegateMethod()
+        {
+            Debug.WriteLine("Delegate verwendet.");
         }
     }
 }

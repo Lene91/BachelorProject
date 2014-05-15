@@ -16,8 +16,9 @@ namespace BachelorProject
         private bool constraintsThreadIsRunning = false;
         private string constraints;
         private List<string> names;
+        private delegate void handler;
 
-        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names)
+        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, Delegate handler)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = true;

@@ -61,7 +61,7 @@ namespace BachelorProject
             //InitializeLeftInterface();
         }
 
-        public void Initialize(int numberOfPersons, string constraints, List<string> names)
+        public void Initialize(int numberOfPersons, string constraints, List<string> names, Delegate handler)
         {
             this.numberOfPersons = numberOfPersons;
             this.constraints = constraints;
@@ -71,6 +71,7 @@ namespace BachelorProject
             InitializeConstraints();
             InitializeLeftInterface();
             InitializeBigCircles();
+            handler();
         }
 
         private void InitializeLeftInterface()

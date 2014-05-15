@@ -1,0 +1,12 @@
+﻿<Window x:Class="BachelorProject.ExampleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ExampleWindow" Height="300" Width="300">
+    <Canvas Background="LightGray">
+        <TextBox Margin="50" Background="LightGray" TextAlignment="Center"  BorderBrush="Black" BorderThickness ="1" Width="200" FontSize="20" TextWrapping="WrapWithOverflow">
+                Möchtest du jetzt einen Hinweis erhalten?
+        </TextBox>
+        <Button Name="btn1" FontSize="20" Width="70" Height="50" Margin="50,200"> Ja</Button>
+        <Button Name="btn2" FontSize="20" Width="70" Height="50" Margin="175,200"> Nein</Button>
+    </Canvas>
+</Window>
