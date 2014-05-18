@@ -52,26 +52,29 @@ namespace BachelorProject
         private string[] singleConstraints;
         private List<string> names = new List<string>();
 
+        private Del checkConstraints;
+
         bool isSitting = false;
+
+        private List<KeyValuePair<Circle, double>> sittingOrder = new List<KeyValuePair<Circle, double>>();
 
 
         public ExampleExercise()
         {
             InitializeComponent();
-            //InitializeLeftInterface();
         }
 
-        public void Initialize(int numberOfPersons, string constraints, List<string> names, Delegate handler)
+        public void Initialize(int numberOfPersons, string constraints, List<string> names, Del handler)
         {
             this.numberOfPersons = numberOfPersons;
             this.constraints = constraints;
             this.names = names;
+            this.checkConstraints = handler;
             InitializeColors();
             InitializeLegend();
             InitializeConstraints();
             InitializeLeftInterface();
             InitializeBigCircles();
-            handler();
         }
 
         private void InitializeLeftInterface()
@@ -136,7 +139,7 @@ namespace BachelorProject
         {
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() => CheckConstraints());
+                Dispatcher.Invoke(() => InitializeLegend());
                 return;
             }
 
@@ -198,7 +201,7 @@ namespace BachelorProject
         {
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() => CheckConstraints());
+                Dispatcher.Invoke(() => InitializeConstraints());
                 return;
             }
             singleConstraints = constraints.Split(new Char[]{';'});
@@ -302,23 +305,30 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => CheckConstraints());
                 return;
             }
+
+            calculateSittingOrder();
+            if (sittingNextToEachOther(p1, p2))
+                getConstraint("c1").Text = "Yes";
+            else
+                getConstraint("c1").Text = "No";
+
             if (!isSitting)
                 getConstraint("c4").Background = Brushes.Red;
             initiateRedBrush();
-            
+
             constraintsFullfilled = true;
             if (p1.touches(table))
                 getConstraint("c1").Background = Brushes.Green;
             else constraintsFullfilled = false;
-            
+
             if (p2.touches(table))
                 getConstraint("c2").Background = Brushes.Green;
             else constraintsFullfilled = false;
-            
+
             if (p3.touches(table) && p4.touches(table) && p3.overlaps(p4) && p3.touches(table))
                 getConstraint("c3").Background = Brushes.Green;
             else constraintsFullfilled = false;
-            
+
             if (p5.enters(p2) && currentCircle != null && currentCircle.Equals(p5) || isSitting)
             {
                 p5.isSittingOn(p2);
@@ -335,7 +345,7 @@ namespace BachelorProject
             //if (p1.sitsNextTo(p2, persons)) //&& p1.touches(table) && p2.touches(table))
             //getConstraint("c5").Text = p1.sitsNextTo(p2,persons);
             //else
-                //getConstraint("c5").Background = Brushes.Red;
+            //getConstraint("c5").Background = Brushes.Red;
 
             /*
             foreach(Circle p in persons)
@@ -351,6 +361,95 @@ namespace BachelorProject
                     }
                 }
             }*/
+        }
+
+        private void calculateSittingOrder()
+        {
+            sittingOrder.Clear();
+            List<Circle> onTable = new List<Circle>();
+            foreach (Circle c in persons)
+            {
+                if (c.touches(table))
+                    onTable.Add(c);
+            }
+            var centerPoint = table.getPosition();
+            var tableEdgePoint = new Point(centerPoint.X, centerPoint.Y - table.getRadius());
+            var firstVector = centerPoint - tableEdgePoint;
+            
+            foreach (Circle c in onTable)
+            {
+                var secondVector = centerPoint - c.getPosition();
+                var angle = Math.Acos(firstVector * secondVector / (firstVector.Length * secondVector.Length));
+                angle = angle * 180 / Math.PI;
+                if (getHalf(c) == 2)
+                    angle = 360 - angle;
+                var newEntry = new KeyValuePair<Circle,double>(c,angle);
+                if (!sittingOrder.Contains(newEntry))
+                    sittingOrder.Add(newEntry);
+            }
+
+            sittingOrder.Sort((firstPair,nextPair) =>
+                {
+                    return firstPair.Value.CompareTo(nextPair.Value);
+                }
+            );  
+        }
+
+        private bool sittingNextToEachOther(Circle c1, Circle c2)
+        {
+            int lastIndex = sittingOrder.Count - 1;
+            int index = 0;
+
+            string bla = "";
+            foreach(KeyValuePair<Circle, double> kvp in sittingOrder)
+                bla += kvp.Key.getName() + "\\" + kvp.Value + " ";
+            getConstraint("c2").Text = bla;
+            if (sittingOrder.Count > 1)
+            {
+                foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
+                {
+                    if (c1.Equals(kvp.Key))
+                    {
+                        //getConstraint("c2").Text = sittingOrder[index].Key.getName();
+                        if (index == 0)
+                        {
+                            //getConstraint("c3").Text = sittingOrder[lastIndex].Key.getName();
+                            //getConstraint("c4").Text = sittingOrder[index+1].Key.getName();
+                            if (c2.Equals(sittingOrder[lastIndex].Key) || c2.Equals(sittingOrder[index + 1].Key))
+                                return true;
+                            else break;
+                        }
+                        else if (index == lastIndex)
+                        {
+                            //getConstraint("c3").Text = sittingOrder[index-1].Key.getName();
+                            //getConstraint("c4").Text = sittingOrder[0].Key.getName();
+                            if (c2.Equals(sittingOrder[index - 1].Key) || c2.Equals(sittingOrder[0].Key))
+                                return true;
+                            else break;
+                        }
+                        else
+                        {
+                            //getConstraint("c3").Text = sittingOrder[index-1].Key.getName();
+                            //getConstraint("c4").Text = sittingOrder[index + 1].Key.getName();
+                            if (c2.Equals(sittingOrder[index - 1].Key) || c2.Equals(sittingOrder[index + 1].Key))
+                                return true;
+                            else break;
+                        }
+                    }
+                    index++;
+                }
+            }
+            return false;
+        }
+
+        private int getHalf(Circle c)
+        {
+            var x = c.getPosition().X;
+            var tableX = table.getPosition().X;
+            if (x >= tableX)
+                return 1;
+            else
+                return 2;
         }
 
         private void initiateRedBrush()
@@ -376,7 +475,7 @@ namespace BachelorProject
             return null;
         }
 
-
+        
 
         // REALIZING DRAGGING
 

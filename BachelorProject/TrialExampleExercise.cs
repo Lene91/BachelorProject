@@ -7,6 +7,9 @@ using ExperimentTemplate;
 using System.Diagnostics;
 using Logging;
 
+using System.CodeDom.Compiler;
+using System.Reflection;
+
 namespace BachelorProject
 {
     class TrialExampleExercise : Trial
@@ -16,16 +19,19 @@ namespace BachelorProject
         private bool constraintsThreadIsRunning = false;
         private string constraints;
         private List<string> names;
-        private delegate void handler;
+        //private delegate void function();
 
-        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, Delegate handler)
+        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, Del handler, MethodInfo mi,object o)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = true;
             Screen = screen;
             this.constraints = constraints;
             this.names = names;
-            screen.Initialize(numberOfPersons,constraints,names);
+            screen.Initialize(numberOfPersons,constraints,names,handler);
+            string textInput = "Console.WriteLine(\"Hallo\");";
+            if (mi != null)
+                mi.Invoke(o, new object[] { textInput });
         }
 
         protected override void OnShowing()
@@ -59,7 +65,6 @@ namespace BachelorProject
         protected override void OnHiding()
         {
             Log.Info("Hiding screen 1...");
-            //bee.StopFlyingAround();
             constraintsThreadIsRunning = false;
         }
 

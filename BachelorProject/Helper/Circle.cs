@@ -79,6 +79,11 @@ namespace BachelorProject
             return false;
         }
 
+        public bool sitsNextTo(Circle c)
+        {
+            return false;
+        }
+
         public bool overlaps(Circle c)
         {
             if (distance(c.getPosition(),position) + overlapEpsilon < (c.getRadius() + radius))
