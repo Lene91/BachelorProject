@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.CodeDom.Compiler;
 using System.Reflection;
+using System.Windows.Shapes;
 
 
 namespace BachelorProject
 {
-    public delegate void Del();
 
     class EntryPoint
     {
         private static Dictionary<int, string> allConstraints = new Dictionary<int, string>();
         private static List<string> allNames = new List<string>();
-        
+
 
         [STAThread]
         static void Main()
@@ -30,16 +30,6 @@ namespace BachelorProject
                 HideMouseCursor = false
             };
 
-            string textInput = "Console.WriteLine(\"Hallo\");";
-
-            Assembly assembly = CompileCode(textInput);
-            object o = assembly.CreateInstance("gfoidl.Code.Test");
-            Type t = o.GetType();
-            MethodInfo mi = t.GetMethod("Ergebnis");
-            
-            
-           
-            
 
             // Dateien, die für alle Trials benötigt werden
             readConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
@@ -48,12 +38,12 @@ namespace BachelorProject
             // Variablen, die für jeden Trial unterschiedlich sind
             int numberOfPersons = 5;
 
-            Del handler = new Del(DelegateMethod);
-            experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], shuffleNames(),handler,mi,o));
+            experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], shuffledNames(), new Trial1()));
+            //experiment.AddTrial(new TrialExampleExercise(4, allConstraints[2], shuffledNames(), new Trial1()));
             experiment.AddTrial(new TrialEndScreen());
-           
+
             //experiment.AddTrial(new TrialExampleExercise(4, allConstraints[2], shuffleNames()));
-            
+
 
             experiment.ConfigureTracker();
             experiment.DoCalibration();
@@ -64,11 +54,11 @@ namespace BachelorProject
         private static void readConstraints(string filename)
         {
             string line;
-            System.IO.StreamReader file = new System.IO.StreamReader(@filename,Encoding.Default);
+            System.IO.StreamReader file = new System.IO.StreamReader(@filename, Encoding.Default);
             while ((line = file.ReadLine()) != null)
             {
-                var trialNumber = Convert.ToInt32(line.Substring(0,line.IndexOf(";")));
-                var constraints = line.Substring(line.IndexOf(";")+1);
+                var trialNumber = Convert.ToInt32(line.Substring(0, line.IndexOf(";")));
+                var constraints = line.Substring(line.IndexOf(";") + 1);
                 allConstraints.Add(trialNumber, constraints);
             }
             file.Close();
@@ -85,7 +75,7 @@ namespace BachelorProject
             file.Close();
         }
 
-        public static List<string> shuffleNames()
+        public static List<string> shuffledNames()
         {
             // Source http://stackoverflow.com/questions/5383498/shuffle-rearrange-randomly-a-liststring
             int n = allNames.Count;
@@ -99,41 +89,6 @@ namespace BachelorProject
                 allNames[n] = value;
             }
             return allNames;
-        }
-
-        public static void DelegateMethod()
-        {
-            Debug.WriteLine("Delegate verwendet.");
-        }
-
-        public static Assembly CompileCode(string CodeInput)
-        {
-            CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
-
-            CompilerParameters cp = new CompilerParameters();
-            cp.ReferencedAssemblies.Add("system.dll");
-            cp.CompilerOptions = "/t:library";
-            cp.GenerateInMemory = true;
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(@"using System;");
-            sb.AppendLine(@"namespace gfoidl.Code{");
-            sb.AppendLine(@"public class Test{");
-            sb.AppendLine(@"public string Ergebnis(string input){");
-            sb.AppendLine(CodeInput);
-            sb.AppendLine(@"return input;");
-            sb.AppendLine(@"}}}");
-
-            CompilerResults cr =
-                provider.CompileAssemblyFromSource(cp, sb.ToString());
-
-            if (cr.Errors.Count > 0)
-            {
-                Console.WriteLine(cr.Errors[0].ErrorText);
-                return null;
-            }
-
-            return cr.CompiledAssembly;
         }
     }
 }

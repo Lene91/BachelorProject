@@ -15,7 +15,7 @@ namespace BachelorProject
     /// <summary>
     /// Hilfsklasse Kreis, repräsentiert eine Person, die am Tisch platziert werden muss, bzw. den Tisch
     /// </summary>
-    class Circle
+    public class Circle
     {
         private string name;
         private double radius;
@@ -121,10 +121,10 @@ namespace BachelorProject
             radius = 50;
         }
 
-        public string sitsNextTo(Circle c, List<Circle> persons)
+        /*public string sitsNextTo(Circle c, List<Circle> persons)
         {
             return sittingPersons.Count().ToString();
-            /*
+            
             var dist = distance(position, c.getPosition());
             foreach (Circle p in persons)
             {
@@ -136,8 +136,8 @@ namespace BachelorProject
                 }
             }
             return true;
-             */
-        }
+             
+        }*/
 
         private double distance(Point p1, Point p2)
         {

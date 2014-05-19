@@ -14,24 +14,22 @@ namespace BachelorProject
 {
     class TrialExampleExercise : Trial
     {
-        private static readonly ExampleExercise screen = new ExampleExercise();
+        private readonly ExampleExercise screen;
         private static readonly Logger Log = Logger.GetLogger(typeof(TrialExampleExercise));
         private bool constraintsThreadIsRunning = false;
         private string constraints;
         private List<string> names;
         //private delegate void function();
 
-        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, Del handler, MethodInfo mi,object o)
+        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = true;
-            Screen = screen;
+            Screen = trial;
+            screen = trial;
             this.constraints = constraints;
             this.names = names;
-            screen.Initialize(numberOfPersons,constraints,names,handler);
-            string textInput = "Console.WriteLine(\"Hallo\");";
-            if (mi != null)
-                mi.Invoke(o, new object[] { textInput });
+            screen.Initialize(numberOfPersons,constraints,names);    
         }
 
         protected override void OnShowing()

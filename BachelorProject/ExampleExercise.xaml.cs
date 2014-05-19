@@ -9,11 +9,14 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
+//using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.CodeDom.Compiler;
+using System.Reflection;
+
 
 namespace BachelorProject
 {
@@ -28,35 +31,30 @@ namespace BachelorProject
 
         private Element current = new Element();
         private Circle currentCircle;
-        private Circle table; 
+        protected Circle table;
         private Circle p1;
         private Circle p2;
-        private Circle p3;
+        protected Circle p3;
         private Circle p4;
         private Circle p5;
         private Circle p6;
-        private List<string> circleNames = new List<string>() {"Person1","Person2","Person3","Person4","Person5","Person6"};
+        private List<string> circleNames;
         private int circleRadius = 50;
-        private List<Circle> persons = new List<Circle>();
+        private List<Circle> persons;
         
-        private bool constraintsFullfilled = false;
+        protected bool constraintsFullfilled = false;
         private StackPanel constraintStackPanel;
         private WrapPanel legendStackPanel;
 
-        private Brush[] allBrushes;
-        private List<Brush> brushes = new List<Brush>();
-        private List<Ellipse> circles = new List<Ellipse>();
+        private List<Brush> brushes;
+        private List<Ellipse> circles;
 
         private int numberOfPersons;
         private string constraints;
         private string[] singleConstraints;
-        private List<string> names = new List<string>();
+        private List<string> names;
 
-        private Del checkConstraints;
-
-        bool isSitting = false;
-
-        private List<KeyValuePair<Circle, double>> sittingOrder = new List<KeyValuePair<Circle, double>>();
+        private List<KeyValuePair<Circle, double>> sittingOrder;
 
 
         public ExampleExercise()
@@ -64,16 +62,31 @@ namespace BachelorProject
             InitializeComponent();
         }
 
-        public void Initialize(int numberOfPersons, string constraints, List<string> names, Del handler)
+        /*
+         * **********************************************************
+         *                                                          *
+         *              INITIALIZING INTERFACE                      *
+         *                                                          *
+         ************************************************************
+         */
+
+        public void Initialize(int numberOfPersons, string constraints, List<string> names)
         {
             this.numberOfPersons = numberOfPersons;
             this.constraints = constraints;
             this.names = names;
-            this.checkConstraints = handler;
+
+            circleNames = new List<string>() {"Person1","Person2","Person3","Person4","Person5","Person6"};
+            persons = new List<Circle>();
+            brushes = new List<Brush>();
+            circles = new List<Ellipse>();
+            names = new List<string>();
+            sittingOrder = new List<KeyValuePair<Circle, double>>();
+
             InitializeColors();
             InitializeLegend();
-            InitializeConstraints();
             InitializeLeftInterface();
+            InitializeConstraints();
             InitializeBigCircles();
         }
 
@@ -235,7 +248,7 @@ namespace BachelorProject
             TextBox tb = new TextBox
             {
                 Name = "c0",
-                Text = "Regeln",
+                Text = "Sitzwünsche",
                 Margin = new Thickness(10, 10, 10, 10),
                 Background = Brushes.Transparent,
                 BorderThickness = new Thickness(0),
@@ -290,13 +303,65 @@ namespace BachelorProject
                 x += 110;
                 counter++;
             }
+
+            x = 30;
+            foreach (Circle c in persons)
+            {
+                var newCenterX = x + circleRadius;
+                var newCenterY = 30 + circleRadius;
+                c.updatePosition(new Point(newCenterX, newCenterY));
+                x += 110;
+            }
+            
         }
+
+
+        /*
+         * **********************************************************
+         *                                                          *
+         *                   LOGIC UNIT                             *
+         *                                                          *
+         ************************************************************
+         */
+
 
         public bool ConstraintsFullfilled()
         {
             CheckConstraints();
             return constraintsFullfilled;
         }
+
+        /*public static Assembly CompileCode(string CodeInput)
+        {
+            CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
+
+            CompilerParameters cp = new CompilerParameters();
+            cp.ReferencedAssemblies.Add("System.dll");
+            cp.ReferencedAssemblies.Add("ExperimentTemplate.dll");
+            cp.CompilerOptions = "/t:library";
+            cp.GenerateInMemory = true;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(@"using System;");
+            sb.AppendLine(@"using ExperimentTemplate;");
+            sb.AppendLine(@"namespace BachelorProject{");
+            sb.AppendLine(@"public class Test{");
+            sb.AppendLine(@"public string Ergebnis(string input){");
+            sb.AppendLine(CodeInput);
+            sb.AppendLine(@"return input;");
+            sb.AppendLine(@"}}}");
+
+            CompilerResults cr =
+                provider.CompileAssemblyFromSource(cp, sb.ToString());
+
+            if (cr.Errors.Count > 0)
+            {
+                Console.WriteLine(cr.Errors[0].ErrorText);
+                return null;
+            }
+
+            return cr.CompiledAssembly;
+        }*/
 
         private void CheckConstraints()
         {
@@ -307,19 +372,50 @@ namespace BachelorProject
             }
 
             calculateSittingOrder();
-            if (sittingNextToEachOther(p1, p2))
-                getConstraint("c1").Text = "Yes";
-            else
-                getConstraint("c1").Text = "No";
+            initiateRedBrush();
+            constraintsFullfilled = true;
 
+            
+
+            constraintsFullfilled = checkActualConstraints();
+
+            var persons2 = persons;
+            foreach (Circle p in persons)
+            {
+                foreach (Circle q in persons2)
+                {
+                    if (!p.Equals(q) && currentCircle != null && currentCircle.Equals(p))
+                    {
+                        if (p.enters(q))
+                        {
+                            p.isSittingOn(q);
+                            break;
+                        }
+                        else if (p.leaves(q))
+                        {
+                            p.stopsSittingOn(q);
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+            // Prüfen, ob alle am Tisch sitzen
+            foreach (Circle c in persons)
+            {
+                if (!c.touches(table))
+                    constraintsFullfilled = false;
+            }
+
+
+            /*
             if (!isSitting)
                 getConstraint("c4").Background = Brushes.Red;
-            initiateRedBrush();
 
-            constraintsFullfilled = true;
-            if (p1.touches(table))
-                getConstraint("c1").Background = Brushes.Green;
-            else constraintsFullfilled = false;
+            //if (p1.touches(table))
+                //getConstraint("c1").Background = Brushes.Green;
+            //else constraintsFullfilled = false;
 
             if (p2.touches(table))
                 getConstraint("c2").Background = Brushes.Green;
@@ -341,7 +437,8 @@ namespace BachelorProject
                 getConstraint("c4").Background = Brushes.Red;
                 constraintsFullfilled = false;
                 isSitting = false;
-            }
+            }*/
+
             //if (p1.sitsNextTo(p2, persons)) //&& p1.touches(table) && p2.touches(table))
             //getConstraint("c5").Text = p1.sitsNextTo(p2,persons);
             //else
@@ -361,6 +458,13 @@ namespace BachelorProject
                     }
                 }
             }*/
+
+            
+        }
+
+        public virtual bool checkActualConstraints()
+        {
+            return false;
         }
 
         private void calculateSittingOrder()
@@ -400,37 +504,26 @@ namespace BachelorProject
             int lastIndex = sittingOrder.Count - 1;
             int index = 0;
 
-            string bla = "";
-            foreach(KeyValuePair<Circle, double> kvp in sittingOrder)
-                bla += kvp.Key.getName() + "\\" + kvp.Value + " ";
-            getConstraint("c2").Text = bla;
             if (sittingOrder.Count > 1)
             {
                 foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
                 {
                     if (c1.Equals(kvp.Key))
                     {
-                        //getConstraint("c2").Text = sittingOrder[index].Key.getName();
                         if (index == 0)
                         {
-                            //getConstraint("c3").Text = sittingOrder[lastIndex].Key.getName();
-                            //getConstraint("c4").Text = sittingOrder[index+1].Key.getName();
                             if (c2.Equals(sittingOrder[lastIndex].Key) || c2.Equals(sittingOrder[index + 1].Key))
                                 return true;
                             else break;
                         }
                         else if (index == lastIndex)
                         {
-                            //getConstraint("c3").Text = sittingOrder[index-1].Key.getName();
-                            //getConstraint("c4").Text = sittingOrder[0].Key.getName();
                             if (c2.Equals(sittingOrder[index - 1].Key) || c2.Equals(sittingOrder[0].Key))
                                 return true;
                             else break;
                         }
                         else
                         {
-                            //getConstraint("c3").Text = sittingOrder[index-1].Key.getName();
-                            //getConstraint("c4").Text = sittingOrder[index + 1].Key.getName();
                             if (c2.Equals(sittingOrder[index - 1].Key) || c2.Equals(sittingOrder[index + 1].Key))
                                 return true;
                             else break;
@@ -461,7 +554,7 @@ namespace BachelorProject
             }
         }
 
-        private TextBox getConstraint(string name)
+        protected TextBox getConstraint(string name)
         {
             foreach (UIElement e in constraintStackPanel.Children)
             {
@@ -475,9 +568,16 @@ namespace BachelorProject
             return null;
         }
 
-        
 
-        // REALIZING DRAGGING
+
+        /*
+         * **********************************************************
+         *                                                          *
+         *              REALIZING DRAGGING                          *
+         *                                                          *
+         ************************************************************
+         */
+
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
