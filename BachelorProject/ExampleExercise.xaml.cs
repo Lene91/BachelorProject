@@ -32,12 +32,12 @@ namespace BachelorProject
         private Element current = new Element();
         private Circle currentCircle;
         protected Circle table;
-        private Circle p1;
-        private Circle p2;
+        protected Circle p1;
+        protected Circle p2;
         protected Circle p3;
-        private Circle p4;
-        private Circle p5;
-        private Circle p6;
+        protected Circle p4;
+        protected Circle p5;
+        protected Circle p6;
         private List<string> circleNames;
         private int circleRadius = 50;
         private List<Circle> persons;
@@ -268,7 +268,7 @@ namespace BachelorProject
                     Text = c,
                     Margin = new Thickness(30, 10, 30, 10),
                     BorderBrush = Brushes.Black, 
-                    BorderThickness = new Thickness(2),
+                    BorderThickness = new Thickness(1),
                     FontSize = 25,
                     MaxWidth = 360,
                     TextWrapping = TextWrapping.WrapWithOverflow
@@ -331,37 +331,6 @@ namespace BachelorProject
             return constraintsFullfilled;
         }
 
-        /*public static Assembly CompileCode(string CodeInput)
-        {
-            CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
-
-            CompilerParameters cp = new CompilerParameters();
-            cp.ReferencedAssemblies.Add("System.dll");
-            cp.ReferencedAssemblies.Add("ExperimentTemplate.dll");
-            cp.CompilerOptions = "/t:library";
-            cp.GenerateInMemory = true;
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(@"using System;");
-            sb.AppendLine(@"using ExperimentTemplate;");
-            sb.AppendLine(@"namespace BachelorProject{");
-            sb.AppendLine(@"public class Test{");
-            sb.AppendLine(@"public string Ergebnis(string input){");
-            sb.AppendLine(CodeInput);
-            sb.AppendLine(@"return input;");
-            sb.AppendLine(@"}}}");
-
-            CompilerResults cr =
-                provider.CompileAssemblyFromSource(cp, sb.ToString());
-
-            if (cr.Errors.Count > 0)
-            {
-                Console.WriteLine(cr.Errors[0].ErrorText);
-                return null;
-            }
-
-            return cr.CompiledAssembly;
-        }*/
 
         private void CheckConstraints()
         {
@@ -375,28 +344,17 @@ namespace BachelorProject
             initiateRedBrush();
             constraintsFullfilled = true;
 
-            
-
             constraintsFullfilled = checkActualConstraints();
+
 
             var persons2 = persons;
             foreach (Circle p in persons)
             {
+                
                 foreach (Circle q in persons2)
                 {
                     if (!p.Equals(q) && currentCircle != null && currentCircle.Equals(p))
-                    {
-                        if (p.enters(q))
-                        {
-                            p.isSittingOn(q);
-                            break;
-                        }
-                        else if (p.leaves(q))
-                        {
-                            p.stopsSittingOn(q);
-                            break;
-                        }
-                    }
+                        p.checkSitting(q);
                 }
             }
 
@@ -499,7 +457,7 @@ namespace BachelorProject
             );  
         }
 
-        private bool sittingNextToEachOther(Circle c1, Circle c2)
+        protected bool sittingNextToEachOther(Circle c1, Circle c2)
         {
             int lastIndex = sittingOrder.Count - 1;
             int index = 0;
@@ -535,6 +493,20 @@ namespace BachelorProject
             return false;
         }
 
+        protected void updateConstraint(string name, bool fulfilled)
+        {
+            if (fulfilled)
+            {
+                getConstraint(name).Background = Brushes.LightGreen;
+                getConstraint(name).BorderThickness = new Thickness(1);
+            }
+            else
+            {
+                getConstraint(name).Background = Brushes.LightCoral;
+                getConstraint(name).BorderThickness = new Thickness(3);
+            }
+        }
+
         private int getHalf(Circle c)
         {
             var x = c.getPosition().X;
@@ -550,11 +522,11 @@ namespace BachelorProject
             for (int i = 1; i < singleConstraints.Count(); ++i)
             {
                 string name = "c" + i.ToString();
-                getConstraint(name).Background = Brushes.Red;
+                updateConstraint(name, false);
             }
         }
 
-        protected TextBox getConstraint(string name)
+        private TextBox getConstraint(string name)
         {
             foreach (UIElement e in constraintStackPanel.Children)
             {

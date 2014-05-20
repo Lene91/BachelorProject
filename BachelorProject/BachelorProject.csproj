@@ -76,6 +76,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Trial1.cs" />
+    <Compile Include="Trial2.cs" />
     <Compile Include="TrialEndScreen.cs" />
     <Compile Include="TrialExampleExercise.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

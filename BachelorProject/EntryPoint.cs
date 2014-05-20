@@ -35,14 +35,12 @@ namespace BachelorProject
             readConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
             readNames("names.txt"); // shuffle()-Aufruf gibt neu sortierte Liste zurück
 
-            // Variablen, die für jeden Trial unterschiedlich sind
-            int numberOfPersons = 5;
+            // Variablen, die für jeden Trial unterschiedlich sind (höchstens 6)
+            int numberOfPersons = 3;
 
             experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], shuffledNames(), new Trial1()));
-            //experiment.AddTrial(new TrialExampleExercise(4, allConstraints[2], shuffledNames(), new Trial1()));
+            //experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], shuffledNames(), new Trial2()));
             experiment.AddTrial(new TrialEndScreen());
-
-            //experiment.AddTrial(new TrialExampleExercise(4, allConstraints[2], shuffleNames()));
 
 
             experiment.ConfigureTracker();
