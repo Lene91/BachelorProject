@@ -14,14 +14,18 @@ namespace BachelorProject
 
         public override bool checkActualConstraints()
         {
-            // zwei Personen möchten sich ein Essen teilen
+            // zwei bestimmte Personen möchten sich ein Essen teilen
             if (sharingFood(p1,p2))
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            // zwei Personen möchten sich kein Essen teilen
+            // zwei bestimmte Personen möchten sich kein Essen teilen
             if (notSharingFood(p3,p4))
                 updateConstraint("c2", true);
+            else constraintsFullfilled = false;
+
+            if (numberSharingFood(1))
+                updateConstraint("c3", true);
             else constraintsFullfilled = false;
 
             return constraintsFullfilled;

@@ -546,6 +546,31 @@ namespace BachelorProject
                 return false;
         }
 
+        protected bool numberSharingFood(int number)
+        {
+            int amount = 0;
+            foreach (Circle p in persons)
+            {
+                foreach (Circle q in persons)
+                {
+                    if (!p.Equals(q) && sharingFood(p,q))
+                        amount++;
+                }
+            }
+            return amount/2 == number;
+        }
+
+        protected bool numberSittingOn(int number)
+        {
+            int amount = 0;
+            foreach (Circle p in persons)
+            {
+                if (p.getSeat() != null)
+                    amount++;
+            }
+            return amount == number;
+        }
+
         protected void updateConstraint(string name, bool fulfilled)
         {
             if (fulfilled)

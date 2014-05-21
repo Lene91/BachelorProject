@@ -16,12 +16,12 @@ namespace BachelorProject
 
         public override bool checkActualConstraints()
         {
-            // zwei Personen möchten nebeneinander sitzen
+            // zwei bestimmte Personen möchten nebeneinander sitzen
             if (sittingNextToEachOther(p1, p2))
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            // zwei Personen möchten nicht nebeneinander sitzen
+            // zwei bestimmte Personen möchten nicht nebeneinander sitzen
             if (notSittingNextToEachOther(p3, p4))
                 updateConstraint("c2", true);
 
