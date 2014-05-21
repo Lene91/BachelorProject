@@ -38,8 +38,8 @@ namespace BachelorProject
             // Variablen, die für jeden Trial unterschiedlich sind (höchstens 6)
             int numberOfPersons = 4;
 
-            experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], shuffledNames(), new Trial1()));
-            experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[2], shuffledNames(), new Trial2()));
+            //experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[1], shuffledNames(), new Trial1()));
+            //experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[2], shuffledNames(), new Trial2()));
             experiment.AddTrial(new TrialExampleExercise(numberOfPersons, allConstraints[3], shuffledNames(), new Trial3()));
             experiment.AddTrial(new TrialEndScreen());
 

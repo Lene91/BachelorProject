@@ -24,6 +24,7 @@ namespace BachelorProject
             // zwei Personen möchten nicht nebeneinander sitzen
             if (notSittingNextToEachOther(p3, p4))
                 updateConstraint("c2", true);
+
             return constraintsFullfilled;
         }
     }

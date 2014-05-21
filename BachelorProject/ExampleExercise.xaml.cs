@@ -514,6 +514,38 @@ namespace BachelorProject
                 return !sittingNextToEachOther(c1, c2);
         }
 
+        protected bool sharingFood(Circle c1, Circle c2)
+        {
+            if (c1.touches(table) && c2.touches(table) && c1.overlaps(c2))
+                return true;
+            else
+                return false;
+        }
+
+        protected bool notSharingFood(Circle c1, Circle c2)
+        {
+            if (c1.touches(table) && c2.touches(table) && !c1.overlaps(c2))
+                return true;
+            else
+                return false;
+        }
+
+        protected bool sittingOn(Circle c1, Circle c2)
+        {
+            if (c1.touches(table) && c2.touches(table) && c1.sitsOn(c2))
+                return true;
+            else
+                return false;
+        }
+
+        protected bool notSittingOn(Circle c1, Circle c2)
+        {
+            if (c1.touches(table) && c2.touches(table) && !c1.sitsOn(c2))
+                return true;
+            else
+                return false;
+        }
+
         protected void updateConstraint(string name, bool fulfilled)
         {
             if (fulfilled)

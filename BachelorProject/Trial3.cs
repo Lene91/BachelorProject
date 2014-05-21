@@ -17,10 +17,10 @@ namespace BachelorProject
         public override bool checkActualConstraints()
         {
 
-            if (p1.sitsOn(p2))
+            if (sittingOn(p1,p2))
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
-            if (!p3.sitsOn(p4))
+            if (notSittingOn(p3,p4))
                 updateConstraint("c2", true);
             return constraintsFullfilled;
         }
