@@ -53,8 +53,8 @@ namespace BachelorProject
             {
                 if (screen.ConstraintsFullfilled())
                     counter--;
-                if(counter < 0)
-                    SkipTrial();
+                if (counter < 0)
+                    ;//SkipTrial();
 
                 System.Threading.Thread.Sleep(10);
             }

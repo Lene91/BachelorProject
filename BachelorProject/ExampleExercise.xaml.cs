@@ -346,18 +346,16 @@ namespace BachelorProject
 
             constraintsFullfilled = checkActualConstraints();
 
-
+            // Größe ändern, wenn ein Kreis über einem anderen liegt
             var persons2 = persons;
             foreach (Circle p in persons)
-            {
-                
+            {  
                 foreach (Circle q in persons2)
                 {
                     if (!p.Equals(q) && currentCircle != null && currentCircle.Equals(p))
                         p.checkSitting(q);
                 }
             }
-
 
             // Prüfen, ob alle am Tisch sitzen
             foreach (Circle c in persons)
@@ -431,9 +429,18 @@ namespace BachelorProject
             List<Circle> onTable = new List<Circle>();
             foreach (Circle c in persons)
             {
-                if (c.touches(table))
+                if (c.getSeat() != null)
+                {
+                    
+                }
+                else if (c.touches(table))
+                {
                     onTable.Add(c);
+                }
+                
             }
+            
+
             var centerPoint = table.getPosition();
             var tableEdgePoint = new Point(centerPoint.X, centerPoint.Y - table.getRadius());
             var firstVector = centerPoint - tableEdgePoint;
@@ -461,36 +468,50 @@ namespace BachelorProject
         {
             int lastIndex = sittingOrder.Count - 1;
             int index = 0;
+            
 
             if (sittingOrder.Count > 1)
-            {
+            { 
                 foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
                 {
-                    if (c1.Equals(kvp.Key))
+                    if (c1.getSeat() != null)
+                        c1 = c1.getSeat();
+                    if (c2.getSeat() != null)
+                        c2 = c2.getSeat();
+                    
+                    if (c1.Equals(kvp.Key) && c1.touches(table) && c2.touches(table))
                     {
                         if (index == 0)
                         {
                             if (c2.Equals(sittingOrder[lastIndex].Key) || c2.Equals(sittingOrder[index + 1].Key))
                                 return true;
-                            else break;
+                            else return false;
                         }
                         else if (index == lastIndex)
                         {
                             if (c2.Equals(sittingOrder[index - 1].Key) || c2.Equals(sittingOrder[0].Key))
                                 return true;
-                            else break;
+                            else return false;
                         }
                         else
                         {
                             if (c2.Equals(sittingOrder[index - 1].Key) || c2.Equals(sittingOrder[index + 1].Key))
                                 return true;
-                            else break;
+                            else return false;
                         }
                     }
                     index++;
                 }
             }
             return false;
+        }
+
+        protected bool notSittingNextToEachOther(Circle c1, Circle c2)
+        {
+            if (!c1.touches(table) || !c2.touches(table))
+                return false;
+            else
+                return !sittingNextToEachOther(c1, c2);
         }
 
         protected void updateConstraint(string name, bool fulfilled)
@@ -519,7 +540,7 @@ namespace BachelorProject
 
         private void initiateRedBrush()
         {
-            for (int i = 1; i < singleConstraints.Count(); ++i)
+            for (int i = 1; i <= singleConstraints.Count(); ++i)
             {
                 string name = "c" + i.ToString();
                 updateConstraint(name, false);

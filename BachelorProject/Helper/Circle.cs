@@ -27,6 +27,8 @@ namespace BachelorProject
         private int leaveEpsilon = 40;
         private static HashSet<Circle> sittingPersons = new HashSet<Circle>();
         public bool isSitter = false;
+        public bool isSittingOnSomeone = false;
+        private Circle seat = null;
 
         public Circle(Ellipse ellipse)
         {
@@ -66,6 +68,21 @@ namespace BachelorProject
             this.position = pos;
         }
 
+        public void setSeat(Circle c)
+        {
+            this.seat = c;
+        }
+
+        public void unSetSeat(Circle c)
+        {
+            this.seat = null;
+        }
+
+        public Circle getSeat()
+        {
+            return seat;
+        }
+
         public bool touches(Circle c)
         {
             var actualDist = distance(c.getPosition(), position);
@@ -93,13 +110,19 @@ namespace BachelorProject
             return false;
         }
 
+        public bool sitsOn(Circle c)
+        {
+            if (seat != null && seat.Equals(c))
+                return true;
+            return false;
+        }
+
         public void checkSitting(Circle c)
         {
             if (enters(c))
                 isSittingOn(c);
             else if (leaves(c))
                 stopsSittingOn(c);
-
         }
 
         private bool enters(Circle c)
@@ -116,6 +139,8 @@ namespace BachelorProject
             ellipse.Height = 80;
             radius = 40;
             c.isSitter = true;
+            isSittingOnSomeone = true;
+            seat = c;
         }
 
         private bool leaves(Circle c)
@@ -132,10 +157,12 @@ namespace BachelorProject
             ellipse.Height = 100;
             radius = 50;
             c.isSitter = false;
+            isSittingOnSomeone = false;
+            seat = null;
         }
 
 
-        private double distance(Point p1, Point p2)
+        public double distance(Point p1, Point p2)
         {
             return Math.Sqrt( Math.Pow(p2.X-p1.X,2) + Math.Pow(p2.Y-p1.Y,2) );
         }

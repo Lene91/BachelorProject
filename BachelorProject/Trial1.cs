@@ -16,10 +16,14 @@ namespace BachelorProject
 
         public override bool checkActualConstraints()
         {
-
-            if (p1.touches(table))
+            // zwei Personen möchten nebeneinander sitzen
+            if (sittingNextToEachOther(p1, p2))
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
+
+            // zwei Personen möchten nicht nebeneinander sitzen
+            if (notSittingNextToEachOther(p3, p4))
+                updateConstraint("c2", true);
             return constraintsFullfilled;
         }
     }
