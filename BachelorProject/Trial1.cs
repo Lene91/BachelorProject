@@ -10,9 +10,11 @@ namespace BachelorProject
 {
     class Trial1 : ExampleExercise
     {
+
+
         public Trial1()
             : base()
-        { }
+        { id = 1; }
 
         public override bool checkActualConstraints()
         {

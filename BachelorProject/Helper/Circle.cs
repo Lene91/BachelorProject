@@ -28,7 +28,7 @@ namespace BachelorProject
         private static HashSet<Circle> sittingPersons = new HashSet<Circle>();
         public bool isSitter = false;
         public bool isSittingOnSomeone = false;
-        private Circle seat = null;
+        private Circle seat = null; // Person, auf der man drauf sitzt
 
         public Circle(Ellipse ellipse)
         {

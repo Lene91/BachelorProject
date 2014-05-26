@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="BachelorProject.IntroScreen2"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d"
+      Width="1200" Height="800" Background="LightGray">
+
+
+    <Canvas Name="MyCanvas"
+            MouseDown="Canvas_MouseDown"
+            MouseUp="Canvas_MouseUp"
+            MouseMove="Canvas_MouseMove">
+        <Line
+            X1="800" Y1="0"
+            X2="800" Y2="800"
+            Stroke="Black"
+            StrokeThickness="4" />
+        <Line
+            X1="800" Y1="270"
+            X2="1200" Y2="270"
+            Stroke="Black"
+            StrokeThickness="4" />
+        <Border BorderThickness="4" BorderBrush="Black" Margin="600,100">
+        <TextBlock
+            Padding="30"
+            Width="550"
+            Height="600"
+            Background="White"
+            FontSize="30"
+            TextWrapping="WrapWithOverflow"
+            TextAlignment="Center">
+            <LineBreak/>
+            <Bold>Übersichtsbildschirm</Bold>
+            <LineBreak/>
+            <LineBreak/>
+            Hier siehst du den Tisch, der als großer grauer Kreis dargestellt ist und die Personen, die durch kleinere bunte Kreise symbolisiert werden.
+            <LineBreak/>
+            Die Personenkreise kannst du mithilfe der Maus verschieben.
+            <LineBreak/>
+            <LineBreak/>
+            <Italic>Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Italic>
+        </TextBlock>
+        </Border>
+        <Ellipse
+            Name="Table"
+            Fill="Gray"
+            Width="250"
+            Height="250"
+            StrokeThickness="4"
+            Stroke="Black"
+            Margin="275,275">
+        </Ellipse>
+        <Ellipse
+            Name="Person1"
+            Opacity="0.8"
+            Width="100"
+            Height="100"
+            StrokeThickness="4"
+            Stroke="Black"
+            Fill="RoyalBlue"
+            Cursor="Hand"
+            Margin="100,50"
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
+            <Ellipse.RenderTransform>
+                <TranslateTransform/>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse
+            Name="Person2"
+            Opacity="0.8"
+            Width="100"
+            Height="100"
+            StrokeThickness="4"
+            Stroke="Black"
+            Fill="SeaGreen"
+            Margin="300,50"
+            Cursor="Hand"
+            MouseLeftButtonDown="ellipse_MouseLeftButtonDown">
+            <Ellipse.RenderTransform>
+                <TranslateTransform/>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+
+
+    </Canvas>
+</UserControl>

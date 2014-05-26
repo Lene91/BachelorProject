@@ -62,6 +62,19 @@
       <DependentUpon>ExampleExercise.xaml</DependentUpon>
     </Compile>
     <Compile Include="HintExampleWindow.cs" />
+    <Compile Include="Introduction.cs" />
+    <Compile Include="IntroScreen1.xaml.cs">
+      <DependentUpon>IntroScreen1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IntroScreen2.xaml.cs">
+      <DependentUpon>IntroScreen2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IntroScreen3.xaml.cs">
+      <DependentUpon>IntroScreen3.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IntroScreen4.xaml.cs">
+      <DependentUpon>IntroScreen4.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -75,6 +88,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Trial0.cs" />
     <Compile Include="Trial1.cs" />
     <Compile Include="Trial2.cs" />
     <Compile Include="Trial3.cs" />
@@ -114,6 +128,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ExampleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IntroScreen1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IntroScreen2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IntroScreen3.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IntroScreen4.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -11,7 +11,7 @@
             MouseDown="Canvas_MouseDown"
             MouseUp="Canvas_MouseUp"
             MouseMove="Canvas_MouseMove">
-        <Line
+        <Line 
             X1="800" Y1="0"
             X2="800" Y2="800"
             Stroke="Black"

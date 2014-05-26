@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="BachelorProject.IntroScreen3"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d"
+      Width="1200" Height="800" Background="LightGray">
+
+
+    <Canvas Name="MyCanvas">
+        <Line
+            X1="800" Y1="0"
+            X2="800" Y2="800"
+            Stroke="Black"
+            StrokeThickness="4" />
+        <Line
+            X1="800" Y1="270"
+            X2="1200" Y2="270"
+            Stroke="Black"
+            StrokeThickness="4" />
+        <Border BorderThickness="4" BorderBrush="Black" Margin="100">
+            <TextBlock
+            Padding="10"
+            Width="600"
+            Height="600"
+            Background="White"
+            FontSize="30"
+            TextAlignment="Center"
+            TextWrapping="WrapWithOverflow">
+            <LineBreak/>
+            <Bold>Sitzplatzwünsche</Bold>
+            <LineBreak/>
+            <LineBreak/>
+                Hier siehst du die Wünsche der Gäste. Jede Textbox steht für einen Wunsch, den du erfüllen musst. Zu Beginn sind alle Textboxen rot, doch wenn du einen Wunsch erfüllt hast, wird die Textbox grün eingefärbt.
+            <LineBreak/>
+            <LineBreak/>
+            <Italic>Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Italic>
+            </TextBlock>
+        </Border>
+
+        <StackPanel Name="ConstraintCanvas" Width="400" Height="550" Margin="800,250" Orientation="Vertical">
+            <TextBlock Name="c0" Text="Sitzwünsche" Background="Transparent" FontWeight="Bold" FontSize="30" Margin="20,20"/>
+            <Border BorderBrush="Black" BorderThickness="3" Margin="30,10,30,10">
+            <TextBlock Name="c1" Background ="LightCoral" FontSize="25" MaxWidth="360" Text="Hanna möchte neben Tobias sitzen." TextWrapping="Wrap" />
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="1" Margin="30,10,30,10">
+            <TextBlock Name="c2" Background ="LightGreen" FontSize="25" MaxWidth="360" Text="Anne möchte auf dem Schoß von Sabine sitzen." TextWrapping="Wrap" />
+            </Border>
+        </StackPanel>
+
+    </Canvas>
+</UserControl>

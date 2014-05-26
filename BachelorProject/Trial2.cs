@@ -8,9 +8,10 @@ namespace BachelorProject
 {
     class Trial2 : ExampleExercise
     {
+
         public Trial2()
             : base()
-        { }
+        { id = 2; }
 
         public override bool checkActualConstraints()
         {
@@ -24,9 +25,28 @@ namespace BachelorProject
                 updateConstraint("c2", true);
             else constraintsFullfilled = false;
 
+            // Anzahl, wieviele Personenpaare sich ein Essen teilen
             if (numberSharingFood(1))
                 updateConstraint("c3", true);
             else constraintsFullfilled = false;
+
+            // eine bestimmte Person teilt sich ein Essen mit einer unbestimmten anderen
+            if(sharingFood(p1))
+                updateConstraint("c4", true);
+            else constraintsFullfilled = false;
+
+            // eine bestimmte Person möchte sich mit niemandem ein Essen teilen
+            if (notSharingFood(p3))
+                updateConstraint("c5", true);
+            else constraintsFullfilled = false;
+
+            // mindestens ein Nachbar teilt sich ein Essen
+            if (neighbourSharingFood(p4))
+                updateConstraint("c6", true);
+
+            // kein Nachbar teilt sich ein Essen
+            if (neighbourNotSharingFood(p3))
+                updateConstraint("c7", true);
 
             return constraintsFullfilled;
         }

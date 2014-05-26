@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="BachelorProject.IntroScreen4"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d"
+      Width="1200" Height="800" Background="LightGray">
+
+
+    <Canvas Name="MyCanvas">
+        <Line
+            X1="800" Y1="0"
+            X2="800" Y2="800"
+            Stroke="Black"
+            StrokeThickness="4" />
+        <Line
+            X1="800" Y1="270"
+            X2="1200" Y2="270"
+            Stroke="Black"
+            StrokeThickness="4" />
+        <Border BorderThickness="4" BorderBrush="Black" Margin="100">
+            <TextBlock
+            Padding="10"
+            Width="600"
+            Height="600"
+            Background="White"
+            FontSize="30"
+            TextAlignment="Center"
+            TextWrapping="WrapWithOverflow">
+            <LineBreak/>
+            <Bold>Legende</Bold>
+            <LineBreak/>
+            <LineBreak/>
+                Hier siehst du die Legende. In der Legende werden die Namen der Personen aus den Sitzplatzwünschen den farbigen Kreisen im Übersichtsbildschirm zugeordnet.
+            <LineBreak/>
+            <LineBreak/>
+            <Italic>Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Italic>
+            </TextBlock>
+        </Border>
+
+
+        <TextBlock Name="l0" Text="Legende" Background="Transparent"  FontWeight="Bold" FontSize="30" Margin="820,20"/>
+        <Ellipse
+            Name="Legend1"
+            Fill="RoyalBlue"
+            Opacity="0.8"
+            Width="50"
+            Height="50"
+            StrokeThickness="4"
+            Stroke="Black"
+            Margin="820,80">
+        </Ellipse>
+        <TextBlock Name="l1" Text="Hanna" Background="Transparent" FontSize="25" Margin="900,85"/>
+        <Ellipse
+            Name="Legend2"
+            Fill="SeaGreen"
+            Opacity="0.8"
+            Width="50"
+            Height="50"
+            StrokeThickness="4"
+            Stroke="Black"
+            Margin="820,150">
+        </Ellipse>
+        <TextBlock Name="l2" Text="Tobias" Background="Transparent" FontSize="25" Margin="900,155"/>
+        
+
+    </Canvas>
+</UserControl>

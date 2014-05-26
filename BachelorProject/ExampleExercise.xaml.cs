@@ -54,7 +54,9 @@ namespace BachelorProject
         private string[] singleConstraints;
         private List<string> names;
 
-        private List<KeyValuePair<Circle, double>> sittingOrder;
+        private List<KeyValuePair<Circle, double>> sittingOrder; // Kreis und Winkel zur Senkrechten auf dem Tisch
+
+        protected int id;
 
 
         public ExampleExercise()
@@ -161,6 +163,7 @@ namespace BachelorProject
             {
                 Name = "l0",
                 Text = "Legende",
+                IsReadOnly = true,
                 Margin = new Thickness(810, 10, 0, 0),
                 Background = Brushes.Transparent,
                 BorderThickness = new Thickness(0),
@@ -200,6 +203,7 @@ namespace BachelorProject
                 {
                     Name = "l" + i,
                     Text = names[i-1],
+                    IsReadOnly = true,
                     Background = Brushes.Transparent,
                     BorderThickness = new Thickness(0),
                     FontSize = 25,
@@ -237,18 +241,19 @@ namespace BachelorProject
             // Panel für Constraints
             constraintStackPanel = new StackPanel 
             { 
-                Name = "ConstraintPanel", 
+                Name = "ConstraintPanel",
                 Orientation = Orientation.Vertical, 
                 Width = 400, 
                 Height = 550, 
                 Margin = new Thickness(800, 270, 0, 0) };
             this.MyCanvas.Children.Add(constraintStackPanel);
 
-            // Überschrift "Regeln"
+            // Überschrift "Sitzwünsche"
             TextBox tb = new TextBox
             {
                 Name = "c0",
                 Text = "Sitzwünsche",
+                IsReadOnly = true,
                 Margin = new Thickness(10, 10, 10, 10),
                 Background = Brushes.Transparent,
                 BorderThickness = new Thickness(0),
@@ -266,10 +271,11 @@ namespace BachelorProject
                 { 
                     Name = labelName, 
                     Text = c,
-                    Margin = new Thickness(30, 10, 30, 10),
+                    IsReadOnly = true,
+                    Margin = new Thickness(30, 3, 30, 3),
                     BorderBrush = Brushes.Black, 
                     BorderThickness = new Thickness(1),
-                    FontSize = 25,
+                    FontSize = 20,
                     MaxWidth = 360,
                     TextWrapping = TextWrapping.WrapWithOverflow
                 };
@@ -313,6 +319,11 @@ namespace BachelorProject
                 x += 110;
             }
             
+        }
+
+        public int getID()
+        {
+            return id;
         }
 
 
@@ -423,6 +434,12 @@ namespace BachelorProject
             return false;
         }
 
+        /*
+         * **********************************************************
+         *              (not) sitting next to                       *
+         ************************************************************
+         */
+
         private void calculateSittingOrder()
         {
             sittingOrder.Clear();
@@ -436,11 +453,9 @@ namespace BachelorProject
                 else if (c.touches(table))
                 {
                     onTable.Add(c);
-                }
-                
+                } 
             }
-            
-
+      
             var centerPoint = table.getPosition();
             var tableEdgePoint = new Point(centerPoint.X, centerPoint.Y - table.getRadius());
             var firstVector = centerPoint - tableEdgePoint;
@@ -514,6 +529,37 @@ namespace BachelorProject
                 return !sittingNextToEachOther(c1, c2);
         }
 
+        private Tuple<Circle,Circle> getNeighbours(Circle c)
+        {
+            int counter = 0;
+            int lastIndex = sittingOrder.Count - 1;
+            Circle last = null;
+            Circle next = null;
+            foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
+            {
+                if (c.Equals(kvp.Key))
+                {
+                    if (counter - 1 < 0)
+                        last = sittingOrder[lastIndex].Key;
+                    if (counter + 1 > lastIndex)
+                        next = sittingOrder[0].Key;
+                    if (last == null)
+                        last = sittingOrder[counter - 1].Key;
+                    if (next == null)
+                        next = sittingOrder[counter + 1].Key;
+                    return new Tuple<Circle, Circle>(last, next);
+                }
+                counter++;
+            }
+            return new Tuple<Circle, Circle>(null, null);
+        }
+
+        /*
+         * **********************************************************
+         *              (not) sharing food                          *
+         ************************************************************
+         */
+
         protected bool sharingFood(Circle c1, Circle c2)
         {
             if (c1.touches(table) && c2.touches(table) && c1.overlaps(c2))
@@ -529,6 +575,64 @@ namespace BachelorProject
             else
                 return false;
         }
+
+        protected bool sharingFood(Circle c)
+        {
+            foreach (Circle p in persons) {
+                if (!c.Equals(p) && sharingFood(c,p))
+                    return true;
+            }
+            return false;
+        }
+
+        protected bool notSharingFood(Circle c)
+        {
+            foreach (Circle p in persons)
+            {
+                if ((!c.Equals(p) && sharingFood(c, p)))
+                    return false;
+            }
+            if (c.touches(table))
+                return true;
+            return false;
+        }
+
+        protected bool numberSharingFood(int number)
+        {
+            int amount = 0;
+            foreach (Circle p in persons)
+            {
+                foreach (Circle q in persons)
+                {
+                    if (!p.Equals(q) && sharingFood(p, q))
+                        amount++;
+                }
+            }
+            return amount / 2 == number;
+        }
+
+        protected bool neighbourSharingFood(Circle c)
+        {
+            Tuple<Circle, Circle> neighbours = getNeighbours(c);
+            if ((neighbours.Item1 != null && sharingFood(neighbours.Item1)) || (neighbours.Item2 != null && sharingFood(neighbours.Item2)))
+                return true;
+            return false;
+        }
+
+        protected bool neighbourNotSharingFood(Circle c)
+        {
+            Tuple<Circle, Circle> neighbours = getNeighbours(c);
+            if (neighbours.Item1 != null && notSharingFood(neighbours.Item1) && neighbours.Item2 != null && notSharingFood(neighbours.Item2))
+                return true;
+            return false;
+        }
+
+
+        /*
+         * **********************************************************
+         *              (not) sitting somewhere                     *
+         ************************************************************
+         */
 
         protected bool sittingOn(Circle c1, Circle c2)
         {
@@ -546,19 +650,34 @@ namespace BachelorProject
                 return false;
         }
 
-        protected bool numberSharingFood(int number)
+        protected bool sittingOnSomeone(Circle c)
         {
-            int amount = 0;
-            foreach (Circle p in persons)
-            {
-                foreach (Circle q in persons)
-                {
-                    if (!p.Equals(q) && sharingFood(p,q))
-                        amount++;
-                }
-            }
-            return amount/2 == number;
+            if (c.getSeat() != null && c.touches(table))
+                return true;
+            return false;
         }
+
+        protected bool notSittingOnSomeone(Circle c)
+        {
+            if (c.getSeat() == null && c.touches(table))
+                return true;
+            return false;
+        }
+
+        protected bool isSeat(Circle c)
+        {
+            if (c.isSitter && c.touches(table))
+                return true;
+            return false;
+        }
+
+        protected bool isNotSeat(Circle c)
+        {
+            if (!c.isSitter && c.touches(table))
+                return true;
+            return false;
+        }
+
 
         protected bool numberSittingOn(int number)
         {
@@ -570,6 +689,31 @@ namespace BachelorProject
             }
             return amount == number;
         }
+
+        protected bool neighbourIsSeat(Circle c)
+        {
+            Tuple<Circle, Circle> neighbours = getNeighbours(c);
+            if ((neighbours.Item1 != null && isSeat(neighbours.Item1)) || (neighbours.Item2 != null && isSeat(neighbours.Item2)))
+                return true;
+            return false;
+        }
+
+        protected bool neighbourIsNotSeat(Circle c)
+        { 
+            Tuple<Circle, Circle> neighbours = getNeighbours(c);
+            if (neighbours.Item1 != null && isNotSeat(neighbours.Item1) && neighbours.Item2 != null && isNotSeat(neighbours.Item2))
+                return true;
+            return false;
+        }
+
+        /*
+         * **********************************************************
+         *                                                          *
+         *              HELPER FUNCTIONS                            *
+         *                                                          *
+         ************************************************************
+         */
+
 
         protected void updateConstraint(string name, bool fulfilled)
         {
@@ -617,6 +761,9 @@ namespace BachelorProject
             }
             return null;
         }
+
+
+        public virtual void setTutorialText(string text) {}
 
 
 

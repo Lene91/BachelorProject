@@ -16,30 +16,32 @@ namespace BachelorProject
     {
         private readonly ExampleExercise screen;
         private static readonly Logger Log = Logger.GetLogger(typeof(TrialExampleExercise));
+        private static int counter = 1;
         private bool constraintsThreadIsRunning = false;
         private string constraints;
         private List<string> names;
-        //private delegate void function();
+        private int trialID;
 
-        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial)
+        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking)
         {
             Name = "TrialExampleExercise";
-            TrackingRequired = true;
+            TrackingRequired = tracking;
             Screen = trial;
             screen = trial;
             this.constraints = constraints;
             this.names = names;
+            this.trialID = trial.getID();
             screen.Initialize(numberOfPersons,constraints,names);    
         }
 
         protected override void OnShowing()
         {
-            Log.Info("Showing screen 1.");
+            Log.Info("Showing screen " + counter + " and Trial " + trialID + ".");
         }
 
         protected override void OnShown()
         {
-            Log.Info("Screen 1 is shown.");
+            Log.Info("Screen " + counter + " and Trial " + trialID + " are shown.");
 
             var constraintsThread = new Thread(CheckConstraints);
             constraintsThreadIsRunning = true;
@@ -62,13 +64,19 @@ namespace BachelorProject
 
         protected override void OnHiding()
         {
-            Log.Info("Hiding screen 1...");
+            Log.Info("Hiding screen " + counter + " and Trial " + trialID + "...");
             constraintsThreadIsRunning = false;
         }
 
         protected override void OnHidden()
         {
-            Log.Info("Screen 1 hidden.");
+            Log.Info("Screen " + counter + " and Trial " + trialID + " hidden.");
+            counter++;
+        }
+
+
+        public void setTutorialText(string text) {
+            screen.setTutorialText(text);
         }
 
     }
