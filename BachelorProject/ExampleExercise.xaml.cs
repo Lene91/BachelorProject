@@ -16,7 +16,19 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.CodeDom.Compiler;
 using System.Reflection;
-
+using System.Threading;
+using Eyetracker;
+using Eyetracker.EyeEvents;
+using Eyetracker.EyeEvents.FixationDetectionStrategies;
+using Eyetracker.Eyelink;
+using Eyetracker.MouseTracker;
+using System.Drawing.Imaging;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+//using System.Windows.Forms;
+using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace BachelorProject
 {
@@ -26,6 +38,9 @@ namespace BachelorProject
     /// </summary>
     public partial class ExampleExercise : UserControl
     {
+        // IMPORTANT!
+        private int testPerson = 1;
+
         private double screenWidth = SystemParameters.FullPrimaryScreenWidth;
         private double screenHeight = SystemParameters.FullPrimaryScreenHeight;
 
@@ -46,7 +61,7 @@ namespace BachelorProject
         private StackPanel constraintStackPanel;
         private WrapPanel legendStackPanel;
 
-        private List<Brush> brushes;
+        private List<System.Windows.Media.Brush> brushes;
         private List<Ellipse> circles;
 
         private int numberOfPersons;
@@ -57,6 +72,8 @@ namespace BachelorProject
         private List<KeyValuePair<Circle, double>> sittingOrder; // Kreis und Winkel zur Senkrechten auf dem Tisch
 
         protected int id;
+
+        private ITracker tracker;
 
 
         public ExampleExercise()
@@ -72,15 +89,16 @@ namespace BachelorProject
          ************************************************************
          */
 
-        public void Initialize(int numberOfPersons, string constraints, List<string> names)
+        public void Initialize(int numberOfPersons, string constraints, List<string> names, ITracker tracker)
         {
             this.numberOfPersons = numberOfPersons;
             this.constraints = constraints;
             this.names = names;
+            this.tracker = tracker;
 
             circleNames = new List<string>() {"Person1","Person2","Person3","Person4","Person5","Person6"};
             persons = new List<Circle>();
-            brushes = new List<Brush>();
+            brushes = new List<System.Windows.Media.Brush>();
             circles = new List<Ellipse>();
             names = new List<string>();
             sittingOrder = new List<KeyValuePair<Circle, double>>();
@@ -116,28 +134,28 @@ namespace BachelorProject
 
         private void InitializeColors()
         {
-            Brush[] allBrushes = new Brush[] {
-                Brushes.AliceBlue,
-                Brushes.AntiqueWhite,
-                Brushes.Aqua,
-                Brushes.Aquamarine,
-                Brushes.Blue,
-                Brushes.BlueViolet,
-                Brushes.Brown,
-                Brushes.BurlyWood,
-                Brushes.CadetBlue,
-                Brushes.Coral,
-                Brushes.CornflowerBlue,
-                Brushes.Crimson,
-                Brushes.DarkGoldenrod,
-                Brushes.DarkGreen,
-                Brushes.DarkOrange,
-                Brushes.Gold,
-                Brushes.Fuchsia,
-                Brushes.Indigo,
-                Brushes.LightGreen,
-                Brushes.Olive,
-                Brushes.YellowGreen
+            System.Windows.Media.Brush[] allBrushes = new System.Windows.Media.Brush[] {
+                System.Windows.Media.Brushes.AliceBlue,
+                System.Windows.Media.Brushes.AntiqueWhite,
+                System.Windows.Media.Brushes.Aqua,
+                System.Windows.Media.Brushes.Aquamarine,
+                System.Windows.Media.Brushes.Blue,
+                System.Windows.Media.Brushes.BlueViolet,
+                System.Windows.Media.Brushes.Brown,
+                System.Windows.Media.Brushes.BurlyWood,
+                System.Windows.Media.Brushes.CadetBlue,
+                System.Windows.Media.Brushes.Coral,
+                System.Windows.Media.Brushes.CornflowerBlue,
+                System.Windows.Media.Brushes.Crimson,
+                System.Windows.Media.Brushes.DarkGoldenrod,
+                System.Windows.Media.Brushes.DarkGreen,
+                System.Windows.Media.Brushes.DarkOrange,
+                System.Windows.Media.Brushes.Gold,
+                System.Windows.Media.Brushes.Fuchsia,
+                System.Windows.Media.Brushes.Indigo,
+                System.Windows.Media.Brushes.LightGreen,
+                System.Windows.Media.Brushes.Olive,
+                System.Windows.Media.Brushes.YellowGreen
             };
 
             Random r = new Random();
@@ -159,14 +177,12 @@ namespace BachelorProject
             }
 
             // Überschrift "Legende"
-            TextBox tb = new TextBox
+            TextBlock tb = new TextBlock
             {
                 Name = "l0",
                 Text = "Legende",
-                IsReadOnly = true,
                 Margin = new Thickness(810, 10, 0, 0),
-                Background = Brushes.Transparent,
-                BorderThickness = new Thickness(0),
+                Background = System.Windows.Media.Brushes.Transparent,
                 FontSize = 26,
                 FontWeight = FontWeights.Bold
             };
@@ -176,7 +192,7 @@ namespace BachelorProject
             legendStackPanel = new WrapPanel()
             {
                 Name = "LegendPanel",
-                Width = 330,
+                Width = 320,
                 Height = 250,
                 Margin = new Thickness(800, 50, 0, 0)
             };
@@ -194,18 +210,16 @@ namespace BachelorProject
                     Width = 50,
                     Height = 50,
                     StrokeThickness = 3,
-                    Stroke = Brushes.Black,
+                    Stroke = System.Windows.Media.Brushes.Black,
                     Margin = new Thickness(10,10,10,10)
                 };
                 legendStackPanel.Children.Add(e);
 
-                TextBox t = new TextBox
+                TextBlock t = new TextBlock
                 {
                     Name = "l" + i,
                     Text = names[i-1],
-                    IsReadOnly = true,
-                    Background = Brushes.Transparent,
-                    BorderThickness = new Thickness(0),
+                    Background = System.Windows.Media.Brushes.Transparent,
                     FontSize = 25,
                     Margin = new Thickness(10,10,10,10)
                 };
@@ -249,14 +263,12 @@ namespace BachelorProject
             this.MyCanvas.Children.Add(constraintStackPanel);
 
             // Überschrift "Sitzwünsche"
-            TextBox tb = new TextBox
+            TextBlock tb = new TextBlock
             {
                 Name = "c0",
                 Text = "Sitzwünsche",
-                IsReadOnly = true,
                 Margin = new Thickness(10, 10, 10, 10),
-                Background = Brushes.Transparent,
-                BorderThickness = new Thickness(0),
+                Background = System.Windows.Media.Brushes.Transparent,
                 FontSize = 26,
                 FontWeight = FontWeights.Bold
             };
@@ -267,20 +279,23 @@ namespace BachelorProject
             foreach (string c in singleConstraints)
             {
                 string labelName = "c" + constraintCounter;
-                TextBox t = new TextBox 
-                { 
-                    Name = labelName, 
-                    Text = c,
-                    IsReadOnly = true,
-                    Margin = new Thickness(30, 3, 30, 3),
-                    BorderBrush = Brushes.Black, 
+                Border b = new Border
+                {
+                    Name = labelName,
                     BorderThickness = new Thickness(1),
-                    FontSize = 20,
+                    BorderBrush = System.Windows.Media.Brushes.Black,
+                    Margin = new Thickness(30, 3, 30, 3)
+                };
+                TextBlock t = new TextBlock 
+                {
+                    Text = c,
+                    FontSize = 25,
                     MaxWidth = 360,
                     TextWrapping = TextWrapping.WrapWithOverflow
                 };
                 constraintCounter++;
-                constraintStackPanel.Children.Add(t);
+                b.Child = t;
+                constraintStackPanel.Children.Add(b);
             }
         }
 
@@ -315,7 +330,7 @@ namespace BachelorProject
             {
                 var newCenterX = x + circleRadius;
                 var newCenterY = 30 + circleRadius;
-                c.updatePosition(new Point(newCenterX, newCenterY));
+                c.updatePosition(new System.Windows.Point(newCenterX, newCenterY));
                 x += 110;
             }
             
@@ -350,6 +365,10 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => CheckConstraints());
                 return;
             }
+                
+            var pos = Mouse.GetPosition(null);
+            //Debug.WriteLine(pos);
+            tracker.SendMessage(pos.ToString());
 
             calculateSittingOrder();
             initiateRedBrush();
@@ -373,60 +392,7 @@ namespace BachelorProject
             {
                 if (!c.touches(table))
                     constraintsFullfilled = false;
-            }
-
-
-            /*
-            if (!isSitting)
-                getConstraint("c4").Background = Brushes.Red;
-
-            //if (p1.touches(table))
-                //getConstraint("c1").Background = Brushes.Green;
-            //else constraintsFullfilled = false;
-
-            if (p2.touches(table))
-                getConstraint("c2").Background = Brushes.Green;
-            else constraintsFullfilled = false;
-
-            if (p3.touches(table) && p4.touches(table) && p3.overlaps(p4) && p3.touches(table))
-                getConstraint("c3").Background = Brushes.Green;
-            else constraintsFullfilled = false;
-
-            if (p5.enters(p2) && currentCircle != null && currentCircle.Equals(p5) || isSitting)
-            {
-                p5.isSittingOn(p2);
-                getConstraint("c4").Background = Brushes.Green;
-                isSitting = true;
-            }
-            if (p5.leaves(p2) && currentCircle != null && currentCircle.Equals(p5) || !isSitting)
-            {
-                p5.stopsSittingOn(p2);
-                getConstraint("c4").Background = Brushes.Red;
-                constraintsFullfilled = false;
-                isSitting = false;
-            }*/
-
-            //if (p1.sitsNextTo(p2, persons)) //&& p1.touches(table) && p2.touches(table))
-            //getConstraint("c5").Text = p1.sitsNextTo(p2,persons);
-            //else
-            //getConstraint("c5").Background = Brushes.Red;
-
-            /*
-            foreach(Circle p in persons)
-            {
-                foreach(Circle q in persons)
-                {
-                    if (!p.Equals(q))
-                    {
-                        if (p.enters(q) && currentCircle.Equals(p))
-                            p.isSittingOn(q);
-                        if (p.leaves(q) && currentCircle.Equals(p))
-                            p.stopsSittingOn(q);
-                    }
-                }
-            }*/
-
-            
+            }  
         }
 
         public virtual bool checkActualConstraints()
@@ -457,7 +423,7 @@ namespace BachelorProject
             }
       
             var centerPoint = table.getPosition();
-            var tableEdgePoint = new Point(centerPoint.X, centerPoint.Y - table.getRadius());
+            var tableEdgePoint = new System.Windows.Point(centerPoint.X, centerPoint.Y - table.getRadius());
             var firstVector = centerPoint - tableEdgePoint;
             
             foreach (Circle c in onTable)
@@ -717,15 +683,17 @@ namespace BachelorProject
 
         protected void updateConstraint(string name, bool fulfilled)
         {
+            Border b = getConstraint(name);
+            TextBlock tb = b.Child as TextBlock;
             if (fulfilled)
             {
-                getConstraint(name).Background = Brushes.LightGreen;
-                getConstraint(name).BorderThickness = new Thickness(1);
+                tb.Background = System.Windows.Media.Brushes.LightGreen;
+                b.BorderThickness = new Thickness(1);
             }
             else
             {
-                getConstraint(name).Background = Brushes.LightCoral;
-                getConstraint(name).BorderThickness = new Thickness(3);
+                tb.Background = System.Windows.Media.Brushes.LightCoral;
+                b.BorderThickness = new Thickness(3);
             }
         }
 
@@ -748,22 +716,39 @@ namespace BachelorProject
             }
         }
 
-        private TextBox getConstraint(string name)
+        private Border getConstraint(string name)
         {
             foreach (UIElement e in constraintStackPanel.Children)
             {
-                if (e is TextBox)
+                if (e is Border)
                 {
-                    TextBox t = e as TextBox;
-                    if (t.Name.Equals(name))
-                        return t;
+                    Border b = e as Border;
+                    if (b.Name.Equals(name))
+                        return b;
                 }
             }
             return null;
         }
 
+        public void takePicture()
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => takePicture());
+                return;
+            }
 
-        public virtual void setTutorialText(string text) {}
+            Bitmap Screenshot = new Bitmap((int)this.Width, (int)this.Height);
+            Graphics G = Graphics.FromImage(Screenshot);
+            // snip wanted area
+            G.CopyFromScreen(40, 0, 0, 0, new System.Drawing.Size((int)this.Width, (int)this.Height), CopyPixelOperation.SourceCopy);
+
+            // save uncompressed bitmap to disk
+            string fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\"+testPerson+"\\Trial"+id+".bmp";
+            System.IO.FileStream fs = System.IO.File.Open(fileName, System.IO.FileMode.OpenOrCreate);
+            Screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Bmp);
+            fs.Close();
+        }
 
 
 
@@ -843,10 +828,10 @@ namespace BachelorProject
         {
             Ellipse el = this.current.InputElement as Ellipse;
             GeneralTransform generalTransform1 = MyCanvas.TransformToVisual(el);
-            Point currentPoint = generalTransform1.Inverse.Transform(new Point(0, 0));
+            System.Windows.Point currentPoint = generalTransform1.Inverse.Transform(new System.Windows.Point(0, 0));
             var newCenterX = currentPoint.X + circleRadius;
             var newCenterY = currentPoint.Y + circleRadius;
-            currentCircle.updatePosition(new Point(newCenterX, newCenterY));
+            currentCircle.updatePosition(new System.Windows.Point(newCenterX, newCenterY));
         }
     }
 

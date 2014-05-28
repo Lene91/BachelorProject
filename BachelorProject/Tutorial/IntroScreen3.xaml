@@ -28,13 +28,13 @@
             TextAlignment="Center"
             TextWrapping="WrapWithOverflow">
             <LineBreak/>
-            <Bold>Sitzplatzwünsche</Bold>
+            <Run FontSize="40" FontWeight="Bold">Sitzplatzwünsche</Run>
             <LineBreak/>
             <LineBreak/>
                 Hier siehst du die Wünsche der Gäste. Jede Textbox steht für einen Wunsch, den du erfüllen musst. Zu Beginn sind alle Textboxen rot, doch wenn du einen Wunsch erfüllt hast, wird die Textbox grün eingefärbt.
             <LineBreak/>
             <LineBreak/>
-            <Italic>Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Italic>
+            <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>
             </TextBlock>
         </Border>
 

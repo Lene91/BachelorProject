@@ -31,13 +31,14 @@
             <Run FontSize="50" FontWeight="Bold">Tutorial</Run>
             <LineBreak/>
             <LineBreak/>
-                Stell dir vor, du hilfst bei der Planung einer großen Feier mit. Deine Aufgabe ist es, die Sitzplätze festzulegen.
-                Die Gäste haben bereits einige Sitzwünsche abgegeben und nun musst du mithilfe eines Tools die Gäste so platzieren, dass alle Wünsche erfüllt sind.
-                Dir wird immer ein Tisch angezeigt, die Gäste, die an diesem Tisch sitzen möchten und deren Sitzpräferenzen.
+                Stell dir vor, du hilfst bei der Planung einer großen Feier. Deine Aufgabe ist es, die Sitzplätze der Gäste festzulegen.
+                Es wurden bereits einige Sitzwünsche abgegeben und nun musst du mithilfe dieses Tools die Gäste so platzieren, dass alle Wünsche erfüllt sind.
+            <LineBreak/>
+                Pro Teilaufgabe siehst du eine bestimmte Anzahl von Gästen, ihre Sitzplatzwünsche, und den Tisch, an dem die Personen platziert werden sollen.
                 Im Folgenden lernst du das Tool etwas genauer kennen.
             <LineBreak/>
             <LineBreak/>
-            <Italic>Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Italic>
+            <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>
         </TextBlock>
             </Border>
 

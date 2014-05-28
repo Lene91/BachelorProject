@@ -1,5 +1,6 @@
 ﻿using ExperimentTemplate;
 using Eyetracker.MouseTracker;
+using Eyetracker.EyeTribe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,21 @@ using System.Diagnostics;
 using System.CodeDom.Compiler;
 using System.Reflection;
 using System.Windows.Shapes;
+using Eyetracker;
+using System.Threading;
+using System.Windows.Input;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Navigation;
+using System.Text.RegularExpressions;
 
 
 namespace BachelorProject
 {
-
+    
     class EntryPoint
     {
         private static Dictionary<int, string> allConstraints = new Dictionary<int, string>();
@@ -32,7 +43,6 @@ namespace BachelorProject
                 HideMouseCursor = false
             };
 
-
             // Dateien, die für alle Trials benötigt werden -> Container befüllen
             readConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
             readNames("names.txt"); // shuffle()-Aufruf gibt neu sortierte Liste zurück
@@ -40,35 +50,27 @@ namespace BachelorProject
             int[] numberOfPersons = {5,4,4};
 
 
-            // Tutorial
+            // TUTORIAL
             experiment.AddTrial(new Introduction(new IntroScreen1()));
             experiment.AddTrial(new Introduction(new IntroScreen2()));
             experiment.AddTrial(new Introduction(new IntroScreen3()));
             experiment.AddTrial(new Introduction(new IntroScreen4()));
-            var trial0 = new Trial0(getTutorialText(0));
+            // Tutorial mit ausprobieren
+            var trial0 = new Trial0();
             var tutorialTrial = new TrialExampleExercise(4, allConstraints[0], shuffledNames(), trial0, false);
-            /*experiment.AddTrial(tutorialTrial);
-            tutorialTrial.setTutorialText(getTutorialText(1));
-            experiment.AddTrial(tutorialTrial);
-            tutorialTrial.setTutorialText(getTutorialText(2));
-            experiment.AddTrial(tutorialTrial);
-            tutorialTrial.setTutorialText(getTutorialText(3));
-            experiment.AddTrial(tutorialTrial);
-            tutorialTrial.setTutorialText(getTutorialText(4));
-            experiment.AddTrial(tutorialTrial);*/
-
-            tutorialTrial.setTutorialText(getTutorialText(5));
             experiment.AddTrial(tutorialTrial);
 
 
             allTrials = shuffledTrials();
-            for (int i = 0; i < numberOfTrials; ++i)
+            experiment.AddTrial(new TrialExampleExercise(5,allConstraints[1],shuffledNames(),new Trial1(), true));
+            /*for (int i = 0; i < numberOfTrials; ++i)
             {
                 var trial = allTrials[i];
                 var id = trial.getID();
                 var index = id - 1;
                 experiment.AddTrial(new TrialExampleExercise(numberOfPersons[index], allConstraints[id], shuffledNames(), trial, true));
-            }
+            }*/
+
             experiment.AddTrial(new TrialEndScreen());
 
 
@@ -131,25 +133,6 @@ namespace BachelorProject
                 allTrials[n] = value;
             }
             return allTrials;
-        }
-
-        private static string getTutorialText(int page)
-        {
-            string tutorialText = "";
-            if (page == 0)
-                tutorialText = "Die Aufgabe kann nur gelöst werden, wenn alle Personen am Tisch sitzen. Platziere dafür den Kreis einer Person nah am Tisch, sodass die Ränder sich überschneiden.";
-            else if (page == 1)
-                tutorialText = "Möchten zwei Personen nebeneinander sitzen, so darf sich keine Person zwischen ihnen befinden. Sitzen nur zwei Personen am Tisch, so sitzen diese immer nebeneinander.";
-            else if (page == 2)
-                tutorialText = "Wenn sich zwei Personen ein Essen teilen möchten, müssen sie am Tisch sitzen und die Kreise der Personen müssen sich überschneiden.";
-            else if (page == 3)
-                tutorialText = "Möchte eine Person auf dem Schoß einer anderen sitzen, so musst du die eine Person auf die andere ziehen. Der Kreis der Person, die auf dem Schoß sitzt, verkleinert sich automatisch.";
-            else if (page == 4)
-                tutorialText = "Jetzt kannst du das Tool noch ein wenig ausprobieren und falls du keine weiteren Fragen hast, so gelangst du mit dem Drücken der Leertaste zu ein paar Übungsaufgaben.";
-            else if (page == 5)
-                tutorialText = "Die Aufgabe kann nur gelöst werden, wenn alle Personen am Tisch sitzen. Platziere dafür den Kreis einer Person nah am Tisch, sodass die Ränder sich überschneiden. \n \n Möchten zwei Personen nebeneinander sitzen, so darf sich keine Person zwischen ihnen befinden. Sitzen nur zwei Personen am Tisch, so sitzen diese immer nebeneinander. \n \n Wenn sich zwei Personen ein Essen teilen möchten, müssen sie am Tisch sitzen und die Kreise der Personen müssen sich überschneiden. Möchte eine Person auf dem Schoß einer anderen sitzen, so musst du die eine Person auf die andere ziehen. Der Kreis der Person, die auf dem Schoß sitzt, verkleinert sich automatisch. \n \n Jetzt kannst du das Tool noch ein wenig ausprobieren und falls du keine weiteren Fragen hast, so gelangst du mit dem Drücken der Leertaste zu ein paar Übungsaufgaben.";
-            return tutorialText;
-
         }
     }
 }

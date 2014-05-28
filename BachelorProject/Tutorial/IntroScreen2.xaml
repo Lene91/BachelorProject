@@ -31,7 +31,7 @@
             TextWrapping="WrapWithOverflow"
             TextAlignment="Center">
             <LineBreak/>
-            <Bold>Übersichtsbildschirm</Bold>
+            <Run FontSize="40" FontWeight="Bold" >Übersichtsbildschirm</Run>
             <LineBreak/>
             <LineBreak/>
             Hier siehst du den Tisch, der als großer grauer Kreis dargestellt ist und die Personen, die durch kleinere bunte Kreise symbolisiert werden.
@@ -39,7 +39,7 @@
             Die Personenkreise kannst du mithilfe der Maus verschieben.
             <LineBreak/>
             <LineBreak/>
-            <Italic>Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Italic>
+            <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>
         </TextBlock>
         </Border>
         <Ellipse
