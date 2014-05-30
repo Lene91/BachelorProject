@@ -6,29 +6,32 @@ using System.Threading.Tasks;
 
 namespace BachelorProject
 {
-    class Trial2 : ExampleExercise
+    class Trial5 : ExampleExercise
     {
-
-        public Trial2()
+        public Trial5()
             : base()
-        { id = 2; }
+        { id = 5; }
 
         public override bool checkActualConstraints()
         {
-            if (notSittingNextToEachOther(p2,p4))
+            if (notSittingNextToEachOther(p4, p1))
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (sittingOnSomeone(p5))
+            if (sittingNextToEachOther(p5, p2))
                 updateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p5,p2))
+            if (notSittingNextToEachOther(p1, p5))
                 updateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if(isNotSeat(p1))
+            if (numberSharingFood(2))
                 updateConstraint("c4", true);
+            else constraintsFullfilled = false;
+
+            if (notSharingFood(p3))
+                updateConstraint("c5", true);
             else constraintsFullfilled = false;
 
             return constraintsFullfilled;

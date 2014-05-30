@@ -62,7 +62,19 @@ namespace BachelorProject
 
 
             allTrials = shuffledTrials();
-            experiment.AddTrial(new TrialExampleExercise(5,allConstraints[1],shuffledNames(),new Trial1(), true));
+
+            experiment.AddTrial(new TrialExampleExercise(4, allConstraints[1], shuffledNames(), new Trial1(), true));
+            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[2], shuffledNames(), new Trial2(), true));
+            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[3], shuffledNames(), new Trial3(), true));
+            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[4], shuffledNames(), new Trial4(), true));
+            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[5], shuffledNames(), new Trial5(), true));
+            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[6], shuffledNames(), new Trial6(), true));
+            experiment.AddTrial(new TrialExampleExercise(6, allConstraints[7], shuffledNames(), new Trial7(), true));
+            experiment.AddTrial(new TrialExampleExercise(4, allConstraints[8], shuffledNames(), new Trial8(), true));
+            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[9], shuffledNames(), new Trial9(), true));
+            experiment.AddTrial(new TrialExampleExercise(6, allConstraints[10], shuffledNames(), new Trial10(), true));
+
+
             /*for (int i = 0; i < numberOfTrials; ++i)
             {
                 var trial = allTrials[i];

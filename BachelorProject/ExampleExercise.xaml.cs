@@ -289,7 +289,7 @@ namespace BachelorProject
                 TextBlock t = new TextBlock 
                 {
                     Text = c,
-                    FontSize = 25,
+                    FontSize = 22,
                     MaxWidth = 360,
                     TextWrapping = TextWrapping.WrapWithOverflow
                 };

@@ -64,6 +64,13 @@
       <DependentUpon>ExampleExercise.xaml</DependentUpon>
     </Compile>
     <Compile Include="HintExampleWindow.cs" />
+    <Compile Include="Trial10.cs" />
+    <Compile Include="Trial4.cs" />
+    <Compile Include="Trial5.cs" />
+    <Compile Include="Trial6.cs" />
+    <Compile Include="Trial7.cs" />
+    <Compile Include="Trial8.cs" />
+    <Compile Include="Trial9.cs" />
     <Compile Include="Tutorial\Introduction.cs" />
     <Compile Include="Tutorial\IntroScreen1.xaml.cs">
       <DependentUpon>IntroScreen1.xaml</DependentUpon>

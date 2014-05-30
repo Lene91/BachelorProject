@@ -3,47 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows;
 
 namespace BachelorProject
 {
-    class Trial3 : ExampleExercise
+    class Trial6 : ExampleExercise
     {
-
-
-        public Trial3()
+        public Trial6()
             : base()
-        { id = 3; }
+        { id = 6; }
 
         public override bool checkActualConstraints()
         {
-            if (numberSharingFood(1))
+            if (sittingNextToEachOther(p2, p4))
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (numberSittingOn(0))
+            if (isSeat(p3))
                 updateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p4,p5))
+            if (sittingNextToEachOther(p1, p5))
                 updateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p3,p4))
+            if (sittingNextToEachOther(p5, p4))
                 updateConstraint("c4", true);
             else constraintsFullfilled = false;
 
-            if (sharingFood(p2,p1))
+            if (sittingNextToEachOther(p1, p3))
                 updateConstraint("c5", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p3,p2))
+            if (sittingNextToEachOther(p2, p3))
                 updateConstraint("c6", true);
             else constraintsFullfilled = false;
 
-            if (neighbourSharingFood(p5))
+            if (sittingOnSomeone(p2))
                 updateConstraint("c7", true);
+            else constraintsFullfilled = false;
+
+            if (notSittingOnSomeone(p5))
+                updateConstraint("c8", true);
             else constraintsFullfilled = false;
 
 
@@ -51,3 +51,4 @@ namespace BachelorProject
         }
     }
 }
+

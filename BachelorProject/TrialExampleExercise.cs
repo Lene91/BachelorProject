@@ -48,22 +48,21 @@ namespace BachelorProject
 
         protected override void OnShowing()
         {
+            Tracker.SendMessage("TRIAL_START " + trialID);
             Log.Info("Showing screen " + counter + " and Trial " + trialID + ".");
 
-            if (Tracker != null)
+            /*if (Tracker != null)
             {
                 Tracker.GazeTick += Tracker_GazeTick;
                 Tracker.FixationStart += Tracker_FixationStart;
                 Tracker.FixationEnd += Tracker_FixationEnd;
-            }
+            }*/
         }
 
+        /*
         private void Tracker_GazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
         {
             Tracker.SendMessage(e.Position.ToString());
-            //var gazePos = new Point(e.Position.X, e.Position.Y);
-            //var now = DateTime.Now.Ticks / 10000;
-            //gazePositions.Add(gazePos);
         }
 
         private void Tracker_FixationStart(object sender, Eyetracker.EyeEvents.FixationEventArgs e)
@@ -75,6 +74,7 @@ namespace BachelorProject
         {
             Tracker.SendMessage("fixation end");
         }
+         */
 
         protected override void OnShown()
         {
@@ -110,6 +110,7 @@ namespace BachelorProject
 
         protected override void OnHidden()
         {
+            Tracker.SendMessage("TRIAL_STOP " + trialID);
             Log.Info("Screen " + counter + " and Trial " + trialID + " hidden.");
             counter++;
         }

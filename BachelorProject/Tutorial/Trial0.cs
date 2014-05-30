@@ -68,9 +68,9 @@ namespace BachelorProject
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(getTutorialText());
             tb.Inlines.Add(new Run("Jetzt kannst du das Tool noch ein wenig" +
-                           " ausprobieren und falls du keine weiteren Fragen" +
-                           " hast, so gelangst du mit dem Drücken der Leertaste" +
-                           " zu ein paar Übungsaufgaben.") 
+                           " ausprobieren. Wenn du alle Wünsche in dieser Aufgabe" +
+                           " erfüllt hast, gelangst du automatisch zu ein paar" +
+                           " weiteren Übungsaufgaben.") 
                            { FontStyle = FontStyles.Italic, FontSize = 25 });
 
             sv.Content = tb;
