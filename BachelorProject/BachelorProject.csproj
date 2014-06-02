@@ -64,7 +64,9 @@
       <DependentUpon>ExampleExercise.xaml</DependentUpon>
     </Compile>
     <Compile Include="HintExampleWindow.cs" />
+    <Compile Include="MyAOI.cs" />
     <Compile Include="Trial10.cs" />
+    <Compile Include="Trial11.cs" />
     <Compile Include="Trial4.cs" />
     <Compile Include="Trial5.cs" />
     <Compile Include="Trial6.cs" />

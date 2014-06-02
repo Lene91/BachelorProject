@@ -3,38 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows;
 
 namespace BachelorProject
 {
-    class Trial9 : ExampleExercise
+    class Trial11 : ExampleExercise
     {
-        public Trial9()
+
+
+        public Trial11()
             : base()
-        { id = 9; }
+        { id = 11; }
 
         public override bool checkActualConstraints()
         {
-            if (notSittingNextToEachOther(p2, p4))
+            if (oneNeighbourSharingFood(p1))
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p5, p1))
+            if (atLeastOneNeighbourSharingFood(p1))
                 updateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p2, p3))
+            if (noNeighbourSharingFood(p1))
                 updateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (notSittingOn(p2, p4))
+            if (oneNeighbourIsSeat(p6))
                 updateConstraint("c4", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p1, p2))
+            if (atLeastOneNeighbourIsSeat(p6))
                 updateConstraint("c5", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p4, p1))
+            if (noNeighbourIsSeat(p6))
                 updateConstraint("c6", true);
             else constraintsFullfilled = false;
 

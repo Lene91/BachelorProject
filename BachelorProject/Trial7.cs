@@ -18,11 +18,11 @@ namespace BachelorProject
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (neighbourSharingFood(p3))
+            if (atLeastOneNeighbourSharingFood(p3))
                 updateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (neighbourNotSharingFood(p5))
+            if (noNeighbourSharingFood(p5))
                 updateConstraint("c3", true);
             else constraintsFullfilled = false;
 

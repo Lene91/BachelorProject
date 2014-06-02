@@ -22,6 +22,15 @@
             Stroke="Black"
             StrokeThickness="4" />
 
+        <Button 
+            Width="120"
+            Height="60"
+            Margin="20,720"
+            Content="Reset"
+            FontSize="30"
+            FontWeight="Bold"
+            PreviewMouseDown="Button_MouseDown"/>
+
         <!-- <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>
         <Ellipse
             Name="Legend1"

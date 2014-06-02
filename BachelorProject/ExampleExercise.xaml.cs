@@ -41,6 +41,8 @@ namespace BachelorProject
         // IMPORTANT!
         private int testPerson = 1;
 
+        private IAoiUpdate trial;
+
         private double screenWidth = SystemParameters.FullPrimaryScreenWidth;
         private double screenHeight = SystemParameters.FullPrimaryScreenHeight;
 
@@ -89,8 +91,9 @@ namespace BachelorProject
          ************************************************************
          */
 
-        public void Initialize(int numberOfPersons, string constraints, List<string> names, ITracker tracker)
+        public void Initialize(IAoiUpdate trial, int numberOfPersons, string constraints, List<string> names, ITracker tracker)
         {
+            this.trial = trial;
             this.numberOfPersons = numberOfPersons;
             this.constraints = constraints;
             this.names = names;
@@ -110,15 +113,20 @@ namespace BachelorProject
             InitializeBigCircles();
         }
 
+        public List<Circle> GetPersons()
+        {
+            return persons;
+        }
+
         private void InitializeLeftInterface()
         {
-            table = new Circle(Table);
-            p1 = new Circle(Person1);
-            p2 = new Circle(Person2);
-            p3 = new Circle(Person3);
-            p4 = new Circle(Person4);
-            p5 = new Circle(Person5);
-            p6 = new Circle(Person6);
+            table = new Circle(Table,id);
+            p1 = new Circle(Person1,id);
+            p2 = new Circle(Person2,id);
+            p3 = new Circle(Person3,id);
+            p4 = new Circle(Person4,id);
+            p5 = new Circle(Person5,id);
+            p6 = new Circle(Person6,id);
             persons.Add(p1);
             persons.Add(p2);
             persons.Add(p3);
@@ -135,27 +143,20 @@ namespace BachelorProject
         private void InitializeColors()
         {
             System.Windows.Media.Brush[] allBrushes = new System.Windows.Media.Brush[] {
-                System.Windows.Media.Brushes.AliceBlue,
-                System.Windows.Media.Brushes.AntiqueWhite,
-                System.Windows.Media.Brushes.Aqua,
-                System.Windows.Media.Brushes.Aquamarine,
-                System.Windows.Media.Brushes.Blue,
-                System.Windows.Media.Brushes.BlueViolet,
-                System.Windows.Media.Brushes.Brown,
-                System.Windows.Media.Brushes.BurlyWood,
-                System.Windows.Media.Brushes.CadetBlue,
-                System.Windows.Media.Brushes.Coral,
-                System.Windows.Media.Brushes.CornflowerBlue,
-                System.Windows.Media.Brushes.Crimson,
-                System.Windows.Media.Brushes.DarkGoldenrod,
-                System.Windows.Media.Brushes.DarkGreen,
-                System.Windows.Media.Brushes.DarkOrange,
+                System.Windows.Media.Brushes.White,
                 System.Windows.Media.Brushes.Gold,
-                System.Windows.Media.Brushes.Fuchsia,
-                System.Windows.Media.Brushes.Indigo,
-                System.Windows.Media.Brushes.LightGreen,
-                System.Windows.Media.Brushes.Olive,
-                System.Windows.Media.Brushes.YellowGreen
+                System.Windows.Media.Brushes.OrangeRed,
+                System.Windows.Media.Brushes.Red,
+                System.Windows.Media.Brushes.YellowGreen,
+                System.Windows.Media.Brushes.DarkGreen,
+                System.Windows.Media.Brushes.LightSkyBlue,
+                System.Windows.Media.Brushes.DarkBlue,
+                System.Windows.Media.Brushes.Peru,
+                System.Windows.Media.Brushes.MediumOrchid,
+                System.Windows.Media.Brushes.MediumSeaGreen,
+                System.Windows.Media.Brushes.RoyalBlue,
+                System.Windows.Media.Brushes.DarkRed,
+                System.Windows.Media.Brushes.HotPink
             };
 
             Random r = new Random();
@@ -528,7 +529,7 @@ namespace BachelorProject
 
         protected bool sharingFood(Circle c1, Circle c2)
         {
-            if (c1.touches(table) && c2.touches(table) && c1.overlaps(c2))
+            if (c1.touches(table) && c2.touches(table) && c1.overlaps(c2) && c1.getRadius() == c2.getRadius())
                 return true;
             else
                 return false;
@@ -568,16 +569,26 @@ namespace BachelorProject
             int amount = 0;
             foreach (Circle p in persons)
             {
+                if (!p.touches(table))
+                    return false;
                 foreach (Circle q in persons)
                 {
                     if (!p.Equals(q) && sharingFood(p, q))
                         amount++;
                 }
-            }
+            } 
             return amount / 2 == number;
         }
 
-        protected bool neighbourSharingFood(Circle c)
+        protected bool oneNeighbourSharingFood(Circle c)
+        {
+            Tuple<Circle, Circle> neighbours = getNeighbours(c);
+            if ((neighbours.Item1 != null && sharingFood(neighbours.Item1)) ^ (neighbours.Item2 != null && sharingFood(neighbours.Item2)))
+                return true;
+            return false;
+        }
+
+        protected bool atLeastOneNeighbourSharingFood(Circle c)
         {
             Tuple<Circle, Circle> neighbours = getNeighbours(c);
             if ((neighbours.Item1 != null && sharingFood(neighbours.Item1)) || (neighbours.Item2 != null && sharingFood(neighbours.Item2)))
@@ -585,7 +596,7 @@ namespace BachelorProject
             return false;
         }
 
-        protected bool neighbourNotSharingFood(Circle c)
+        protected bool noNeighbourSharingFood(Circle c)
         {
             Tuple<Circle, Circle> neighbours = getNeighbours(c);
             if (neighbours.Item1 != null && notSharingFood(neighbours.Item1) && neighbours.Item2 != null && notSharingFood(neighbours.Item2))
@@ -650,13 +661,23 @@ namespace BachelorProject
             int amount = 0;
             foreach (Circle p in persons)
             {
+                if (!p.touches(table))
+                    return false;
                 if (p.getSeat() != null)
                     amount++;
             }
             return amount == number;
         }
 
-        protected bool neighbourIsSeat(Circle c)
+        protected bool oneNeighbourIsSeat(Circle c)
+        {
+            Tuple<Circle, Circle> neighbours = getNeighbours(c);
+            if ((neighbours.Item1 != null && isSeat(neighbours.Item1)) ^ (neighbours.Item2 != null && isSeat(neighbours.Item2)))
+                return true;
+            return false;
+        }
+
+        protected bool atLeastOneNeighbourIsSeat(Circle c)
         {
             Tuple<Circle, Circle> neighbours = getNeighbours(c);
             if ((neighbours.Item1 != null && isSeat(neighbours.Item1)) || (neighbours.Item2 != null && isSeat(neighbours.Item2)))
@@ -664,7 +685,7 @@ namespace BachelorProject
             return false;
         }
 
-        protected bool neighbourIsNotSeat(Circle c)
+        protected bool noNeighbourIsSeat(Circle c)
         { 
             Tuple<Circle, Circle> neighbours = getNeighbours(c);
             if (neighbours.Item1 != null && isNotSeat(neighbours.Item1) && neighbours.Item2 != null && isNotSeat(neighbours.Item2))
@@ -738,16 +759,36 @@ namespace BachelorProject
                 return;
             }
 
-            Bitmap Screenshot = new Bitmap((int)this.Width, (int)this.Height);
+            Bitmap Screenshot = new Bitmap((int)this.Width+100, (int)this.Height+100);
             Graphics G = Graphics.FromImage(Screenshot);
             // snip wanted area
-            G.CopyFromScreen(40, 0, 0, 0, new System.Drawing.Size((int)this.Width, (int)this.Height), CopyPixelOperation.SourceCopy);
+            G.CopyFromScreen(350, 150, 0, 0, new System.Drawing.Size((int)this.Width+50, (int)this.Height+50), CopyPixelOperation.SourceCopy);
 
             // save uncompressed bitmap to disk
             string fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\"+testPerson+"\\Trial"+id+".bmp";
             System.IO.FileStream fs = System.IO.File.Open(fileName, System.IO.FileMode.OpenOrCreate);
             Screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Bmp);
             fs.Close();
+        }
+
+        private void Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            foreach (Circle el in persons)
+            {
+                // Reset the location of the object (add to sender's renderTransform
+                // newPosition minus currentElement's position
+                var rt = ((UIElement)el.getEllipse()).RenderTransform;
+                var offsetX = rt.Value.OffsetX;
+                var offsetY = rt.Value.OffsetY;
+                rt.SetValue(TranslateTransform.XProperty, 0.0);
+                rt.SetValue(TranslateTransform.YProperty, 0.0);
+
+                GeneralTransform generalTransform1 = MyCanvas.TransformToVisual(el.getEllipse());
+                System.Windows.Point currentPoint = generalTransform1.Inverse.Transform(new System.Windows.Point(0, 0));
+                var newCenterX = currentPoint.X + circleRadius;
+                var newCenterY = currentPoint.Y + circleRadius;
+                el.updatePosition(new System.Windows.Point(newCenterX, newCenterY));
+            }
         }
 
 

@@ -18,6 +18,7 @@ namespace BachelorProject
     public class Circle
     {
         private string name;
+        private string aoiName;
         private double radius;
         private Point position;
         private Ellipse ellipse;
@@ -30,12 +31,14 @@ namespace BachelorProject
         public bool isSittingOnSomeone = false;
         private Circle seat = null; // Person, auf der man drauf sitzt
 
-        public Circle(Ellipse ellipse)
+        public Circle(Ellipse ellipse,int id)
         {
             this.ellipse = ellipse;
             this.name = ellipse.Name;
+            this.aoiName = "Trial" + id + ellipse.Name;
             this.radius = ellipse.Width/2;
             this.position = new Point(ellipse.Margin.Left + radius, ellipse.Margin.Top + radius);
+            id++;
         }
 
         public Point getPosition()
@@ -46,6 +49,11 @@ namespace BachelorProject
         public string getName()
         {
             return name;
+        }
+
+        public string getAoiName()
+        {
+            return aoiName;
         }
 
         public Ellipse getEllipse()
