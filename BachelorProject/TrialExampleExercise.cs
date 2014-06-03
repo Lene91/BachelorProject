@@ -26,7 +26,7 @@ namespace BachelorProject
 
     public interface IAoiUpdate
     {
-        System.Drawing.Point[] UpdateAoi(Circle person);
+        void UpdateAoi(Circle person);
     }
     
     class TrialExampleExercise : Trial, IAoiUpdate
@@ -38,6 +38,10 @@ namespace BachelorProject
         private string constraints;
         private List<string> names;
         private int trialID;
+        private double screenWidth = 1200;
+        private double screenHeight = 800;
+        private double offsetX;
+        private double offsetY;
 
         public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking)
         {
@@ -48,10 +52,11 @@ namespace BachelorProject
             this.constraints = constraints;
             this.names = names;
             this.trialID = trial.getID();
+
+            offsetX = (SystemParameters.FullPrimaryScreenWidth - screenWidth)/2;
+            offsetY = (SystemParameters.FullPrimaryScreenHeight - screenHeight)/2;
             screen.Initialize(this,numberOfPersons,constraints,names,Tracker);
-            //Debug.WriteLine(screen.GetPersons().Count);
             CreateAois(screen.GetPersons());
-            //Debug.WriteLine("aoi " + AOIs.Count);
         }
 
         private void CreateAois(List<Circle> persons)
@@ -60,6 +65,11 @@ namespace BachelorProject
             {
                 AOIs.Add(new MyAOI(person));
             }
+        }
+
+        private void DeleteAois()
+        {
+            AOIs.Clear();
         }
 
         protected override void OnShowing()
@@ -81,14 +91,11 @@ namespace BachelorProject
             Tracker.SendMessage(e.Position.ToString());
             foreach (var aoi in AOIs)
             {
-                var pos = new PointF(e.Position.X - 400, e.Position.Y - 200);
-                Debug.WriteLine(aoi.Name + " -> " + pos.ToString());
+                var pos = new PointF((float)(e.Position.X - offsetX), (float)(e.Position.Y - offsetY));
                 //if (aoi.Contains(pos))
                     //Tracker.SendMessage(aoi + " contains " + pos);
 
-                Debug.WriteLine(trialID);
-                var aoiTrialId = Convert.ToInt32(aoi.Name.Substring(5, aoi.Name.IndexOf("P")-5));
-                if (aoiTrialId == trialID && aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y && aoi.Points[1].Y > pos.Y)
+                if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y && aoi.Points[1].Y > pos.Y)
                     Tracker.SendMessage(aoi + " contains " + pos);
             }
         }
@@ -142,6 +149,7 @@ namespace BachelorProject
         {
             Log.Info("Hiding screen " + counter + " and Trial " + trialID + "...");
             constraintsThreadIsRunning = false;
+            DeleteAois();
         }
 
         protected override void OnHidden()
@@ -151,19 +159,17 @@ namespace BachelorProject
             counter++;
         }
 
-        public System.Drawing.Point[] UpdateAoi(Circle person)
+        public void UpdateAoi(Circle person)
         {
             var updatedAoi = GetUpdatedAoi(person);
             updatedAoi.Set((int)person.getPosition().X, (int)person.getPosition().Y, person.getRadius());
-            return new System.Drawing.Point[]{updatedAoi.Points[0],updatedAoi.Points[1]};
         }
 
         private MyAOI GetUpdatedAoi(Circle person)
         {
             foreach (var aoi in AOIs)
             {
-                Debug.WriteLine("AOI: " + aoi);
-                if (aoi.Name.Equals(person.getAoiName()))
+                if (aoi.Name.Equals(person.getName()))
                     return (MyAOI)aoi;
             }
             Debug.Assert(false);

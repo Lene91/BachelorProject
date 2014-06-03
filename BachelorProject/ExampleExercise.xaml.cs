@@ -759,17 +759,26 @@ namespace BachelorProject
                 return;
             }
 
-            Bitmap Screenshot = new Bitmap((int)this.Width+100, (int)this.Height+100);
+            Bitmap Screenshot = new Bitmap((int)this.Width + 100, (int)this.Height + 100);
             Graphics G = Graphics.FromImage(Screenshot);
             // snip wanted area
-            G.CopyFromScreen(350, 150, 0, 0, new System.Drawing.Size((int)this.Width+50, (int)this.Height+50), CopyPixelOperation.SourceCopy);
+            G.CopyFromScreen(350, 150, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
 
             // save uncompressed bitmap to disk
-            string fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\"+testPerson+"\\Trial"+id+".bmp";
+            string fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + testPerson + "\\Trial" + id + ".bmp";
             System.IO.FileStream fs = System.IO.File.Open(fileName, System.IO.FileMode.OpenOrCreate);
             Screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Bmp);
             fs.Close();
         }
+
+
+        /*
+         * **********************************************************
+         *                                                          *
+         *              RESET BUTTON                                *
+         *                                                          *
+         ************************************************************
+         */
 
         private void Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -789,6 +798,7 @@ namespace BachelorProject
                 var newCenterY = currentPoint.Y + circleRadius;
                 el.updatePosition(new System.Windows.Point(newCenterX, newCenterY));
             }
+            tracker.SendMessage("RESET");
         }
 
 
@@ -848,7 +858,7 @@ namespace BachelorProject
                 current.Y = newY;
 
                 var mousePos = e.GetPosition(MyCanvas);
-
+                trial.UpdateAoi(currentCircle);
                 updatePosition();
             }
         }

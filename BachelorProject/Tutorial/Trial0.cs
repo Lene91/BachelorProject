@@ -93,7 +93,8 @@ namespace BachelorProject
                 " müssen sich überschneiden. \n \n Möchte eine Person auf dem Schoß einer" +
                 " anderen sitzen, so musst du die eine Person auf die andere ziehen." +
                 " Der Kreis der Person, die auf dem Schoß sitzt, verkleinert sich" +
-                " automatisch. \n \n";
+                " automatisch. \n \n Du kannst alle deine Änderungen rückgängig machen," +
+                " indem du auf den Reset-Button klickst. \n \n";
             return tutorialText;
         }
     }
