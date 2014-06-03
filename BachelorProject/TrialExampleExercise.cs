@@ -42,8 +42,11 @@ namespace BachelorProject
         private double screenHeight = 800;
         private double offsetX;
         private double offsetY;
+        private bool timeLimit;
+        private System.Timers.Timer timer;
+        private System.Timers.Timer timer2;
 
-        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking)
+        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = tracking;
@@ -52,6 +55,7 @@ namespace BachelorProject
             this.constraints = constraints;
             this.names = names;
             this.trialID = trial.getID();
+            this.timeLimit = timeLimit;
 
             offsetX = (SystemParameters.FullPrimaryScreenWidth - screenWidth)/2;
             offsetY = (SystemParameters.FullPrimaryScreenHeight - screenHeight)/2;
@@ -76,6 +80,13 @@ namespace BachelorProject
         {
             Tracker.SendMessage("TRIAL_START " + trialID);
             Log.Info("Showing screen " + counter + " and Trial " + trialID + ".");
+            if (timeLimit)
+            {
+                timer = new System.Timers.Timer(300000); // 5 Minuten = 300000
+                timer.Elapsed += new System.Timers.ElapsedEventHandler(endTrial);
+                timer.AutoReset = false;
+                timer.Enabled = true;
+            }
 
             if (Tracker != null)
             {
@@ -118,6 +129,20 @@ namespace BachelorProject
             Tracker.SendMessage("fixation end");
         }
          */
+
+        private void endTrial(object source, System.Timers.ElapsedEventArgs e)
+        {
+            screen.showExerciseEnd();
+            timer2 = new System.Timers.Timer(300); // 5 Minuten = 300000
+            timer2.Elapsed += new System.Timers.ElapsedEventHandler(skip);
+            timer2.AutoReset = false;
+            timer2.Enabled = true;
+        }
+
+        private void skip(object source, System.Timers.ElapsedEventArgs e)
+        {
+            //SkipTrial();
+        }
 
         protected override void OnShown()
         {

@@ -771,6 +771,49 @@ namespace BachelorProject
             fs.Close();
         }
 
+        public void showExerciseEnd()
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => showExerciseEnd());
+                return;
+            }
+
+            /*foreach (UIElement e in MyCanvas.Children)
+            {
+                if (e is Border)
+                {
+                    Border b = e as Border;
+                    if (b.Name.Equals("end"))
+                    {
+                        b.Margin = new Thickness(100, 250, 0, 0);
+                    }
+                }
+            }*/
+
+            Border b = new Border()
+            {
+                BorderThickness = new Thickness(3),
+                BorderBrush = System.Windows.Media.Brushes.Black,
+                Background = System.Windows.Media.Brushes.White,
+                Height = 250,
+                Margin = new Thickness(80,250,0,0)
+            };
+
+            TextBlock tb = new TextBlock()
+            {
+                Padding = new Thickness(80),
+                FontSize = 30,
+                FontWeight = FontWeights.Bold,
+                Text = "Deine Zeit ist abgelaufen. In wenigen Sekunden geht es weiter."
+            };
+
+            b.Child = tb;
+            MyCanvas.Children.Add(b);
+
+
+        }
+
 
         /*
          * **********************************************************

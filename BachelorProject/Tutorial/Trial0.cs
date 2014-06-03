@@ -63,7 +63,7 @@ namespace BachelorProject
                 TextWrapping = TextWrapping.WrapWithOverflow
             };
 
-            tb.Inlines.Add(new Run("Hinweise") { FontWeight = FontWeights.Bold, FontSize = 40 });
+            tb.Inlines.Add(new Run("Weitere Hinweise") { FontWeight = FontWeights.Bold, FontSize = 40 });
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(getTutorialText());

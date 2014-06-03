@@ -30,7 +30,8 @@
             FontSize="30"
             FontWeight="Bold"
             PreviewMouseDown="Button_MouseDown"/>
-
+        
+        
         <!-- <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>
         <Ellipse
             Name="Legend1"
@@ -173,6 +174,10 @@
                 <TranslateTransform/>
             </Ellipse.RenderTransform>
         </Ellipse>
+
+        <!--<Border Name="end" BorderThickness="2" BorderBrush="Black" Background="White" Height="80" Margin="2000,200">
+            <TextBlock Padding="20" FontSize="30" FontWeight="Bold" Text="Deine Zeit ist abgelaufen. In wenigen Sekunden geht es weiter."/>
+        </Border> -->
 
     </Canvas>
 </UserControl>
