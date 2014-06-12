@@ -7,6 +7,6 @@
       Width="1200" Height="800" Background="LightGray">
 
     <Canvas>
-        <TextBox Name="l1" Text="Aufgabe abgeschlossen" Background="Transparent" BorderThickness="0" FontSize="40" Margin="400,380"/>
+        <TextBlock Name="t1" Text="Drücke ein letztes Mal 'Alt' + 'Tab' um zum Fragebogen zu gelangen. Gleich hast du es geschafft." Width="800" TextWrapping="WrapWithOverflow" Background="Transparent" FontSize="40" Margin="200,300"/>
     </Canvas>
 </UserControl>

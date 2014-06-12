@@ -64,6 +64,9 @@
       <DependentUpon>ExampleExercise.xaml</DependentUpon>
     </Compile>
     <Compile Include="HintExampleWindow.cs" />
+    <Compile Include="InterScreen.xaml.cs">
+      <DependentUpon>InterScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MyAOI.cs" />
     <Compile Include="Trial10.cs" />
     <Compile Include="Trial11.cs" />
@@ -73,6 +76,7 @@
     <Compile Include="Trial7.cs" />
     <Compile Include="Trial8.cs" />
     <Compile Include="Trial9.cs" />
+    <Compile Include="TrialInterScreen.cs" />
     <Compile Include="Tutorial\Introduction.cs" />
     <Compile Include="Tutorial\IntroScreen1.xaml.cs">
       <DependentUpon>IntroScreen1.xaml</DependentUpon>
@@ -139,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ExampleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InterScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
