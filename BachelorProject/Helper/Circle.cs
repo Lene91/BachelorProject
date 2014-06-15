@@ -28,7 +28,7 @@ namespace BachelorProject
         private static HashSet<Circle> sittingPersons = new HashSet<Circle>();
         public bool isSitter = false;
         public bool isSittingOnSomeone = false;
-        private Circle seat = null; // Person, auf der man drauf sitzt
+        private Circle seat = null; // Person, auf der dieser Kreis drauf sitzt
 
         public Circle(Ellipse ellipse,int id)
         {
@@ -62,6 +62,8 @@ namespace BachelorProject
         public void updateRadius(double r)
         {
             this.radius = r;
+            ellipse.Height = 2*r;
+            ellipse.Width = 2*r;
         }
 
         public void updatePosition(Point pos)
@@ -120,15 +122,32 @@ namespace BachelorProject
 
         public void checkSitting(Circle c)
         {
+            if (seatLeaves(c))
+                updateSitting(c);
             if (enters(c))
                 isSittingOn(c);
             else if (leaves(c))
                 stopsSittingOn(c);
         }
 
+        private bool seatLeaves(Circle c)
+        {
+            if (distance(c.getPosition(), position) > leaveEpsilon && this.Equals(c.seat))
+                return true;
+            return false;
+        }
+
+        private void updateSitting(Circle c)
+        {
+            c.updateRadius(50);
+            c.isSittingOnSomeone = false;
+            c.seat = null;
+            this.isSitter = false;
+        }
+        
         private bool enters(Circle c)
         {
-            if (distance(c.getPosition(), position) < enterEpsilon)
+            if (distance(c.getPosition(), position) < enterEpsilon && c.getRadius() == radius)
                 return true;
             return false;
         }
@@ -140,13 +159,13 @@ namespace BachelorProject
             ellipse.Height = 80;
             radius = 40;
             c.isSitter = true;
-            isSittingOnSomeone = true;
+            this.isSittingOnSomeone = true;
             seat = c;
         }
 
         private bool leaves(Circle c)
         {
-            if (distance(c.getPosition(), position) > leaveEpsilon && c.isSitter)
+            if (seat != null && distance(c.getPosition(), position) > leaveEpsilon && seat.Equals(c))
                 return true;
             return false;
         }
@@ -158,7 +177,7 @@ namespace BachelorProject
             ellipse.Height = 100;
             radius = 50;
             c.isSitter = false;
-            isSittingOnSomeone = false;
+            this.isSittingOnSomeone = false;
             seat = null;
         }
 
