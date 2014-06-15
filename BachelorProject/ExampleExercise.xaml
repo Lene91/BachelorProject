@@ -29,9 +29,18 @@
             Content="Reset"
             FontSize="30"
             FontWeight="Bold"
-            PreviewMouseDown="Button_MouseDown"/>
-        
-        
+            PreviewMouseDown="Reset_Button_MouseDown"/>
+
+        <Button 
+            Width="120"
+            Height="60"
+            Margin="150,720"
+            Content="Weiter"
+            FontSize="30"
+            FontWeight="Bold"
+            PreviewMouseDown="Weiter_Button_MouseDown"/>
+
+
         <!-- <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>
         <Ellipse
             Name="Legend1"

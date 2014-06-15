@@ -100,27 +100,34 @@ namespace BachelorProject
         private void Tracker_GazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
         {
             Tracker.SendMessage(e.Position.ToString());
-            foreach (var aoi in AOIs)
+            if (screen.skip)
             {
-                var pos = new PointF((float)(e.Position.X - offsetX), (float)(e.Position.Y - offsetY));
-                //if (aoi.Contains(pos))
-                    //Tracker.SendMessage(aoi + " contains " + pos);
-
-                if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y && aoi.Points[1].Y > pos.Y)
-                    Tracker.SendMessage(aoi + " contains " + pos);
+                screen.skip = false;
+                SkipTrial();
             }
         }
         
 
         private void Tracker_FixationStart(object sender, Eyetracker.EyeEvents.FixationEventArgs e)
         {
+
+            Tracker.SendMessage("fixation start");
+            foreach (var aoi in AOIs)
+            {
+                var pos = new PointF((float)(e.AveragePosition.X - offsetX), (float)(e.AveragePosition.Y - offsetY));
+                //if (aoi.Contains(pos))
+                //Tracker.SendMessage(aoi + " contains " + pos);
+
+                if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y && aoi.Points[1].Y > pos.Y)
+                    Tracker.SendMessage(aoi + " contains " + pos);
+            }
             /*foreach (var aoi in AOIs) {
                 Debug.WriteLine(aoi.Name + " -> " + e.AveragePosition + " :: " + aoi.Points[0] + ", " + aoi.Points[1]);
                 var pos = new PointF(e.AveragePosition.X - 400, e.AveragePosition.Y - 200);
                 if (aoi.Contains(pos))
                     Tracker.SendMessage(aoi  + " contains " + pos);
             }*/
-            Tracker.SendMessage("fixation start");
+            
         }
 
         /*
@@ -132,8 +139,9 @@ namespace BachelorProject
 
         private void endTrial(object source, System.Timers.ElapsedEventArgs e)
         {
+            screen.takePicture();
             screen.showExerciseEnd();
-            timer2 = new System.Timers.Timer(300); // 5 Minuten = 300000
+            timer2 = new System.Timers.Timer(300);
             timer2.Elapsed += new System.Timers.ElapsedEventHandler(skip);
             timer2.AutoReset = false;
             timer2.Enabled = true;
@@ -141,7 +149,8 @@ namespace BachelorProject
 
         private void skip(object source, System.Timers.ElapsedEventArgs e)
         {
-            //SkipTrial();
+            Tracker.SendMessage("TIME ELAPSED.");
+            SkipTrial();
         }
 
         protected override void OnShown()
@@ -197,7 +206,7 @@ namespace BachelorProject
                 if (aoi.Name.Equals(person.getName()))
                     return (MyAOI)aoi;
             }
-            Debug.Assert(false);
+            //Debug.Assert(false);
             return null;
         }
 

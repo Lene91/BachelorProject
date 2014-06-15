@@ -67,15 +67,15 @@
     <Compile Include="InterScreen.xaml.cs">
       <DependentUpon>InterScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MyAOI.cs" />
-    <Compile Include="Trial10.cs" />
-    <Compile Include="Trial11.cs" />
-    <Compile Include="Trial4.cs" />
-    <Compile Include="Trial5.cs" />
-    <Compile Include="Trial6.cs" />
-    <Compile Include="Trial7.cs" />
-    <Compile Include="Trial8.cs" />
-    <Compile Include="Trial9.cs" />
+    <Compile Include="Helper\MyAOI.cs" />
+    <Compile Include="Trials\Trial10.cs" />
+    <Compile Include="Trials\Trial11.cs" />
+    <Compile Include="Trials\Trial4.cs" />
+    <Compile Include="Trials\Trial5.cs" />
+    <Compile Include="Trials\Trial6.cs" />
+    <Compile Include="Trials\Trial7.cs" />
+    <Compile Include="Trials\Trial8.cs" />
+    <Compile Include="Trials\Trial9.cs" />
     <Compile Include="TrialInterScreen.cs" />
     <Compile Include="Tutorial\Introduction.cs" />
     <Compile Include="Tutorial\IntroScreen1.xaml.cs">
@@ -104,11 +104,14 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Tutorial\Trial0.cs" />
-    <Compile Include="Trial1.cs" />
-    <Compile Include="Trial2.cs" />
-    <Compile Include="Trial3.cs" />
+    <Compile Include="Trials\Trial1.cs" />
+    <Compile Include="Trials\Trial2.cs" />
+    <Compile Include="Trials\Trial3.cs" />
     <Compile Include="TrialEndScreen.cs" />
     <Compile Include="TrialExampleExercise.cs" />
+    <Compile Include="Tutorial\TutTrial1.cs" />
+    <Compile Include="Tutorial\TutTrial2.cs" />
+    <Compile Include="Tutorial\TutTrial3.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

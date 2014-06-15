@@ -77,6 +77,8 @@ namespace BachelorProject
 
         private ITracker tracker;
 
+        public bool skip = false;
+
 
         public ExampleExercise()
         {
@@ -290,7 +292,7 @@ namespace BachelorProject
                 TextBlock t = new TextBlock 
                 {
                     Text = c,
-                    FontSize = 22,
+                    FontSize = 20,
                     MaxWidth = 360,
                     TextWrapping = TextWrapping.WrapWithOverflow
                 };
@@ -378,7 +380,12 @@ namespace BachelorProject
             constraintsFullfilled = checkActualConstraints();
 
             // Größe ändern, wenn ein Kreis über einem anderen liegt
-            var persons2 = persons;
+            foreach (Circle p in persons)
+            {
+                if (currentCircle != null && !currentCircle.Equals(p))
+                    currentCircle.checkSitting(p);
+            }
+            /*var persons2 = persons;
             foreach (Circle p in persons)
             {  
                 foreach (Circle q in persons2)
@@ -386,7 +393,7 @@ namespace BachelorProject
                     if (!p.Equals(q) && currentCircle != null && currentCircle.Equals(p))
                         p.checkSitting(q);
                 }
-            }
+            }*/
 
             // Prüfen, ob alle am Tisch sitzen
             foreach (Circle c in persons)
@@ -599,7 +606,7 @@ namespace BachelorProject
         protected bool noNeighbourSharingFood(Circle c)
         {
             Tuple<Circle, Circle> neighbours = getNeighbours(c);
-            if (neighbours.Item1 != null && notSharingFood(neighbours.Item1) && neighbours.Item2 != null && notSharingFood(neighbours.Item2))
+            if ((neighbours.Item1 != null && notSharingFood(neighbours.Item1)) && (neighbours.Item2 != null && notSharingFood(neighbours.Item2)))
                 return true;
             return false;
         }
@@ -686,7 +693,7 @@ namespace BachelorProject
         }
 
         protected bool noNeighbourIsSeat(Circle c)
-        { 
+        {
             Tuple<Circle, Circle> neighbours = getNeighbours(c);
             if (neighbours.Item1 != null && isNotSeat(neighbours.Item1) && neighbours.Item2 != null && isNotSeat(neighbours.Item2))
                 return true;
@@ -714,7 +721,7 @@ namespace BachelorProject
             else
             {
                 tb.Background = System.Windows.Media.Brushes.LightCoral;
-                b.BorderThickness = new Thickness(3);
+                b.BorderThickness = new Thickness(2);
             }
         }
 
@@ -818,12 +825,12 @@ namespace BachelorProject
         /*
          * **********************************************************
          *                                                          *
-         *              RESET BUTTON                                *
+         *              BUTTONS                                     *
          *                                                          *
          ************************************************************
          */
 
-        private void Button_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Reset_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
             foreach (Circle el in persons)
             {
@@ -840,8 +847,17 @@ namespace BachelorProject
                 var newCenterX = currentPoint.X + circleRadius;
                 var newCenterY = currentPoint.Y + circleRadius;
                 el.updatePosition(new System.Windows.Point(newCenterX, newCenterY));
+
+                // resize object
+                el.updateRadius(50);
             }
             tracker.SendMessage("RESET");
+        }
+
+        private void Weiter_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            tracker.SendMessage("WEITER");
+            skip = true;
         }
 
 

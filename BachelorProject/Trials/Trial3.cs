@@ -18,6 +18,24 @@ namespace BachelorProject
 
         public override bool checkActualConstraints()
         {
+            if (sharingFood(p2, p3))
+                updateConstraint("c1", true);
+            else constraintsFullfilled = false;
+
+            if (sittingOn(p4, p1))
+                updateConstraint("c2", true);
+            else constraintsFullfilled = false;
+
+            if (sittingNextToEachOther(p6, p2))
+                updateConstraint("c3", true);
+            else constraintsFullfilled = false;
+
+            if (notSittingNextToEachOther(p5, p6))
+                updateConstraint("c4", true);
+            else constraintsFullfilled = false;
+            
+
+            /*
             if (numberSharingFood(1))
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
@@ -45,7 +63,7 @@ namespace BachelorProject
             if (atLeastOneNeighbourSharingFood(p5))
                 updateConstraint("c7", true);
             else constraintsFullfilled = false;
-
+            */
 
             return constraintsFullfilled;
         }

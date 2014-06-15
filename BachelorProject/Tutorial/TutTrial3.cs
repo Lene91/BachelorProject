@@ -3,40 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows;
 
 namespace BachelorProject
 {
-    class Trial8 : ExampleExercise
+    class TutTrial3 : ExampleExercise
     {
-        public Trial8()
+
+
+        public TutTrial3()
             : base()
-        { id = 8; }
+        { id = 3; }
 
         public override bool checkActualConstraints()
         {
-            if (sittingNextToEachOther(p2, p4))
+            if (oneNeighbourSharingFood(p3))
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p1, p2))
+            if (sittingNextToEachOther(p1, p4))
                 updateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p3, p4))
+            if (sharingFood(p2))
                 updateConstraint("c3", true);
             else constraintsFullfilled = false;
-
-            if (notSittingOnSomeone(p3))
-                updateConstraint("c4", true);
-            else constraintsFullfilled = false;
-
-            if (isNotSeat(p2))
-                updateConstraint("c5", true);
-            else constraintsFullfilled = false;
-
 
             return constraintsFullfilled;
         }
     }
 }
-

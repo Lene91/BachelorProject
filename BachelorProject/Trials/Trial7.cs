@@ -6,53 +6,62 @@ using System.Threading.Tasks;
 
 namespace BachelorProject
 {
-    class Trial10 : ExampleExercise
+    class Trial7 : ExampleExercise
     {
-        public Trial10()
+        public Trial7()
             : base()
-        { id = 10; }
+        { id = 7; }
 
         public override bool checkActualConstraints()
         {
-            if (numberSharingFood(3))
+            if (sharingFood(p2))
                 updateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p3,p2))
+            if (sittingOnSomeone(p4))
                 updateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p6, p5))
+            if (oneNeighbourSharingFood(p1))
                 updateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (notSharingFood(p6, p1))
+            if (oneNeighbourIsSeat(p3))
                 updateConstraint("c4", true);
             else constraintsFullfilled = false;
 
-            if (notSharingFood(p4, p1))
+            if (oneNeighbourIsSeat(p1))
                 updateConstraint("c5", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p1, p6))
+            /*
+            if (sittingNextToEachOther(p2, p1))
+                updateConstraint("c1", true);
+            else constraintsFullfilled = false;
+
+            if (atLeastOneNeighbourSharingFood(p3))
+                updateConstraint("c2", true);
+            else constraintsFullfilled = false;
+
+            if (noNeighbourSharingFood(p5))
+                updateConstraint("c3", true);
+            else constraintsFullfilled = false;
+
+            if (sittingNextToEachOther(p6, p1))
+                updateConstraint("c4", true);
+            else constraintsFullfilled = false;
+
+            if (notSittingNextToEachOther(p3, p5))
+                updateConstraint("c5", true);
+            else constraintsFullfilled = false;
+
+            if (sittingNextToEachOther(p5, p6))
                 updateConstraint("c6", true);
             else constraintsFullfilled = false;
-
-            if (sittingNextToEachOther(p4, p5))
-                updateConstraint("c7", true);
-            else constraintsFullfilled = false;
-
-            if (notSharingFood(p5, p4))
-                updateConstraint("c8", true);
-            else constraintsFullfilled = false;
-
-            if (notSharingFood(p2, p4))
-                updateConstraint("c9", true);
-            else constraintsFullfilled = false;
+            */
 
             return constraintsFullfilled;
         }
     }
 }
-
 
