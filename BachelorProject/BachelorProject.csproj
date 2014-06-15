@@ -46,6 +46,10 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="TETCSharpClient, Version=0.9.27.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\code\Eyetracker\EyeTribe\lib\TETCSharpClient.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -123,20 +127,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\code\ExperimentTemplate\ExperimentTemplate\ExperimentTemplate.csproj">
-      <Project>{4732f757-6951-464e-a06d-e6a696db574b}</Project>
-      <Name>ExperimentTemplate</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\code\ExperimentTemplate\Eyetracker\Eyetracker.csproj">
-      <Project>{fae1d5d9-5bc7-4102-aed5-85a08c049d4d}</Project>
-      <Name>Eyetracker</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\code\ExperimentTemplate\Logging\Logging.csproj">
-      <Project>{50f77cdb-d70c-40f0-a668-c864cbef675d}</Project>
-      <Name>Logging</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="EndScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -169,6 +159,20 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\code\ExperimentTemplate\ExperimentTemplate.csproj">
+      <Project>{4732f757-6951-464e-a06d-e6a696db574b}</Project>
+      <Name>ExperimentTemplate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\code\Eyetracker\Eyetracker.csproj">
+      <Project>{fae1d5d9-5bc7-4102-aed5-85a08c049d4d}</Project>
+      <Name>Eyetracker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\code\Logging\Logging.csproj">
+      <Project>{50f77cdb-d70c-40f0-a668-c864cbef675d}</Project>
+      <Name>Logging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

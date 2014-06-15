@@ -28,7 +28,7 @@ namespace BachelorProject
     {
         void UpdateAoi(Circle person);
     }
-    
+
     class TrialExampleExercise : Trial, IAoiUpdate
     {
         private readonly ExampleExercise screen;
@@ -46,7 +46,7 @@ namespace BachelorProject
         private System.Timers.Timer timer;
         private System.Timers.Timer timer2;
 
-        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit)
+        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = tracking;
@@ -57,9 +57,9 @@ namespace BachelorProject
             this.trialID = trial.getID();
             this.timeLimit = timeLimit;
 
-            offsetX = (SystemParameters.FullPrimaryScreenWidth - screenWidth)/2;
-            offsetY = (SystemParameters.FullPrimaryScreenHeight - screenHeight)/2;
-            screen.Initialize(this,numberOfPersons,constraints,names,Tracker);
+            offsetX = (SystemParameters.FullPrimaryScreenWidth - screenWidth) / 2;
+            offsetY = (SystemParameters.FullPrimaryScreenHeight - screenHeight) / 2;
+            screen.Initialize(this, numberOfPersons, constraints, names, Tracker, constraintHelp);
             CreateAois(screen.GetPersons());
         }
 
@@ -96,17 +96,17 @@ namespace BachelorProject
             }
         }
 
-        
+
         private void Tracker_GazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
         {
             Tracker.SendMessage(e.Position.ToString());
-            if (screen.skip)
+            /*if (screen.skip)
             {
                 screen.skip = false;
-                SkipTrial();
-            }
+                //SkipTrial();
+            }*/
         }
-        
+
 
         private void Tracker_FixationStart(object sender, Eyetracker.EyeEvents.FixationEventArgs e)
         {
@@ -127,7 +127,7 @@ namespace BachelorProject
                 if (aoi.Contains(pos))
                     Tracker.SendMessage(aoi  + " contains " + pos);
             }*/
-            
+
         }
 
         /*
@@ -167,6 +167,12 @@ namespace BachelorProject
             int counter = 50;
             while (constraintsThreadIsRunning)
             {
+                if (screen.skip)
+                {
+                    screen.skip = false;
+                    SkipTrial();
+                }
+
                 if (screen.ConstraintsFullfilled())
                     counter--;
                 if (counter < 0)

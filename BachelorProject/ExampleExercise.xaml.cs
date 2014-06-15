@@ -39,7 +39,7 @@ namespace BachelorProject
     public partial class ExampleExercise : UserControl
     {
         // IMPORTANT!
-        private int testPerson = 1;
+        private int testPerson = 101;
 
         private IAoiUpdate trial;
 
@@ -58,7 +58,7 @@ namespace BachelorProject
         private List<string> circleNames;
         private int circleRadius = 50;
         private List<Circle> persons;
-        
+
         protected bool constraintsFullfilled = false;
         private StackPanel constraintStackPanel;
         private WrapPanel legendStackPanel;
@@ -79,6 +79,8 @@ namespace BachelorProject
 
         public bool skip = false;
 
+        private bool constraintHelp;
+
 
         public ExampleExercise()
         {
@@ -93,15 +95,16 @@ namespace BachelorProject
          ************************************************************
          */
 
-        public void Initialize(IAoiUpdate trial, int numberOfPersons, string constraints, List<string> names, ITracker tracker)
+        public void Initialize(IAoiUpdate trial, int numberOfPersons, string constraints, List<string> names, ITracker tracker, bool constraintHelp)
         {
             this.trial = trial;
             this.numberOfPersons = numberOfPersons;
             this.constraints = constraints;
             this.names = names;
             this.tracker = tracker;
+            this.constraintHelp = constraintHelp;
 
-            circleNames = new List<string>() {"Person1","Person2","Person3","Person4","Person5","Person6"};
+            circleNames = new List<string>() { "Person1", "Person2", "Person3", "Person4", "Person5", "Person6" };
             persons = new List<Circle>();
             brushes = new List<System.Windows.Media.Brush>();
             circles = new List<Ellipse>();
@@ -122,20 +125,20 @@ namespace BachelorProject
 
         private void InitializeLeftInterface()
         {
-            table = new Circle(Table,id);
-            p1 = new Circle(Person1,id);
-            p2 = new Circle(Person2,id);
-            p3 = new Circle(Person3,id);
-            p4 = new Circle(Person4,id);
-            p5 = new Circle(Person5,id);
-            p6 = new Circle(Person6,id);
+            table = new Circle(Table, id);
+            p1 = new Circle(Person1, id);
+            p2 = new Circle(Person2, id);
+            p3 = new Circle(Person3, id);
+            p4 = new Circle(Person4, id);
+            p5 = new Circle(Person5, id);
+            p6 = new Circle(Person6, id);
             persons.Add(p1);
             persons.Add(p2);
             persons.Add(p3);
             persons.Add(p4);
             persons.Add(p5);
             persons.Add(p6);
-            for (int i = 5; i > numberOfPersons-1; --i)
+            for (int i = 5; i > numberOfPersons - 1; --i)
             {
                 persons.Remove(persons[i]);
                 circleNames.Remove(circleNames[i]);
@@ -166,7 +169,7 @@ namespace BachelorProject
             {
                 int rNumber = r.Next(allBrushes.Length);
                 var brush = allBrushes[rNumber];
-                if(!brushes.Contains(brush))
+                if (!brushes.Contains(brush))
                     brushes.Add(brush);
             }
         }
@@ -208,23 +211,23 @@ namespace BachelorProject
                 Ellipse e = new Ellipse
                 {
                     Name = "lc" + i,
-                    Fill = brushes[i-1],
+                    Fill = brushes[i - 1],
                     Opacity = 0.8,
                     Width = 50,
                     Height = 50,
                     StrokeThickness = 3,
                     Stroke = System.Windows.Media.Brushes.Black,
-                    Margin = new Thickness(10,10,10,10)
+                    Margin = new Thickness(10, 10, 10, 10)
                 };
                 legendStackPanel.Children.Add(e);
 
                 TextBlock t = new TextBlock
                 {
                     Name = "l" + i,
-                    Text = names[i-1],
+                    Text = names[i - 1],
                     Background = System.Windows.Media.Brushes.Transparent,
                     FontSize = 25,
-                    Margin = new Thickness(10,10,10,10)
+                    Margin = new Thickness(10, 10, 10, 10)
                 };
                 legendStackPanel.Children.Add(t);
             }
@@ -238,9 +241,9 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => InitializeConstraints());
                 return;
             }
-            singleConstraints = constraints.Split(new Char[]{';'});
+            singleConstraints = constraints.Split(new Char[] { ';' });
             string[] newConstraints = new string[singleConstraints.Count()];
-            
+
             // Ersetzen der Platzhalter (Zahlen) in Constraints durch konkrete Namen
             int index = 0;
             foreach (string s in singleConstraints)
@@ -248,7 +251,7 @@ namespace BachelorProject
                 var newString = s;
                 for (int i = 1; i <= numberOfPersons; ++i)
                 {
-                    newString = newString.Replace(i.ToString(), names[i-1]);
+                    newString = newString.Replace(i.ToString(), names[i - 1]);
                 }
                 newConstraints[index] = newString;
                 index++;
@@ -256,13 +259,14 @@ namespace BachelorProject
             singleConstraints = newConstraints;
 
             // Panel für Constraints
-            constraintStackPanel = new StackPanel 
-            { 
+            constraintStackPanel = new StackPanel
+            {
                 Name = "ConstraintPanel",
-                Orientation = Orientation.Vertical, 
-                Width = 400, 
-                Height = 550, 
-                Margin = new Thickness(800, 270, 0, 0) };
+                Orientation = Orientation.Vertical,
+                Width = 400,
+                Height = 550,
+                Margin = new Thickness(800, 270, 0, 0)
+            };
             this.MyCanvas.Children.Add(constraintStackPanel);
 
             // Überschrift "Sitzwünsche"
@@ -289,7 +293,7 @@ namespace BachelorProject
                     BorderBrush = System.Windows.Media.Brushes.Black,
                     Margin = new Thickness(30, 3, 30, 3)
                 };
-                TextBlock t = new TextBlock 
+                TextBlock t = new TextBlock
                 {
                     Text = c,
                     FontSize = 20,
@@ -336,7 +340,7 @@ namespace BachelorProject
                 c.updatePosition(new System.Windows.Point(newCenterX, newCenterY));
                 x += 110;
             }
-            
+
         }
 
         public int getID()
@@ -368,7 +372,7 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => CheckConstraints());
                 return;
             }
-                
+
             var pos = Mouse.GetPosition(null);
             //Debug.WriteLine(pos);
             tracker.SendMessage(pos.ToString());
@@ -385,22 +389,13 @@ namespace BachelorProject
                 if (currentCircle != null && !currentCircle.Equals(p))
                     currentCircle.checkSitting(p);
             }
-            /*var persons2 = persons;
-            foreach (Circle p in persons)
-            {  
-                foreach (Circle q in persons2)
-                {
-                    if (!p.Equals(q) && currentCircle != null && currentCircle.Equals(p))
-                        p.checkSitting(q);
-                }
-            }*/
 
             // Prüfen, ob alle am Tisch sitzen
             foreach (Circle c in persons)
             {
                 if (!c.touches(table))
                     constraintsFullfilled = false;
-            }  
+            }
         }
 
         public virtual bool checkActualConstraints()
@@ -422,18 +417,18 @@ namespace BachelorProject
             {
                 if (c.getSeat() != null)
                 {
-                    
+
                 }
                 else if (c.touches(table))
                 {
                     onTable.Add(c);
-                } 
+                }
             }
-      
+
             var centerPoint = table.getPosition();
             var tableEdgePoint = new System.Windows.Point(centerPoint.X, centerPoint.Y - table.getRadius());
             var firstVector = centerPoint - tableEdgePoint;
-            
+
             foreach (Circle c in onTable)
             {
                 var secondVector = centerPoint - c.getPosition();
@@ -441,33 +436,33 @@ namespace BachelorProject
                 angle = angle * 180 / Math.PI;
                 if (getHalf(c) == 2)
                     angle = 360 - angle;
-                var newEntry = new KeyValuePair<Circle,double>(c,angle);
+                var newEntry = new KeyValuePair<Circle, double>(c, angle);
                 if (!sittingOrder.Contains(newEntry))
                     sittingOrder.Add(newEntry);
             }
 
-            sittingOrder.Sort((firstPair,nextPair) =>
-                {
-                    return firstPair.Value.CompareTo(nextPair.Value);
-                }
-            );  
+            sittingOrder.Sort((firstPair, nextPair) =>
+            {
+                return firstPair.Value.CompareTo(nextPair.Value);
+            }
+            );
         }
 
         protected bool sittingNextToEachOther(Circle c1, Circle c2)
         {
             int lastIndex = sittingOrder.Count - 1;
             int index = 0;
-            
+
 
             if (sittingOrder.Count > 1)
-            { 
+            {
                 foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
                 {
                     if (c1.getSeat() != null)
                         c1 = c1.getSeat();
                     if (c2.getSeat() != null)
                         c2 = c2.getSeat();
-                    
+
                     if (c1.Equals(kvp.Key) && c1.touches(table) && c2.touches(table))
                     {
                         if (index == 0)
@@ -503,7 +498,7 @@ namespace BachelorProject
                 return !sittingNextToEachOther(c1, c2);
         }
 
-        private Tuple<Circle,Circle> getNeighbours(Circle c)
+        private Tuple<Circle, Circle> getNeighbours(Circle c)
         {
             int counter = 0;
             int lastIndex = sittingOrder.Count - 1;
@@ -552,8 +547,9 @@ namespace BachelorProject
 
         protected bool sharingFood(Circle c)
         {
-            foreach (Circle p in persons) {
-                if (!c.Equals(p) && sharingFood(c,p))
+            foreach (Circle p in persons)
+            {
+                if (!c.Equals(p) && sharingFood(c, p))
                     return true;
             }
             return false;
@@ -583,7 +579,7 @@ namespace BachelorProject
                     if (!p.Equals(q) && sharingFood(p, q))
                         amount++;
                 }
-            } 
+            }
             return amount / 2 == number;
         }
 
@@ -713,15 +709,18 @@ namespace BachelorProject
         {
             Border b = getConstraint(name);
             TextBlock tb = b.Child as TextBlock;
-            if (fulfilled)
+            if (constraintHelp)
             {
-                tb.Background = System.Windows.Media.Brushes.LightGreen;
-                b.BorderThickness = new Thickness(1);
-            }
-            else
-            {
-                tb.Background = System.Windows.Media.Brushes.LightCoral;
-                b.BorderThickness = new Thickness(2);
+                if (fulfilled)
+                {
+                    tb.Background = System.Windows.Media.Brushes.LightGreen;
+                    b.BorderThickness = new Thickness(1);
+                }
+                else
+                {
+                    tb.Background = System.Windows.Media.Brushes.LightCoral;
+                    b.BorderThickness = new Thickness(2);
+                }
             }
         }
 
@@ -772,7 +771,7 @@ namespace BachelorProject
             G.CopyFromScreen(350, 150, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
 
             // save uncompressed bitmap to disk
-            string fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + testPerson + "\\Trial" + id + ".bmp";
+            string fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + testPerson + "\\Trial" + id + ".bmp";
             System.IO.FileStream fs = System.IO.File.Open(fileName, System.IO.FileMode.OpenOrCreate);
             Screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Bmp);
             fs.Close();
@@ -804,7 +803,7 @@ namespace BachelorProject
                 BorderBrush = System.Windows.Media.Brushes.Black,
                 Background = System.Windows.Media.Brushes.White,
                 Height = 250,
-                Margin = new Thickness(80,250,0,0)
+                Margin = new Thickness(80, 250, 0, 0)
             };
 
             TextBlock tb = new TextBlock()
@@ -856,6 +855,7 @@ namespace BachelorProject
 
         private void Weiter_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            takePicture();
             tracker.SendMessage("WEITER");
             skip = true;
         }
@@ -903,7 +903,7 @@ namespace BachelorProject
                 // Retrieve the current position of the mouse.
                 var newX = Mouse.GetPosition((IInputElement)sender).X;
                 var newY = Mouse.GetPosition((IInputElement)sender).Y;
-  
+
                 // Reset the location of the object (add to sender's renderTransform
                 // newPosition minus currentElement's position
                 var rt = ((UIElement)this.current.InputElement).RenderTransform;
@@ -925,7 +925,8 @@ namespace BachelorProject
         private void ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.current.InputElement = (IInputElement)sender;
-            foreach (Circle c in persons) {
+            foreach (Circle c in persons)
+            {
                 if (c.getName().Equals(((Ellipse)sender).Name))
                 {
                     currentCircle = c;

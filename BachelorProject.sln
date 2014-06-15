@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BachelorProject", "BachelorProject\BachelorProject.csproj", "{64B3E56C-1596-4460-B29C-EED69FB121DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperimentTemplate", "..\code\ExperimentTemplate\ExperimentTemplate\ExperimentTemplate.csproj", "{4732F757-6951-464E-A06D-E6A696DB574B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperimentTemplate", "..\code\ExperimentTemplate\ExperimentTemplate.csproj", "{4732F757-6951-464E-A06D-E6A696DB574B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eyetracker", "..\code\ExperimentTemplate\Eyetracker\Eyetracker.csproj", "{FAE1D5D9-5BC7-4102-AED5-85A08C049D4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eyetracker", "..\code\Eyetracker\Eyetracker.csproj", "{FAE1D5D9-5BC7-4102-AED5-85A08C049D4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "..\code\ExperimentTemplate\Logging\Logging.csproj", "{50F77CDB-D70C-40F0-A668-C864CBEF675D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "..\code\Logging\Logging.csproj", "{50F77CDB-D70C-40F0-A668-C864CBEF675D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
