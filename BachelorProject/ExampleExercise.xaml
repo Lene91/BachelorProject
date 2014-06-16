@@ -34,11 +34,20 @@
         <Button 
             Width="120"
             Height="60"
-            Margin="150,720"
+            Margin="280,720"
             Content="Weiter"
             FontSize="30"
             FontWeight="Bold"
-            PreviewMouseDown="Weiter_Button_MouseDown"/>
+            PreviewMouseDown="Continue_Button_MouseDown"/>
+
+        <Button 
+            Width="120"
+            Height="60"
+            Margin="150,720"
+            Content="Hilfe"
+            FontSize="30"
+            FontWeight="Bold"
+            PreviewMouseDown="Help_Button_MouseDown"/>
 
 
         <!-- <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>

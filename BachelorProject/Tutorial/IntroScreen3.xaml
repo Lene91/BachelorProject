@@ -18,11 +18,11 @@
             X2="1200" Y2="270"
             Stroke="Black"
             StrokeThickness="4" />
-        <Border BorderThickness="4" BorderBrush="Black" Margin="100">
+        <Border BorderThickness="4" BorderBrush="Black" Margin="75,50">
             <TextBlock
             Padding="10"
-            Width="600"
-            Height="600"
+            Width="650"
+            Height="700"
             Background="White"
             FontSize="30"
             TextAlignment="Center"
@@ -31,7 +31,9 @@
             <Run FontSize="40" FontWeight="Bold">Sitzplatzwünsche</Run>
             <LineBreak/>
             <LineBreak/>
-                Hier siehst du die Wünsche der Gäste. Jede Textbox steht für einen Wunsch, den du erfüllen musst. Zu Beginn sind alle Textboxen rot, doch wenn du einen Wunsch erfüllt hast, wird die Textbox grün eingefärbt.
+                Hier siehst du die Wünsche der Gäste. Jede Textbox steht für einen Wunsch, den du erfüllen musst. Zu Beginn sind alle Textboxen transparent (wie die erste Textbox).
+            <LineBreak/>
+                Wenn du nicht mehr weiter weißt, kannst du auf einen Hilfe-Button drücken und die noch nicht erfüllten Wünsche werden rot (siehe zweite Textbox), und die bereits berücksichtigten Wünsche grün eingefärbt (siehe dritte Textbox).
             <LineBreak/>
             <LineBreak/>
             <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>
@@ -40,11 +42,14 @@
 
         <StackPanel Name="ConstraintCanvas" Width="400" Height="550" Margin="800,250" Orientation="Vertical">
             <TextBlock Name="c0" Text="Sitzwünsche" Background="Transparent" FontWeight="Bold" FontSize="30" Margin="20,20"/>
-            <Border BorderBrush="Black" BorderThickness="3" Margin="30,10,30,10">
-            <TextBlock Name="c1" Background ="LightCoral" FontSize="25" MaxWidth="360" Text="Hanna möchte neben Tobias sitzen." TextWrapping="Wrap" />
+            <Border BorderBrush="Black" BorderThickness="1" Margin="30,10,30,10">
+            <TextBlock Name="c1" FontSize="25" MaxWidth="360" Text="Hanna möchte neben Tobias sitzen." TextWrapping="Wrap" />
             </Border>
             <Border BorderBrush="Black" BorderThickness="1" Margin="30,10,30,10">
-            <TextBlock Name="c2" Background ="LightGreen" FontSize="25" MaxWidth="360" Text="Anne möchte auf dem Schoß von Sabine sitzen." TextWrapping="Wrap" />
+            <TextBlock Name="c2" Background ="LightCoral" FontSize="25" MaxWidth="360" Text="Paula möchte sich mit jemandem ein Essen teilen." TextWrapping="Wrap" />
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="1" Margin="30,10,30,10">
+                <TextBlock Name="c3" Background ="LightGreen" FontSize="25" MaxWidth="360" Text="Anne möchte nicht neben Sabine sitzen." TextWrapping="Wrap" />
             </Border>
         </StackPanel>
 

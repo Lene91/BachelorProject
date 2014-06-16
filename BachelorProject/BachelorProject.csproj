@@ -72,6 +72,10 @@
       <DependentUpon>InterScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\MyAOI.cs" />
+    <Compile Include="StartScreen.xaml.cs">
+      <DependentUpon>StartScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TrialStartScreen.cs" />
     <Compile Include="Trials\Trial10.cs" />
     <Compile Include="Trials\Trial11.cs" />
     <Compile Include="Trials\Trial4.cs" />
@@ -140,6 +144,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="InterScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StartScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

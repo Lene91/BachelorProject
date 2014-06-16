@@ -39,7 +39,7 @@ namespace BachelorProject
     public partial class ExampleExercise : UserControl
     {
         // IMPORTANT!
-        private int testPerson = 101;
+        private int testPerson = 1;
 
         private IAoiUpdate trial;
 
@@ -616,7 +616,7 @@ namespace BachelorProject
 
         protected bool sittingOn(Circle c1, Circle c2)
         {
-            if (c1.touches(table) && c2.touches(table) && c1.sitsOn(c2))
+            if (c2.touches(table) && c1.sitsOn(c2))
                 return true;
             else
                 return false;
@@ -719,7 +719,7 @@ namespace BachelorProject
                 else
                 {
                     tb.Background = System.Windows.Media.Brushes.LightCoral;
-                    b.BorderThickness = new Thickness(2);
+                    b.BorderThickness = new Thickness(1);
                 }
             }
         }
@@ -771,7 +771,8 @@ namespace BachelorProject
             G.CopyFromScreen(350, 150, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
 
             // save uncompressed bitmap to disk
-            string fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + testPerson + "\\Trial" + id + ".bmp";
+            //string fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + testPerson + "\\Trial" + id + ".bmp";
+            string fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + testPerson + "\\Trial" + id + ".bmp";
             System.IO.FileStream fs = System.IO.File.Open(fileName, System.IO.FileMode.OpenOrCreate);
             Screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Bmp);
             fs.Close();
@@ -853,11 +854,17 @@ namespace BachelorProject
             tracker.SendMessage("RESET");
         }
 
-        private void Weiter_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Continue_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
             takePicture();
-            tracker.SendMessage("WEITER");
+            tracker.SendMessage("CONTINUE");
             skip = true;
+        }
+
+        private void Help_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            tracker.SendMessage("HELP");
+            constraintHelp = true;
         }
 
 

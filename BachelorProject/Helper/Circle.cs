@@ -22,7 +22,7 @@ namespace BachelorProject
         private Point position;
         private Ellipse ellipse;
         private int touchEpsilon = 5;
-        private int overlapEpsilon = 20;
+        private int overlapEpsilon = 10;
         private int enterEpsilon = 5;
         private int leaveEpsilon = 40;
         private static HashSet<Circle> sittingPersons = new HashSet<Circle>();
@@ -90,7 +90,6 @@ namespace BachelorProject
         {
             var actualDist = distance(c.getPosition(), position);
             var touchDist = c.radius + radius;
-            //var dist = Math.Max(actualDist, touchDist) - Math.Min(actualDist, touchDist);
             var dist = actualDist - touchDist;
             if (dist > - 5 &&  dist < 10)
             {
@@ -140,6 +139,7 @@ namespace BachelorProject
         private void updateSitting(Circle c)
         {
             c.updateRadius(50);
+            Canvas.SetZIndex(c.getEllipse(), 0);
             c.isSittingOnSomeone = false;
             c.seat = null;
             this.isSitter = false;
@@ -147,7 +147,7 @@ namespace BachelorProject
         
         private bool enters(Circle c)
         {
-            if (distance(c.getPosition(), position) < enterEpsilon && c.getRadius() == radius)
+            if (distance(c.getPosition(), position) < enterEpsilon) // || c.getRadius() > radius)
                 return true;
             return false;
         }
@@ -157,7 +157,11 @@ namespace BachelorProject
             Canvas.SetZIndex(ellipse, 50);
             ellipse.Width = 80;
             ellipse.Height = 80;
-            radius = 40;
+            var newRadius = 40;
+            ellipse.Margin = new Thickness(ellipse.Margin.Left + radius - newRadius, ellipse.Margin.Top + radius - newRadius, 0, 0);
+            position = new Point(position.X - radius + newRadius, position.Y - radius + newRadius);
+            radius = newRadius;
+
             c.isSitter = true;
             this.isSittingOnSomeone = true;
             seat = c;
@@ -175,7 +179,10 @@ namespace BachelorProject
             Canvas.SetZIndex(ellipse, 0);
             ellipse.Width = 100;
             ellipse.Height = 100;
-            radius = 50;
+            var oldRadius = 50;
+            ellipse.Margin = new Thickness(ellipse.Margin.Left - oldRadius + radius, ellipse.Margin.Top - oldRadius + radius, 0, 0);
+            position = new Point(position.X + oldRadius - radius, position.Y + oldRadius - radius);
+            radius = oldRadius;
             c.isSitter = false;
             this.isSittingOnSomeone = false;
             seat = null;

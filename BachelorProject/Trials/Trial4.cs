@@ -46,6 +46,10 @@ namespace BachelorProject
                 updateConstraint("c8", true);
             else constraintsFullfilled = false;
 
+            if (numberSharingFood(1))
+                updateConstraint("c9", true);
+            else constraintsFullfilled = false;
+
             /*
             if (sittingNextToEachOther(p3, p2))
                 updateConstraint("c1", true);
