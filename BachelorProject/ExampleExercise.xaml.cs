@@ -265,7 +265,7 @@ namespace BachelorProject
                 Orientation = Orientation.Vertical,
                 Width = 400,
                 Height = 550,
-                Margin = new Thickness(800, 270, 0, 0)
+                Margin = new Thickness(800, 260, 0, 0)
             };
             this.MyCanvas.Children.Add(constraintStackPanel);
 
@@ -393,7 +393,7 @@ namespace BachelorProject
             // Prüfen, ob alle am Tisch sitzen
             foreach (Circle c in persons)
             {
-                if (!c.touches(table))
+                if (!c.touches(table) && c.getSeat() == null)
                     constraintsFullfilled = false;
             }
         }
@@ -415,11 +415,7 @@ namespace BachelorProject
             List<Circle> onTable = new List<Circle>();
             foreach (Circle c in persons)
             {
-                if (c.getSeat() != null)
-                {
-
-                }
-                else if (c.touches(table))
+                if (c.getSeat() == null && c.touches(table))
                 {
                     onTable.Add(c);
                 }
@@ -446,6 +442,16 @@ namespace BachelorProject
                 return firstPair.Value.CompareTo(nextPair.Value);
             }
             );
+
+            /*Border b = getConstraint("c1");
+            TextBlock tb = b.Child as TextBlock;
+            string sit = "";
+            foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
+            {
+                sit += kvp.Key.getName();
+                sit += " --- ";            
+            }
+            tb.Text = sit;*/
         }
 
         protected bool sittingNextToEachOther(Circle c1, Circle c2)
@@ -462,6 +468,7 @@ namespace BachelorProject
                         c1 = c1.getSeat();
                     if (c2.getSeat() != null)
                         c2 = c2.getSeat();
+
 
                     if (c1.Equals(kvp.Key) && c1.touches(table) && c2.touches(table))
                     {
@@ -492,7 +499,9 @@ namespace BachelorProject
 
         protected bool notSittingNextToEachOther(Circle c1, Circle c2)
         {
-            if (!c1.touches(table) || !c2.touches(table))
+            if ((c1.getSeat() != null && c1.getSeat().Equals(c2)) || (c2.getSeat() != null && c2.getSeat().Equals(c1))) // Person sitzt auf dem Schoß der anderen
+                return true;
+            if (!c1.touches(table) && c1.getSeat() == null || !c2.touches(table) && c2.getSeat() == null)
                 return false;
             else
                 return !sittingNextToEachOther(c1, c2);
@@ -504,6 +513,8 @@ namespace BachelorProject
             int lastIndex = sittingOrder.Count - 1;
             Circle last = null;
             Circle next = null;
+            if (c.getSeat() != null)
+                c = c.getSeat();
             foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
             {
                 if (c.Equals(kvp.Key))
@@ -539,7 +550,7 @@ namespace BachelorProject
 
         protected bool notSharingFood(Circle c1, Circle c2)
         {
-            if (c1.touches(table) && c2.touches(table) && !c1.overlaps(c2))
+            if (c1.touches(table) && c2.touches(table) && (!c1.overlaps(c2) || c1.getRadius() != c2.getRadius()))
                 return true;
             else
                 return false;
@@ -572,7 +583,7 @@ namespace BachelorProject
             int amount = 0;
             foreach (Circle p in persons)
             {
-                if (!p.touches(table))
+                if (!p.touches(table) && p.getSeat() == null)
                     return false;
                 foreach (Circle q in persons)
                 {
@@ -632,7 +643,7 @@ namespace BachelorProject
 
         protected bool sittingOnSomeone(Circle c)
         {
-            if (c.getSeat() != null && c.touches(table))
+            if (c.getSeat() != null)
                 return true;
             return false;
         }
@@ -768,7 +779,8 @@ namespace BachelorProject
             Bitmap Screenshot = new Bitmap((int)this.Width + 100, (int)this.Height + 100);
             Graphics G = Graphics.FromImage(Screenshot);
             // snip wanted area
-            G.CopyFromScreen(350, 150, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
+            //G.CopyFromScreen(350, 150, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
+            G.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
 
             // save uncompressed bitmap to disk
             //string fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + testPerson + "\\Trial" + id + ".bmp";
@@ -834,6 +846,8 @@ namespace BachelorProject
         {
             foreach (Circle el in persons)
             {
+                
+
                 // Reset the location of the object (add to sender's renderTransform
                 // newPosition minus currentElement's position
                 var rt = ((UIElement)el.getEllipse()).RenderTransform;
@@ -844,12 +858,19 @@ namespace BachelorProject
 
                 GeneralTransform generalTransform1 = MyCanvas.TransformToVisual(el.getEllipse());
                 System.Windows.Point currentPoint = generalTransform1.Inverse.Transform(new System.Windows.Point(0, 0));
+
+                if (el.getRadius() < circleRadius)
+                {
+                    Circle seat = el.getSeat();
+                    el.stopsSittingOn(seat);
+                }
                 var newCenterX = currentPoint.X + circleRadius;
                 var newCenterY = currentPoint.Y + circleRadius;
+
                 el.updatePosition(new System.Windows.Point(newCenterX, newCenterY));
 
                 // resize object
-                el.updateRadius(50);
+                el.updateRadius(circleRadius);
             }
             tracker.SendMessage("RESET");
         }

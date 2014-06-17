@@ -14,7 +14,7 @@ namespace BachelorProject
 
         public TutTrial2()
             : base()
-        { id = 2; }
+        { id = 1002; }
 
         public override bool checkActualConstraints()
         {

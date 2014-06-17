@@ -159,7 +159,7 @@ namespace BachelorProject
             ellipse.Height = 80;
             var newRadius = 40;
             ellipse.Margin = new Thickness(ellipse.Margin.Left + radius - newRadius, ellipse.Margin.Top + radius - newRadius, 0, 0);
-            position = new Point(position.X - radius + newRadius, position.Y - radius + newRadius);
+            //position = new Point(position.X - radius + newRadius, position.Y - radius + newRadius);
             radius = newRadius;
 
             c.isSitter = true;
@@ -174,14 +174,14 @@ namespace BachelorProject
             return false;
         }
 
-        private void stopsSittingOn(Circle c)
+        public void stopsSittingOn(Circle c)
         {
             Canvas.SetZIndex(ellipse, 0);
             ellipse.Width = 100;
             ellipse.Height = 100;
             var oldRadius = 50;
             ellipse.Margin = new Thickness(ellipse.Margin.Left - oldRadius + radius, ellipse.Margin.Top - oldRadius + radius, 0, 0);
-            position = new Point(position.X + oldRadius - radius, position.Y + oldRadius - radius);
+            //position = new Point(position.X + oldRadius - radius, position.Y + oldRadius - radius);
             radius = oldRadius;
             c.isSitter = false;
             this.isSittingOnSomeone = false;

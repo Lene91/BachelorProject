@@ -7,6 +7,6 @@
       Width="1200" Height="800" Background="LightGray">
 
     <Canvas>
-        <TextBlock Name="t1" Text="Nun hast du die Übungsaufgaben geschafft. Drückst du nun auf die Leertaste, so starten die eigentlichen Aufgaben. Nach jeder Aufgabe musst du ein paar Fragen dazu beantworten. Viel Spaß! :) " Width="800" TextWrapping="WrapWithOverflow" Background="Transparent" FontSize="40" Margin="200" TextAlignment="Center"/>
+        <TextBlock Name="t1" Text="Nun hast du die Übungsaufgaben geschafft. Drückst du nun auf die Leertaste, so starten die eigentlichen Aufgaben. Versuche, sie so schnell wie möglich zu lösen. Nach jeder Aufgabe musst du ein paar Fragen dazu beantworten. Viel Spaß! :) " Width="800" TextWrapping="WrapWithOverflow" Background="Transparent" FontSize="40" Margin="200" TextAlignment="Center"/>
     </Canvas>
 </UserControl>

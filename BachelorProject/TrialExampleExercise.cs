@@ -15,6 +15,7 @@ using System.Windows;
 using System.CodeDom.Compiler;
 using System.Reflection;
 using System.Windows.Input;
+using System.Windows.Controls;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -175,6 +176,7 @@ namespace BachelorProject
 
                 if (screen.ConstraintsFullfilled())
                     counter--;
+
                 if (counter < 0)
                 {
                     screen.takePicture();

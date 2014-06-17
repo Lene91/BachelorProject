@@ -19,5 +19,15 @@ namespace BachelorProject
             TrackingRequired = false;
             Screen = screen;
         }
+
+        protected override void OnShowing()
+        {
+            Tracker.SendMessage("SHOW ENDSCREEN");
+        }
+
+        protected override void OnHidden()
+        {
+            Tracker.SendMessage("STOP ENDSCREEN");
+        }
     }
 }
