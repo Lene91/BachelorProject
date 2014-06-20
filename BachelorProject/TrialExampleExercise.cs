@@ -165,16 +165,19 @@ namespace BachelorProject
 
         private void CheckConstraints()
         {
-            int counter = 50;
+            //int counter = 50;
             while (constraintsThreadIsRunning)
             {
                 if (screen.skip)
                 {
                     screen.skip = false;
+                    screen.takePicture();
                     SkipTrial();
                 }
 
-                if (screen.ConstraintsFullfilled())
+                screen.ConstraintsFullfilled();
+
+                /*if (screen.ConstraintsFullfilled())
                     counter--;
 
                 if (counter < 0)
@@ -184,6 +187,7 @@ namespace BachelorProject
                 }
 
                 System.Threading.Thread.Sleep(10);
+                 */
             }
         }
 

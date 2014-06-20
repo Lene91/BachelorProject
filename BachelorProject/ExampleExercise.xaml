@@ -38,6 +38,7 @@
             Content="Weiter"
             FontSize="30"
             FontWeight="Bold"
+            Cursor="Hand"
             PreviewMouseDown="Continue_Button_MouseDown"/>
 
         <Button 
@@ -47,58 +48,19 @@
             Content="Hilfe"
             FontSize="30"
             FontWeight="Bold"
+            Cursor="Hand"
             PreviewMouseDown="Help_Button_MouseDown"/>
 
-
-        <!-- <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>
-        <Ellipse
-            Name="Legend1"
-            Fill="BlueViolet"
-            Opacity="0.8"
-            Width="50"
-            Height="50"
-            StrokeThickness="4"
-            Stroke="Black"
+        <Button 
+            Width="120"
+            Height="60"
+            Margin="650,720"
+            Content="Fertig"
+            FontSize="30"
+            FontWeight="Bold"
             Cursor="Hand"
-            Margin="820,80">
-        </Ellipse>
-        <TextBox Name="l1" Text="Lila" Background="Transparent" BorderThickness="0" FontSize="25" Margin="900,85"/>
-        <Ellipse
-            Name="Legend2"
-            Fill="Bisque"
-            Opacity="0.8"
-            Width="50"
-            Height="50"
-            StrokeThickness="4"
-            Stroke="Black"
-            Cursor="Hand"
-            Margin="820,150">
-        </Ellipse>
-        <TextBox Name="l2" Text="Hell" Background="Transparent" BorderThickness="0" FontSize="25" Margin="900,155"/> -->
+            PreviewMouseDown="Done_Button_MouseDown"/>
 
-        <!--
-        <StackPanel Name="ConstraintCanvas" Width="400" Height="550" Margin="800,250" Orientation="Vertical">
-        <TextBox Name="c0" Text="Regeln" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="20,20"/>
-            <TextBox Name="c1" Margin="30,10,30,10" BorderBrush="Black" BorderThickness="2" FontSize="25" MaxWidth="360" Text="Constraint 1: Dunkel möchte am Tisch sitzen." TextWrapping="Wrap" />
-            
-            <Label Name="c2" Margin="30,10" BorderBrush="Black" BorderThickness="2" FontSize="25" MaxWidth="360">
-            <AccessText TextWrapping="WrapWithOverflow">
-                Constraint 2: Hell möchte am Tisch sitzen.
-            </AccessText>
-            <Label.Background>
-                <SolidColorBrush Color="Red"/>
-            </Label.Background>
-        </Label>
-        <Label Name="c3" Canvas.Left="821" Canvas.Top="590" BorderBrush="Black" BorderThickness="2" FontSize="25" MaxWidth="360" >
-            <AccessText TextWrapping="WrapWithOverflow">
-                Constraint 3.
-            </AccessText>
-            <Label.Background>
-                <SolidColorBrush Color="Red"/>
-            </Label.Background>
-        </Label>
-        </StackPanel> 
-        -->
         <Ellipse
             Name="Table"
             Fill="Gray"
@@ -192,6 +154,101 @@
                 <TranslateTransform/>
             </Ellipse.RenderTransform>
         </Ellipse>
+
+        <Border Name="done" Margin="1500,2000" BorderBrush="Black" BorderThickness="4" Background="White">
+            <StackPanel Margin="40">
+                <TextBlock Name="doneTextBlock"  
+                           Width="800" 
+                           FontSize="30" 
+                           TextWrapping="WrapWithOverflow" 
+                           TextAlignment="Center">
+                    Glückwunsch! 
+                    <LineBreak>
+                    </LineBreak>Du hast alle Wünsche erfüllt. Klicke auf den Button, um fortzufahren.
+                    <LineBreak/>
+                </TextBlock>
+                <Button Width="120"
+                        Height="60"
+                        Content="OK"
+                        FontSize="30"
+                        FontWeight="Bold"
+                        Cursor="Hand"
+                        PreviewMouseDown="Done_Continue_Button_MouseDown"/>
+            </StackPanel>
+        </Border>
+
+        <Border Name="notDone" Margin="1500,2000" BorderBrush="Black" BorderThickness="4" Background="White">
+            <StackPanel Margin="40">
+                <TextBlock Name="notDoneTextBlock"  
+                           Width="800" 
+                           FontSize="30" 
+                           TextWrapping="WrapWithOverflow" 
+                           TextAlignment="Center">
+                    <LineBreak/>
+                    Du hast leider noch nicht alle Wünsche erfüllt. Klicke auf den Button, um zurück zur Aufgabe zu gelangen.
+                    <LineBreak/>
+                    Möchtest du sehen, welche Wünsche du bereits erfüllt hast, klicke auf den Hilfe-Button. Wenn du nicht mehr weiter weißt, klicke auf den Weiter-Button und du gelangst zur nächsten Aufgabe.
+                    <LineBreak/>
+                </TextBlock>
+                <Button Width="120"
+                        Height="60"
+                        Content="OK"
+                        FontSize="30"
+                        FontWeight="Bold"
+                        Cursor="Hand"
+                        PreviewMouseDown="Done_Back_Button_MouseDown"/>
+            </StackPanel>
+        </Border>
+        <!-- <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>
+        <Ellipse
+            Name="Legend1"
+            Fill="BlueViolet"
+            Opacity="0.8"
+            Width="50"
+            Height="50"
+            StrokeThickness="4"
+            Stroke="Black"
+            Cursor="Hand"
+            Margin="820,80">
+        </Ellipse>
+        <TextBox Name="l1" Text="Lila" Background="Transparent" BorderThickness="0" FontSize="25" Margin="900,85"/>
+        <Ellipse
+            Name="Legend2"
+            Fill="Bisque"
+            Opacity="0.8"
+            Width="50"
+            Height="50"
+            StrokeThickness="4"
+            Stroke="Black"
+            Cursor="Hand"
+            Margin="820,150">
+        </Ellipse>
+        <TextBox Name="l2" Text="Hell" Background="Transparent" BorderThickness="0" FontSize="25" Margin="900,155"/> -->
+
+        <!--
+        <StackPanel Name="ConstraintCanvas" Width="400" Height="550" Margin="800,250" Orientation="Vertical">
+        <TextBox Name="c0" Text="Regeln" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="20,20"/>
+            <TextBox Name="c1" Margin="30,10,30,10" BorderBrush="Black" BorderThickness="2" FontSize="25" MaxWidth="360" Text="Constraint 1: Dunkel möchte am Tisch sitzen." TextWrapping="Wrap" />
+            
+            <Label Name="c2" Margin="30,10" BorderBrush="Black" BorderThickness="2" FontSize="25" MaxWidth="360">
+            <AccessText TextWrapping="WrapWithOverflow">
+                Constraint 2: Hell möchte am Tisch sitzen.
+            </AccessText>
+            <Label.Background>
+                <SolidColorBrush Color="Red"/>
+            </Label.Background>
+        </Label>
+        <Label Name="c3" Canvas.Left="821" Canvas.Top="590" BorderBrush="Black" BorderThickness="2" FontSize="25" MaxWidth="360" >
+            <AccessText TextWrapping="WrapWithOverflow">
+                Constraint 3.
+            </AccessText>
+            <Label.Background>
+                <SolidColorBrush Color="Red"/>
+            </Label.Background>
+        </Label>
+        </StackPanel> 
+        -->
+        
 
         <!--<Border Name="end" BorderThickness="2" BorderBrush="Black" Background="White" Height="80" Margin="2000,200">
             <TextBlock Padding="20" FontSize="30" FontWeight="Bold" Text="Deine Zeit ist abgelaufen. In wenigen Sekunden geht es weiter."/>

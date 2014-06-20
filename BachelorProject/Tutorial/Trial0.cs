@@ -43,13 +43,13 @@ namespace BachelorProject
             {
                 BorderThickness = new Thickness(4),
                 BorderBrush = Brushes.Black,
-                Margin = new Thickness(550, 500, 0, 0)
+                Margin = new Thickness(780, 475, 0, 0) //550
             };
 
             ScrollViewer sv = new ScrollViewer
             {
-                Width = 600,
-                Height = 250,
+                Width = 400, //600
+                Height = 290, //235
                 VerticalScrollBarVisibility = ScrollBarVisibility.Visible
             };
 
@@ -58,20 +58,23 @@ namespace BachelorProject
                 //Text = text,
                 Background = Brushes.White,
                 Padding = new Thickness(10),
-                FontSize = 25,
+                FontSize = 22,
                 TextAlignment = TextAlignment.Center,
                 TextWrapping = TextWrapping.WrapWithOverflow
             };
 
-            tb.Inlines.Add(new Run("Weitere Hinweise") { FontWeight = FontWeights.Bold, FontSize = 40 });
+            tb.Inlines.Add(new Run("Weitere Hinweise") { FontWeight = FontWeights.Bold, FontSize = 30 });
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(new LineBreak());
             tb.Inlines.Add(getTutorialText());
             tb.Inlines.Add(new Run("Jetzt kannst du das Tool noch ein wenig" +
-                           " ausprobieren. Wenn du alle Wünsche in dieser Aufgabe" +
-                           " erfüllt hast, gelangst du automatisch zu ein paar" +
-                           " weiteren Übungsaufgaben.") 
-                           { FontStyle = FontStyles.Italic, FontSize = 25 });
+                           " ausprobieren. Klicke auf den Fertig-Button, wenn du" +
+                           " die Aufgabe gelöst hast. Dein Platzierungsvorschlag" +
+                           " wird dann geprüft und wenn du alle Wünsche erfüllt hast," +
+                           " gelangst zu ein paar weiteren Übungsaufgaben." +
+                           " Ist dies nicht der Fall, hast du die Möglichkeit, deine" +
+                           " Lösung noch einmal zu überarbeiten.") 
+                           { FontStyle = FontStyles.Italic, FontSize = 22 });
 
             sv.Content = tb;
             b.Child = sv;

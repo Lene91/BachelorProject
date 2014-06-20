@@ -846,8 +846,6 @@ namespace BachelorProject
         {
             foreach (Circle el in persons)
             {
-                
-
                 // Reset the location of the object (add to sender's renderTransform
                 // newPosition minus currentElement's position
                 var rt = ((UIElement)el.getEllipse()).RenderTransform;
@@ -872,20 +870,91 @@ namespace BachelorProject
                 // resize object
                 el.updateRadius(circleRadius);
             }
-            tracker.SendMessage("RESET");
+            tracker.SendMessage("RESET BUTTON PRESSED");
         }
 
         private void Continue_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            takePicture();
-            tracker.SendMessage("CONTINUE");
+            tracker.SendMessage("CONTINUE BUTTON PRESSED");
             skip = true;
         }
 
         private void Help_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            tracker.SendMessage("HELP");
+            tracker.SendMessage("HELP BUTTON PRESSED");
             constraintHelp = true;
+        }
+
+        private void Done_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            bool done = ConstraintsFullfilled();
+            
+            if (done)
+            {
+                tracker.SendMessage("DONE BUTTON PRESSED (DONE)");
+
+                // get TextBlock and change margin so that it is visible
+                foreach (UIElement uie in MyCanvas.Children)
+                {
+                    if (uie is Border)
+                    {
+                        Border b = uie as Border;
+                        if (b.Name.Equals("done"))
+                        {
+                            Canvas.SetZIndex(b, 100);
+                            b.Margin = new Thickness(150, 200, 0, 0);
+                        }
+                        else uie.Opacity = 0.2;
+                    }
+                    else uie.Opacity = 0.2;
+                }
+            }
+            else
+            {
+                tracker.SendMessage("DONE BUTTON PRESSED (NOT DONE)");
+
+                // get TextBlock and change margin so that it is visible
+                foreach (UIElement uie in MyCanvas.Children)
+                {
+                    if (uie is Border)
+                    {
+                        Border b = uie as Border;
+                        if (b.Name.Equals("notDone"))
+                        {
+                            Canvas.SetZIndex(b, 100);
+                            b.Margin = new Thickness(150, 200, 0, 0);
+                        }
+                        else uie.Opacity = 0.2;
+                    }
+                    else uie.Opacity = 0.2;
+                }
+            }
+        }
+
+        // OK-Button nachdem Fertig-Button gedrückt wurde und alle Wünsche erfüllt sind
+        // -> zum nächsten Screen weiterleiten
+        private void Done_Continue_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            skip = true;
+        }
+
+        // OK-Button nachdem Fertig-Button gedrückt wurde und noch nicht alle Wünsche erfüllt sind
+        // -> zurück zur aktuellen Aufgabe
+        private void Done_Back_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            foreach (UIElement uie in MyCanvas.Children)
+            {
+                uie.Opacity = 1;
+                if (uie is Border)
+                {
+                    Border b = uie as Border;
+                    if (b.Name.Equals("notDone"))
+                    {
+                        Canvas.SetZIndex(b, 100);
+                        b.Margin = new Thickness(1500, 2000, 0, 0);
+                    }
+                }
+            }
         }
 
 

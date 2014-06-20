@@ -91,7 +91,7 @@ namespace BachelorProject
             var actualDist = distance(c.getPosition(), position);
             var touchDist = c.radius + radius;
             var dist = actualDist - touchDist;
-            if (dist > - 5 &&  dist < 10)
+            if (dist > - 15 &&  dist < 10)
             {
                 sittingPersons.Add(this);
                 return true;

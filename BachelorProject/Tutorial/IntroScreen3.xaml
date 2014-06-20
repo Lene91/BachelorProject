@@ -33,7 +33,7 @@
             <LineBreak/>
                 Hier siehst du die Wünsche der Gäste. Jede Textbox steht für einen Wunsch, den du erfüllen musst. Zu Beginn sind alle Textboxen transparent (wie die erste Textbox).
             <LineBreak/>
-                Wenn du nicht mehr weiter weißt, kannst du auf einen Hilfe-Button drücken und die noch nicht erfüllten Wünsche werden rot (siehe zweite Textbox), und die bereits berücksichtigten Wünsche grün eingefärbt (siehe dritte Textbox).
+                Wenn du nicht mehr weiter weißt, kannst du auf einen Hilfe-Button drücken (der später im Übersichtsbildschirm sichtbar sein wird) und die noch nicht erfüllten Wünsche werden rot (siehe zweite Textbox), und die bereits berücksichtigten Wünsche grün eingefärbt (siehe dritte Textbox).
             <LineBreak/>
             <LineBreak/>
             <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>
