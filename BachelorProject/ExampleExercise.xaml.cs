@@ -80,6 +80,9 @@ namespace BachelorProject
         public bool skip = false;
 
         private bool constraintHelp;
+        private bool helpButton;
+
+        private int pictureId = 1;
 
 
         public ExampleExercise()
@@ -382,6 +385,7 @@ namespace BachelorProject
             constraintsFullfilled = true;
 
             constraintsFullfilled = checkActualConstraints();
+            
 
             // Größe ändern, wenn ein Kreis über einem anderen liegt
             foreach (Circle p in persons)
@@ -768,11 +772,11 @@ namespace BachelorProject
             return null;
         }
 
-        public void takePicture()
+        public void takePicture(string info)
         {
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() => takePicture());
+                Dispatcher.Invoke(() => takePicture(info));
                 return;
             }
 
@@ -783,11 +787,13 @@ namespace BachelorProject
             G.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
 
             // save uncompressed bitmap to disk
-            //string fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + testPerson + "\\Trial" + id + ".bmp";
-            string fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + testPerson + "\\Trial" + id + ".bmp";
+            //string fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + testPerson + "\\Trial" + id + info + ".bmp";
+            string fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + testPerson + "\\Trial" + id + "-" + pictureId + "-" + info + ".bmp";
             System.IO.FileStream fs = System.IO.File.Open(fileName, System.IO.FileMode.OpenOrCreate);
             Screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Bmp);
             fs.Close();
+
+            pictureId++;
         }
 
         public void showExerciseEnd()
@@ -844,6 +850,8 @@ namespace BachelorProject
 
         private void Reset_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            takePicture("resetButton");
+
             foreach (Circle el in persons)
             {
                 // Reset the location of the object (add to sender's renderTransform
@@ -875,6 +883,7 @@ namespace BachelorProject
 
         private void Continue_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            takePicture("continueButton");
             tracker.SendMessage("CONTINUE BUTTON PRESSED");
             skip = true;
         }
@@ -883,6 +892,7 @@ namespace BachelorProject
         {
             tracker.SendMessage("HELP BUTTON PRESSED");
             constraintHelp = true;
+            takePicture("helpButton");
         }
 
         private void Done_Button_MouseDown(object sender, MouseButtonEventArgs e)
@@ -892,7 +902,7 @@ namespace BachelorProject
             if (done)
             {
                 tracker.SendMessage("DONE BUTTON PRESSED (DONE)");
-
+                takePicture("doneButton(done)");
                 // get TextBlock and change margin so that it is visible
                 foreach (UIElement uie in MyCanvas.Children)
                 {
@@ -912,7 +922,7 @@ namespace BachelorProject
             else
             {
                 tracker.SendMessage("DONE BUTTON PRESSED (NOT DONE)");
-
+                takePicture("doneButton(notDone)");
                 // get TextBlock and change margin so that it is visible
                 foreach (UIElement uie in MyCanvas.Children)
                 {
@@ -945,6 +955,8 @@ namespace BachelorProject
             foreach (UIElement uie in MyCanvas.Children)
             {
                 uie.Opacity = 1;
+                if (uie is Ellipse && !(uie as Ellipse).Name.Equals("table"))
+                    uie.Opacity = 0.8;
                 if (uie is Border)
                 {
                     Border b = uie as Border;

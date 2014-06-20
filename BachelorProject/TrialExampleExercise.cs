@@ -140,7 +140,7 @@ namespace BachelorProject
 
         private void endTrial(object source, System.Timers.ElapsedEventArgs e)
         {
-            screen.takePicture();
+            screen.takePicture("timeElapsed");
             screen.showExerciseEnd();
             timer2 = new System.Timers.Timer(300);
             timer2.Elapsed += new System.Timers.ElapsedEventHandler(skip);
@@ -171,7 +171,6 @@ namespace BachelorProject
                 if (screen.skip)
                 {
                     screen.skip = false;
-                    screen.takePicture();
                     SkipTrial();
                 }
 
