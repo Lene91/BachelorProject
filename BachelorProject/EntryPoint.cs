@@ -44,6 +44,7 @@ namespace BachelorProject
                 HideMouseCursor = false
             };
 
+
             // Dateien, die für alle Trials benötigt werden -> Container befüllen
             readConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
             readNames("names.txt"); // shuffle()-Aufruf gibt neu sortierte Liste zurück

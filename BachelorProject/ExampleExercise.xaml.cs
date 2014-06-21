@@ -40,6 +40,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private int testPerson = 1;
+        private bool laptop = true;
 
         private IAoiUpdate trial;
 
@@ -80,9 +81,14 @@ namespace BachelorProject
         public bool skip = false;
 
         private bool constraintHelp;
-        private bool helpButton;
 
         private int pictureId = 1;
+
+        
+        private Border doneBorder = new Border();
+        private Border notDoneBorder = new Border();
+
+        private bool doneButtonKlicked = false;
 
 
         public ExampleExercise()
@@ -167,6 +173,9 @@ namespace BachelorProject
                 System.Windows.Media.Brushes.HotPink
             };
 
+            foreach (System.Windows.Media.Brush b in allBrushes)
+                b.Freeze();
+
             Random r = new Random();
             while (brushes.Count < numberOfPersons)
             {
@@ -205,6 +214,7 @@ namespace BachelorProject
                 Height = 250,
                 Margin = new Thickness(800, 50, 0, 0)
             };
+            
 
             this.MyCanvas.Children.Add(legendStackPanel);
 
@@ -376,29 +386,35 @@ namespace BachelorProject
                 return;
             }
 
+            // Mauskoordinaten speichern
             var pos = Mouse.GetPosition(null);
-            //Debug.WriteLine(pos);
             tracker.SendMessage(pos.ToString());
 
-            calculateSittingOrder();
-            initiateRedBrush();
-            constraintsFullfilled = true;
-
-            constraintsFullfilled = checkActualConstraints();
-            
-
-            // Größe ändern, wenn ein Kreis über einem anderen liegt
-            foreach (Circle p in persons)
+            if (constraintHelp || doneButtonKlicked)
             {
-                if (currentCircle != null && !currentCircle.Equals(p))
-                    currentCircle.checkSitting(p);
+                // Sitzplatzbeziehungen prüfen
+                calculateSittingOrder();
+                initiateRedBrush();
+
+                constraintsFullfilled = true;
+
+                foreach (Circle p in persons)
+                {
+                    // Prüfen, ob alle am Tisch sitzen
+                    if (!p.touches(table) && p.getSeat() == null)
+                        constraintsFullfilled = false;
+                }
+                constraintsFullfilled = checkActualConstraints();
             }
 
-            // Prüfen, ob alle am Tisch sitzen
-            foreach (Circle c in persons)
+            if (currentCircle != null)
             {
-                if (!c.touches(table) && c.getSeat() == null)
-                    constraintsFullfilled = false;
+                foreach (Circle p in persons)
+                {
+                    // Größe ändern, wenn ein Kreis über einem anderen liegt
+                    if (!currentCircle.Equals(p))
+                        currentCircle.checkSitting(p);
+                }
             }
         }
 
@@ -446,16 +462,6 @@ namespace BachelorProject
                 return firstPair.Value.CompareTo(nextPair.Value);
             }
             );
-
-            /*Border b = getConstraint("c1");
-            TextBlock tb = b.Child as TextBlock;
-            string sit = "";
-            foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
-            {
-                sit += kvp.Key.getName();
-                sit += " --- ";            
-            }
-            tb.Text = sit;*/
         }
 
         protected bool sittingNextToEachOther(Circle c1, Circle c2)
@@ -466,14 +472,13 @@ namespace BachelorProject
 
             if (sittingOrder.Count > 1)
             {
+                if (c1.getSeat() != null)
+                    c1 = c1.getSeat();
+                if (c2.getSeat() != null)
+                    c2 = c2.getSeat();
+
                 foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
                 {
-                    if (c1.getSeat() != null)
-                        c1 = c1.getSeat();
-                    if (c2.getSeat() != null)
-                        c2 = c2.getSeat();
-
-
                     if (c1.Equals(kvp.Key) && c1.touches(table) && c2.touches(table))
                     {
                         if (index == 0)
@@ -727,15 +732,9 @@ namespace BachelorProject
             if (constraintHelp)
             {
                 if (fulfilled)
-                {
                     tb.Background = System.Windows.Media.Brushes.LightGreen;
-                    b.BorderThickness = new Thickness(1);
-                }
                 else
-                {
                     tb.Background = System.Windows.Media.Brushes.LightCoral;
-                    b.BorderThickness = new Thickness(1);
-                }
             }
         }
 
@@ -780,15 +779,24 @@ namespace BachelorProject
                 return;
             }
 
-            Bitmap Screenshot = new Bitmap((int)this.Width + 100, (int)this.Height + 100);
+            Bitmap Screenshot = new Bitmap((int)this.Width, (int)this.Height-30);
             Graphics G = Graphics.FromImage(Screenshot);
+            string fileName;
             // snip wanted area
-            //G.CopyFromScreen(350, 150, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
-            G.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
-
+            if (laptop)
+            {
+                G.CopyFromScreen(80, 0, 0, 0, new System.Drawing.Size((int)this.Width, (int)this.Height), CopyPixelOperation.SourceCopy);
+                fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + testPerson + "\\Trial" + id + "-" + pictureId + "-" + info + ".bmp";
+            }
+            else
+            {
+                G.CopyFromScreen(350, 150, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
+                fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + testPerson + "\\Trial" + id + "-" + pictureId + "-" + info + ".bmp";
+            }
             // save uncompressed bitmap to disk
-            //string fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + testPerson + "\\Trial" + id + info + ".bmp";
-            string fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + testPerson + "\\Trial" + id + "-" + pictureId + "-" + info + ".bmp";
+            
+            
+            
             System.IO.FileStream fs = System.IO.File.Open(fileName, System.IO.FileMode.OpenOrCreate);
             Screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Bmp);
             fs.Close();
@@ -803,18 +811,6 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => showExerciseEnd());
                 return;
             }
-
-            /*foreach (UIElement e in MyCanvas.Children)
-            {
-                if (e is Border)
-                {
-                    Border b = e as Border;
-                    if (b.Name.Equals("end"))
-                    {
-                        b.Margin = new Thickness(100, 250, 0, 0);
-                    }
-                }
-            }*/
 
             Border b = new Border()
             {
@@ -835,8 +831,6 @@ namespace BachelorProject
 
             b.Child = tb;
             MyCanvas.Children.Add(b);
-
-
         }
 
 
@@ -897,47 +891,40 @@ namespace BachelorProject
 
         private void Done_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            doneButtonKlicked = true;
+            //CheckConstraints();
             bool done = ConstraintsFullfilled();
+            doneButtonKlicked = false;
+
+            foreach (UIElement uie in MyCanvas.Children)
+            {
+                if (uie is Border)
+                {
+                    Border b = uie as Border;
+                    if (b.Name.Equals("done"))
+                        doneBorder = b;
+                    else if (b.Name.Equals("notDone"))
+                        notDoneBorder = b;
+                    else uie.Opacity = 0.2;
+                }
+                else uie.Opacity = 0.2;
+            }
             
             if (done)
             {
                 tracker.SendMessage("DONE BUTTON PRESSED (DONE)");
                 takePicture("doneButton(done)");
-                // get TextBlock and change margin so that it is visible
-                foreach (UIElement uie in MyCanvas.Children)
-                {
-                    if (uie is Border)
-                    {
-                        Border b = uie as Border;
-                        if (b.Name.Equals("done"))
-                        {
-                            Canvas.SetZIndex(b, 100);
-                            b.Margin = new Thickness(150, 200, 0, 0);
-                        }
-                        else uie.Opacity = 0.2;
-                    }
-                    else uie.Opacity = 0.2;
-                }
+                // change margin so that it is visible
+                Canvas.SetZIndex(doneBorder, 100);
+                doneBorder.Margin = new Thickness(150, 200, 0, 0);
             }
             else
             {
                 tracker.SendMessage("DONE BUTTON PRESSED (NOT DONE)");
                 takePicture("doneButton(notDone)");
-                // get TextBlock and change margin so that it is visible
-                foreach (UIElement uie in MyCanvas.Children)
-                {
-                    if (uie is Border)
-                    {
-                        Border b = uie as Border;
-                        if (b.Name.Equals("notDone"))
-                        {
-                            Canvas.SetZIndex(b, 100);
-                            b.Margin = new Thickness(150, 200, 0, 0);
-                        }
-                        else uie.Opacity = 0.2;
-                    }
-                    else uie.Opacity = 0.2;
-                }
+                // change margin so that it is visible
+                Canvas.SetZIndex(notDoneBorder, 100);
+                notDoneBorder.Margin = new Thickness(150, 200, 0, 0);
             }
         }
 
@@ -957,16 +944,9 @@ namespace BachelorProject
                 uie.Opacity = 1;
                 if (uie is Ellipse && !(uie as Ellipse).Name.Equals("table"))
                     uie.Opacity = 0.8;
-                if (uie is Border)
-                {
-                    Border b = uie as Border;
-                    if (b.Name.Equals("notDone"))
-                    {
-                        Canvas.SetZIndex(b, 100);
-                        b.Margin = new Thickness(1500, 2000, 0, 0);
-                    }
-                }
             }
+            Canvas.SetZIndex(notDoneBorder, 100);
+            notDoneBorder.Margin = new Thickness(1500, 2000, 0, 0);
         }
 
 
