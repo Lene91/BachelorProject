@@ -1,34 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 //using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.CodeDom.Compiler;
-using System.Reflection;
-using System.Threading;
+using BachelorProject.Helper;
 using Eyetracker;
-using Eyetracker.EyeEvents;
-using Eyetracker.EyeEvents.FixationDetectionStrategies;
-using Eyetracker.Eyelink;
-using Eyetracker.MouseTracker;
-using System.Drawing.Imaging;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 //using System.Windows.Forms;
-using System.Windows.Media.Imaging;
-using System.IO;
 
 namespace BachelorProject
 {
@@ -36,59 +18,59 @@ namespace BachelorProject
     /// Interaktionslogik für ExampleExercise.xaml
     /// Quelle für Dragging-Interaktion: http://denismorozov.blogspot.de/2008/01/drag-controls-in-wpf-using.html
     /// </summary>
-    public partial class ExampleExercise : UserControl
+    public partial class ExampleExercise
     {
         // IMPORTANT!
-        private int testPerson = 1;
-        private bool laptop = true;
+        private const int TestPerson = 1;
+        private const bool Laptop = false;
 
-        private IAoiUpdate trial;
+        private IAoiUpdate _trial;
 
-        private double screenWidth = SystemParameters.FullPrimaryScreenWidth;
-        private double screenHeight = SystemParameters.FullPrimaryScreenHeight;
+        //private double _screenWidth = SystemParameters.FullPrimaryScreenWidth;
+        //private double _screenHeight = SystemParameters.FullPrimaryScreenHeight;
 
-        private Element current = new Element();
-        private Circle currentCircle;
+        private readonly Element _current = new Element();
+        private Circle _currentCircle;
         protected Circle table;
-        protected Circle p1;
-        protected Circle p2;
-        protected Circle p3;
-        protected Circle p4;
-        protected Circle p5;
-        protected Circle p6;
-        private List<string> circleNames;
-        private int circleRadius = 50;
-        private List<Circle> persons;
+        protected Circle P1;
+        protected Circle P2;
+        protected Circle P3;
+        protected Circle P4;
+        protected Circle P5;
+        protected Circle P6;
+        private List<string> _circleNames;
+        private const int CircleRadius = 50;
+        private List<Circle> _persons;
 
         protected bool constraintsFullfilled = false;
-        private StackPanel constraintStackPanel;
-        private WrapPanel legendStackPanel;
+        private StackPanel _constraintStackPanel;
+        private WrapPanel _legendStackPanel;
 
-        private List<System.Windows.Media.Brush> brushes;
-        private List<Ellipse> circles;
+        private List<System.Windows.Media.Brush> _brushes;
+        private List<Ellipse> _circles;
 
-        private int numberOfPersons;
-        private string constraints;
-        private string[] singleConstraints;
-        private List<string> names;
+        private int _numberOfPersons;
+        private string _constraints;
+        private string[] _singleConstraints;
+        private List<string> _names;
 
-        private List<KeyValuePair<Circle, double>> sittingOrder; // Kreis und Winkel zur Senkrechten auf dem Tisch
+        private List<KeyValuePair<Circle, double>> _sittingOrder; // Kreis und Winkel zur Senkrechten auf dem Tisch
 
-        protected int id;
+        protected int Id;
 
-        private ITracker tracker;
+        private ITracker _tracker;
 
-        public bool skip = false;
+        public bool Skip = false;
 
-        private bool constraintHelp;
+        private bool _constraintHelp;
 
-        private int pictureId = 1;
+        private int _pictureId = 1;
 
         
-        private Border doneBorder = new Border();
-        private Border notDoneBorder = new Border();
+        private Border _doneBorder = new Border();
+        private Border _notDoneBorder = new Border();
 
-        private bool doneButtonKlicked = false;
+        private bool _doneButtonKlicked;
 
 
         public ExampleExercise()
@@ -106,19 +88,19 @@ namespace BachelorProject
 
         public void Initialize(IAoiUpdate trial, int numberOfPersons, string constraints, List<string> names, ITracker tracker, bool constraintHelp)
         {
-            this.trial = trial;
-            this.numberOfPersons = numberOfPersons;
-            this.constraints = constraints;
-            this.names = names;
-            this.tracker = tracker;
-            this.constraintHelp = constraintHelp;
+            _trial = trial;
+            _numberOfPersons = numberOfPersons;
+            _constraints = constraints;
+            _names = names;
+            _tracker = tracker;
+            _constraintHelp = constraintHelp;
 
-            circleNames = new List<string>() { "Person1", "Person2", "Person3", "Person4", "Person5", "Person6" };
-            persons = new List<Circle>();
-            brushes = new List<System.Windows.Media.Brush>();
-            circles = new List<Ellipse>();
+            _circleNames = new List<string> { "Person1", "Person2", "Person3", "Person4", "Person5", "Person6" };
+            _persons = new List<Circle>();
+            _brushes = new List<System.Windows.Media.Brush>();
+            _circles = new List<Ellipse>();
             names = new List<string>();
-            sittingOrder = new List<KeyValuePair<Circle, double>>();
+            _sittingOrder = new List<KeyValuePair<Circle, double>>();
 
             InitializeColors();
             InitializeLegend();
@@ -129,34 +111,35 @@ namespace BachelorProject
 
         public List<Circle> GetPersons()
         {
-            return persons;
+            return _persons;
         }
 
         private void InitializeLeftInterface()
         {
-            table = new Circle(Table, id);
-            p1 = new Circle(Person1, id);
-            p2 = new Circle(Person2, id);
-            p3 = new Circle(Person3, id);
-            p4 = new Circle(Person4, id);
-            p5 = new Circle(Person5, id);
-            p6 = new Circle(Person6, id);
-            persons.Add(p1);
-            persons.Add(p2);
-            persons.Add(p3);
-            persons.Add(p4);
-            persons.Add(p5);
-            persons.Add(p6);
-            for (int i = 5; i > numberOfPersons - 1; --i)
+            table = new Circle(Table);
+            P1 = new Circle(Person1);
+            P2 = new Circle(Person2);
+            P3 = new Circle(Person3);
+            P4 = new Circle(Person4);
+            P5 = new Circle(Person5);
+            P6 = new Circle(Person6);
+            _persons.Add(P1);
+            _persons.Add(P2);
+            _persons.Add(P3);
+            _persons.Add(P4);
+            _persons.Add(P5);
+            _persons.Add(P6);
+            for (int i = 5; i > _numberOfPersons - 1; --i)
             {
-                persons.Remove(persons[i]);
-                circleNames.Remove(circleNames[i]);
+                _persons.Remove(_persons[i]);
+                _circleNames.Remove(_circleNames[i]);
             }
         }
 
         private void InitializeColors()
         {
-            System.Windows.Media.Brush[] allBrushes = new System.Windows.Media.Brush[] {
+            System.Windows.Media.Brush[] allBrushes =
+            {
                 System.Windows.Media.Brushes.White,
                 System.Windows.Media.Brushes.Gold,
                 System.Windows.Media.Brushes.OrangeRed,
@@ -176,13 +159,13 @@ namespace BachelorProject
             foreach (System.Windows.Media.Brush b in allBrushes)
                 b.Freeze();
 
-            Random r = new Random();
-            while (brushes.Count < numberOfPersons)
+            var r = new Random();
+            while (_brushes.Count < _numberOfPersons)
             {
-                int rNumber = r.Next(allBrushes.Length);
+                var rNumber = r.Next(allBrushes.Length);
                 var brush = allBrushes[rNumber];
-                if (!brushes.Contains(brush))
-                    brushes.Add(brush);
+                if (!_brushes.Contains(brush))
+                    _brushes.Add(brush);
             }
         }
 
@@ -195,7 +178,7 @@ namespace BachelorProject
             }
 
             // Überschrift "Legende"
-            TextBlock tb = new TextBlock
+            var tb = new TextBlock
             {
                 Name = "l0",
                 Text = "Legende",
@@ -207,7 +190,7 @@ namespace BachelorProject
             MyCanvas.Children.Add(tb);
 
             // Panel für Legendeneinträge
-            legendStackPanel = new WrapPanel()
+            _legendStackPanel = new WrapPanel
             {
                 Name = "LegendPanel",
                 Width = 320,
@@ -216,15 +199,15 @@ namespace BachelorProject
             };
             
 
-            this.MyCanvas.Children.Add(legendStackPanel);
+            MyCanvas.Children.Add(_legendStackPanel);
 
             // Legendeneinträge bestehend aus Kreis und Name
-            for (int i = 1; i <= numberOfPersons; ++i)
+            for (int i = 1; i <= _numberOfPersons; ++i)
             {
-                Ellipse e = new Ellipse
+                var e = new Ellipse
                 {
                     Name = "lc" + i,
-                    Fill = brushes[i - 1],
+                    Fill = _brushes[i - 1],
                     Opacity = 0.8,
                     Width = 50,
                     Height = 50,
@@ -232,17 +215,17 @@ namespace BachelorProject
                     Stroke = System.Windows.Media.Brushes.Black,
                     Margin = new Thickness(10, 10, 10, 10)
                 };
-                legendStackPanel.Children.Add(e);
+                _legendStackPanel.Children.Add(e);
 
-                TextBlock t = new TextBlock
+                var t = new TextBlock
                 {
                     Name = "l" + i,
-                    Text = names[i - 1],
+                    Text = _names[i - 1],
                     Background = System.Windows.Media.Brushes.Transparent,
                     FontSize = 25,
                     Margin = new Thickness(10, 10, 10, 10)
                 };
-                legendStackPanel.Children.Add(t);
+                _legendStackPanel.Children.Add(t);
             }
         }
 
@@ -254,25 +237,25 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => InitializeConstraints());
                 return;
             }
-            singleConstraints = constraints.Split(new Char[] { ';' });
-            string[] newConstraints = new string[singleConstraints.Count()];
+            _singleConstraints = _constraints.Split(new[] { ';' });
+            var newConstraints = new string[_singleConstraints.Count()];
 
             // Ersetzen der Platzhalter (Zahlen) in Constraints durch konkrete Namen
-            int index = 0;
-            foreach (string s in singleConstraints)
+            var index = 0;
+            foreach (string s in _singleConstraints)
             {
                 var newString = s;
-                for (int i = 1; i <= numberOfPersons; ++i)
+                for (var i = 1; i <= _numberOfPersons; ++i)
                 {
-                    newString = newString.Replace(i.ToString(), names[i - 1]);
+                    newString = newString.Replace(i.ToString(), _names[i - 1]);
                 }
                 newConstraints[index] = newString;
                 index++;
             }
-            singleConstraints = newConstraints;
+            _singleConstraints = newConstraints;
 
             // Panel für Constraints
-            constraintStackPanel = new StackPanel
+            _constraintStackPanel = new StackPanel
             {
                 Name = "ConstraintPanel",
                 Orientation = Orientation.Vertical,
@@ -280,10 +263,10 @@ namespace BachelorProject
                 Height = 550,
                 Margin = new Thickness(800, 260, 0, 0)
             };
-            this.MyCanvas.Children.Add(constraintStackPanel);
+            MyCanvas.Children.Add(_constraintStackPanel);
 
             // Überschrift "Sitzwünsche"
-            TextBlock tb = new TextBlock
+            var tb = new TextBlock
             {
                 Name = "c0",
                 Text = "Sitzwünsche",
@@ -292,21 +275,21 @@ namespace BachelorProject
                 FontSize = 26,
                 FontWeight = FontWeights.Bold
             };
-            constraintStackPanel.Children.Add(tb);
+            _constraintStackPanel.Children.Add(tb);
 
             // einzelne Constraints darstellen
-            int constraintCounter = 1;
-            foreach (string c in singleConstraints)
+            var constraintCounter = 1;
+            foreach (var c in _singleConstraints)
             {
-                string labelName = "c" + constraintCounter;
-                Border b = new Border
+                var labelName = "c" + constraintCounter;
+                var b = new Border
                 {
                     Name = labelName,
                     BorderThickness = new Thickness(1),
                     BorderBrush = System.Windows.Media.Brushes.Black,
                     Margin = new Thickness(30, 3, 30, 3)
                 };
-                TextBlock t = new TextBlock
+                var t = new TextBlock
                 {
                     Text = c,
                     FontSize = 20,
@@ -315,7 +298,7 @@ namespace BachelorProject
                 };
                 constraintCounter++;
                 b.Child = t;
-                constraintStackPanel.Children.Add(b);
+                _constraintStackPanel.Children.Add(b);
             }
         }
 
@@ -324,41 +307,39 @@ namespace BachelorProject
             // Liste mit allen Personenkreisen erstellen
             foreach (UIElement e in MyCanvas.Children)
             {
-                if (e is Ellipse)
+                if (!(e is Ellipse)) continue;
+                var el = e as Ellipse;
+                if (!el.Name.Equals("Table") && _circleNames.Contains(el.Name))
                 {
-                    Ellipse el = e as Ellipse;
-                    if (!el.Name.Equals("Table") && circleNames.Contains(el.Name))
-                    {
-                        circles.Add(el);
-                    }
+                    _circles.Add(el);
                 }
             }
 
             // Positionieren und Einfärben der einzelnen Personenkreise
-            int counter = 0;
-            int x = 30;
-            foreach (Ellipse e in circles)
+            var counter = 0;
+            var x = 30;
+            foreach (var e in _circles)
             {
-                e.Fill = brushes[counter];
+                e.Fill = _brushes[counter];
                 e.Margin = new Thickness(x, 30, 0, 0);
                 x += 110;
                 counter++;
             }
 
             x = 30;
-            foreach (Circle c in persons)
+            foreach (var c in _persons)
             {
-                var newCenterX = x + circleRadius;
-                var newCenterY = 30 + circleRadius;
-                c.updatePosition(new System.Windows.Point(newCenterX, newCenterY));
+                var newCenterX = x + CircleRadius;
+                const int newCenterY = 30 + CircleRadius;
+                c.UpdatePosition(new System.Windows.Point(newCenterX, newCenterY));
                 x += 110;
             }
 
         }
 
-        public int getID()
+        public int GetId()
         {
-            return id;
+            return Id;
         }
 
 
@@ -388,37 +369,29 @@ namespace BachelorProject
 
             // Mauskoordinaten speichern
             var pos = Mouse.GetPosition(null);
-            tracker.SendMessage(pos.ToString());
+            _tracker.SendMessage("MousePos " + pos.ToString());
 
-            if (constraintHelp || doneButtonKlicked)
+            if (_constraintHelp || _doneButtonKlicked)
             {
                 // Sitzplatzbeziehungen prüfen
-                calculateSittingOrder();
-                initiateRedBrush();
+                CalculateSittingOrder();
+                InitiateRedBrush();
 
                 constraintsFullfilled = true;
 
-                foreach (Circle p in persons)
-                {
-                    // Prüfen, ob alle am Tisch sitzen
-                    if (!p.touches(table) && p.getSeat() == null)
-                        constraintsFullfilled = false;
-                }
-                constraintsFullfilled = checkActualConstraints();
+                foreach (var p in _persons.Where(p => !p.Touches(table) && p.GetSeat() == null))
+                    constraintsFullfilled = false;
+                constraintsFullfilled = CheckActualConstraints();
             }
 
-            if (currentCircle != null)
+            if (_currentCircle == null) return;
+            foreach (var p in _persons.Where(p => !_currentCircle.Equals(p)))
             {
-                foreach (Circle p in persons)
-                {
-                    // Größe ändern, wenn ein Kreis über einem anderen liegt
-                    if (!currentCircle.Equals(p))
-                        currentCircle.checkSitting(p);
-                }
+                _currentCircle.CheckSitting(p);
             }
         }
 
-        public virtual bool checkActualConstraints()
+        public virtual bool CheckActualConstraints()
         {
             return false;
         }
@@ -429,113 +402,94 @@ namespace BachelorProject
          ************************************************************
          */
 
-        private void calculateSittingOrder()
+        private void CalculateSittingOrder()
         {
-            sittingOrder.Clear();
-            List<Circle> onTable = new List<Circle>();
-            foreach (Circle c in persons)
-            {
-                if (c.getSeat() == null && c.touches(table))
-                {
-                    onTable.Add(c);
-                }
-            }
+            _sittingOrder.Clear();
+            var onTable = _persons.Where(c => c.GetSeat() == null && c.Touches(table)).ToList();
 
-            var centerPoint = table.getPosition();
-            var tableEdgePoint = new System.Windows.Point(centerPoint.X, centerPoint.Y - table.getRadius());
+            var centerPoint = table.GetPosition();
+            var tableEdgePoint = new System.Windows.Point(centerPoint.X, centerPoint.Y - table.GetRadius());
             var firstVector = centerPoint - tableEdgePoint;
 
-            foreach (Circle c in onTable)
+            foreach (var c in onTable)
             {
-                var secondVector = centerPoint - c.getPosition();
+                var secondVector = centerPoint - c.GetPosition();
                 var angle = Math.Acos(firstVector * secondVector / (firstVector.Length * secondVector.Length));
                 angle = angle * 180 / Math.PI;
-                if (getHalf(c) == 2)
+                if (GetHalf(c) == 2)
                     angle = 360 - angle;
                 var newEntry = new KeyValuePair<Circle, double>(c, angle);
-                if (!sittingOrder.Contains(newEntry))
-                    sittingOrder.Add(newEntry);
+                if (!_sittingOrder.Contains(newEntry))
+                    _sittingOrder.Add(newEntry);
             }
 
-            sittingOrder.Sort((firstPair, nextPair) =>
-            {
-                return firstPair.Value.CompareTo(nextPair.Value);
-            }
-            );
+            _sittingOrder.Sort((firstPair, nextPair) => firstPair.Value.CompareTo(nextPair.Value));
         }
 
-        protected bool sittingNextToEachOther(Circle c1, Circle c2)
+        protected bool SittingNextToEachOther(Circle c1, Circle c2)
         {
-            int lastIndex = sittingOrder.Count - 1;
-            int index = 0;
+            var lastIndex = _sittingOrder.Count - 1;
+            var index = 0;
 
 
-            if (sittingOrder.Count > 1)
+            if (_sittingOrder.Count <= 1) return false;
+            if (c1.GetSeat() != null)
+                c1 = c1.GetSeat();
+            if (c2.GetSeat() != null)
+                c2 = c2.GetSeat();
+
+            foreach (var kvp in _sittingOrder)
             {
-                if (c1.getSeat() != null)
-                    c1 = c1.getSeat();
-                if (c2.getSeat() != null)
-                    c2 = c2.getSeat();
-
-                foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
+                if (c1.Equals(kvp.Key) && c1.Touches(table) && c2.Touches(table))
                 {
-                    if (c1.Equals(kvp.Key) && c1.touches(table) && c2.touches(table))
+                    if (index == 0)
                     {
-                        if (index == 0)
-                        {
-                            if (c2.Equals(sittingOrder[lastIndex].Key) || c2.Equals(sittingOrder[index + 1].Key))
-                                return true;
-                            else return false;
-                        }
-                        else if (index == lastIndex)
-                        {
-                            if (c2.Equals(sittingOrder[index - 1].Key) || c2.Equals(sittingOrder[0].Key))
-                                return true;
-                            else return false;
-                        }
-                        else
-                        {
-                            if (c2.Equals(sittingOrder[index - 1].Key) || c2.Equals(sittingOrder[index + 1].Key))
-                                return true;
-                            else return false;
-                        }
+                        return c2.Equals(_sittingOrder[lastIndex].Key) || c2.Equals(_sittingOrder[index + 1].Key);
                     }
-                    index++;
+                    else if (index == lastIndex)
+                    {
+                        return c2.Equals(_sittingOrder[index - 1].Key) || c2.Equals(_sittingOrder[0].Key);
+                    }
+                    else
+                    {
+                        return c2.Equals(_sittingOrder[index - 1].Key) || c2.Equals(_sittingOrder[index + 1].Key);
+                    }
                 }
+                index++;
             }
             return false;
         }
 
-        protected bool notSittingNextToEachOther(Circle c1, Circle c2)
+        protected bool NotSittingNextToEachOther(Circle c1, Circle c2)
         {
-            if ((c1.getSeat() != null && c1.getSeat().Equals(c2)) || (c2.getSeat() != null && c2.getSeat().Equals(c1))) // Person sitzt auf dem Schoß der anderen
+            if ((c1.GetSeat() != null && c1.GetSeat().Equals(c2)) || (c2.GetSeat() != null && c2.GetSeat().Equals(c1))) // Person sitzt auf dem Schoß der anderen
                 return true;
-            if (!c1.touches(table) && c1.getSeat() == null || !c2.touches(table) && c2.getSeat() == null)
+            if (!c1.Touches(table) && c1.GetSeat() == null || !c2.Touches(table) && c2.GetSeat() == null)
                 return false;
             else
-                return !sittingNextToEachOther(c1, c2);
+                return !SittingNextToEachOther(c1, c2);
         }
 
-        private Tuple<Circle, Circle> getNeighbours(Circle c)
+        private Tuple<Circle, Circle> GetNeighbours(Circle c)
         {
-            int counter = 0;
-            int lastIndex = sittingOrder.Count - 1;
+            var counter = 0;
+            var lastIndex = _sittingOrder.Count - 1;
             Circle last = null;
             Circle next = null;
-            if (c.getSeat() != null)
-                c = c.getSeat();
-            foreach (KeyValuePair<Circle, double> kvp in sittingOrder)
+            if (c.GetSeat() != null)
+                c = c.GetSeat();
+            foreach (var kvp in _sittingOrder)
             {
                 if (c.Equals(kvp.Key))
                 {
                     if (counter - 1 < 0)
-                        last = sittingOrder[lastIndex].Key;
+                        last = _sittingOrder[lastIndex].Key;
                     if (counter + 1 > lastIndex)
-                        next = sittingOrder[0].Key;
+                        next = _sittingOrder[0].Key;
                     if (last == null)
-                        last = sittingOrder[counter - 1].Key;
+                        last = _sittingOrder[counter - 1].Key;
                     if (next == null)
-                        next = sittingOrder[counter + 1].Key;
+                        next = _sittingOrder[counter + 1].Key;
                     return new Tuple<Circle, Circle>(last, next);
                 }
                 counter++;
@@ -549,82 +503,58 @@ namespace BachelorProject
          ************************************************************
          */
 
-        protected bool sharingFood(Circle c1, Circle c2)
+        protected bool SharingFood(Circle c1, Circle c2)
         {
-            if (c1.touches(table) && c2.touches(table) && c1.overlaps(c2) && c1.getRadius() == c2.getRadius())
-                return true;
-            else
+            return c1.Touches(table) && c2.Touches(table) && c1.Overlaps(c2) && c1.GetRadius() == c2.GetRadius();
+        }
+
+        protected bool NotSharingFood(Circle c1, Circle c2)
+        {
+            return c1.Touches(table) && c2.Touches(table) && (!c1.Overlaps(c2) || c1.GetRadius() != c2.GetRadius());
+        }
+
+        protected bool SharingFood(Circle c)
+        {
+            return _persons.Any(p => !c.Equals(p) && SharingFood(c, p));
+        }
+
+        protected bool NotSharingFood(Circle c)
+        {
+            if (_persons.Any(p => (!c.Equals(p) && SharingFood(c, p))))
+            {
                 return false;
-        }
-
-        protected bool notSharingFood(Circle c1, Circle c2)
-        {
-            if (c1.touches(table) && c2.touches(table) && (!c1.overlaps(c2) || c1.getRadius() != c2.getRadius()))
-                return true;
-            else
-                return false;
-        }
-
-        protected bool sharingFood(Circle c)
-        {
-            foreach (Circle p in persons)
-            {
-                if (!c.Equals(p) && sharingFood(c, p))
-                    return true;
             }
-            return false;
+            return c.Touches(table);
         }
 
-        protected bool notSharingFood(Circle c)
+        protected bool NumberSharingFood(int number)
         {
-            foreach (Circle p in persons)
+            var amount = 0;
+            foreach (var p in _persons)
             {
-                if ((!c.Equals(p) && sharingFood(c, p)))
+                if (!p.Touches(table) && p.GetSeat() == null)
                     return false;
-            }
-            if (c.touches(table))
-                return true;
-            return false;
-        }
-
-        protected bool numberSharingFood(int number)
-        {
-            int amount = 0;
-            foreach (Circle p in persons)
-            {
-                if (!p.touches(table) && p.getSeat() == null)
-                    return false;
-                foreach (Circle q in persons)
-                {
-                    if (!p.Equals(q) && sharingFood(p, q))
-                        amount++;
-                }
+                amount += _persons.Count(q => !p.Equals(q) && SharingFood(p, q));
             }
             return amount / 2 == number;
         }
 
-        protected bool oneNeighbourSharingFood(Circle c)
+        protected bool OneNeighbourSharingFood(Circle c)
         {
-            Tuple<Circle, Circle> neighbours = getNeighbours(c);
-            if ((neighbours.Item1 != null && sharingFood(neighbours.Item1)) ^ (neighbours.Item2 != null && sharingFood(neighbours.Item2)))
-                return true;
-            return false;
+            var neighbours = GetNeighbours(c);
+            return (neighbours.Item1 != null && SharingFood(neighbours.Item1)) ^ (neighbours.Item2 != null && SharingFood(neighbours.Item2));
         }
 
-        protected bool atLeastOneNeighbourSharingFood(Circle c)
+        protected bool AtLeastOneNeighbourSharingFood(Circle c)
         {
-            Tuple<Circle, Circle> neighbours = getNeighbours(c);
-            if ((neighbours.Item1 != null && sharingFood(neighbours.Item1)) || (neighbours.Item2 != null && sharingFood(neighbours.Item2)))
-                return true;
-            return false;
+            var neighbours = GetNeighbours(c);
+            return (neighbours.Item1 != null && SharingFood(neighbours.Item1)) || (neighbours.Item2 != null && SharingFood(neighbours.Item2));
         }
 
-        protected bool noNeighbourSharingFood(Circle c)
+        protected bool NoNeighbourSharingFood(Circle c)
         {
-            Tuple<Circle, Circle> neighbours = getNeighbours(c);
-            if ((neighbours.Item1 != null && notSharingFood(neighbours.Item1)) && (neighbours.Item2 != null && notSharingFood(neighbours.Item2)))
-                return true;
-            return false;
+            var neighbours = GetNeighbours(c);
+            return (neighbours.Item1 != null && NotSharingFood(neighbours.Item1)) && (neighbours.Item2 != null && NotSharingFood(neighbours.Item2));
         }
 
 
@@ -634,86 +564,66 @@ namespace BachelorProject
          ************************************************************
          */
 
-        protected bool sittingOn(Circle c1, Circle c2)
+        protected bool SittingOn(Circle c1, Circle c2)
         {
-            if (c2.touches(table) && c1.sitsOn(c2))
-                return true;
-            else
-                return false;
+            return c2.Touches(table) && c1.SitsOn(c2);
         }
 
-        protected bool notSittingOn(Circle c1, Circle c2)
+        protected bool NotSittingOn(Circle c1, Circle c2)
         {
-            if (c1.touches(table) && c2.touches(table) && !c1.sitsOn(c2))
-                return true;
-            else
-                return false;
+            return c1.Touches(table) && c2.Touches(table) && !c1.SitsOn(c2);
         }
 
-        protected bool sittingOnSomeone(Circle c)
+        protected bool SittingOnSomeone(Circle c)
         {
-            if (c.getSeat() != null)
-                return true;
-            return false;
+            return c.GetSeat() != null;
         }
 
-        protected bool notSittingOnSomeone(Circle c)
+        protected bool NotSittingOnSomeone(Circle c)
         {
-            if (c.getSeat() == null && c.touches(table))
-                return true;
-            return false;
+            return c.GetSeat() == null && c.Touches(table);
         }
 
-        protected bool isSeat(Circle c)
+        protected bool IsSeat(Circle c)
         {
-            if (c.isSitter && c.touches(table))
-                return true;
-            return false;
+            return c.IsSitter && c.Touches(table);
         }
 
-        protected bool isNotSeat(Circle c)
+        protected bool IsNotSeat(Circle c)
         {
-            if (!c.isSitter && c.touches(table))
-                return true;
-            return false;
+            return !c.IsSitter && c.Touches(table);
         }
 
 
-        protected bool numberSittingOn(int number)
+        protected bool NumberSittingOn(int number)
         {
-            int amount = 0;
-            foreach (Circle p in persons)
+            var amount = 0;
+            foreach (var p in _persons)
             {
-                if (!p.touches(table))
+                if (!p.Touches(table))
                     return false;
-                if (p.getSeat() != null)
+                if (p.GetSeat() != null)
                     amount++;
             }
             return amount == number;
         }
 
-        protected bool oneNeighbourIsSeat(Circle c)
+        protected bool OneNeighbourIsSeat(Circle c)
         {
-            Tuple<Circle, Circle> neighbours = getNeighbours(c);
-            if ((neighbours.Item1 != null && isSeat(neighbours.Item1)) ^ (neighbours.Item2 != null && isSeat(neighbours.Item2)))
-                return true;
-            return false;
+            var neighbours = GetNeighbours(c);
+            return (neighbours.Item1 != null && IsSeat(neighbours.Item1)) ^ (neighbours.Item2 != null && IsSeat(neighbours.Item2));
         }
 
-        protected bool atLeastOneNeighbourIsSeat(Circle c)
+        protected bool AtLeastOneNeighbourIsSeat(Circle c)
         {
-            Tuple<Circle, Circle> neighbours = getNeighbours(c);
-            if ((neighbours.Item1 != null && isSeat(neighbours.Item1)) || (neighbours.Item2 != null && isSeat(neighbours.Item2)))
-                return true;
-            return false;
+            var neighbours = GetNeighbours(c);
+            return (neighbours.Item1 != null && IsSeat(neighbours.Item1)) || (neighbours.Item2 != null && IsSeat(neighbours.Item2));
         }
 
-        protected bool noNeighbourIsSeat(Circle c)
+        protected bool NoNeighbourIsSeat(Circle c)
         {
-            Tuple<Circle, Circle> neighbours = getNeighbours(c);
-            if (neighbours.Item1 != null && isNotSeat(neighbours.Item1) && neighbours.Item2 != null && isNotSeat(neighbours.Item2))
-                return true;
-            return false;
+            var neighbours = GetNeighbours(c);
+            return neighbours.Item1 != null && IsNotSeat(neighbours.Item1) && neighbours.Item2 != null && IsNotSeat(neighbours.Item2);
         }
 
         /*
@@ -725,94 +635,78 @@ namespace BachelorProject
          */
 
 
-        protected void updateConstraint(string name, bool fulfilled)
+        protected void UpdateConstraint(string name, bool fulfilled)
         {
-            Border b = getConstraint(name);
-            TextBlock tb = b.Child as TextBlock;
-            if (constraintHelp)
+            var b = GetConstraint(name);
+            var tb = b.Child as TextBlock;
+            if (!_constraintHelp) return;
+            if (tb != null)
+                tb.Background = fulfilled ? System.Windows.Media.Brushes.LightGreen : System.Windows.Media.Brushes.LightCoral;
+        }
+
+        private int GetHalf(Circle c)
+        {
+            var x = c.GetPosition().X;
+            var tableX = table.GetPosition().X;
+            return x >= tableX ? 1 : 2;
+        }
+
+        private void InitiateRedBrush()
+        {
+            for (var i = 1; i <= _singleConstraints.Count(); ++i)
             {
-                if (fulfilled)
-                    tb.Background = System.Windows.Media.Brushes.LightGreen;
-                else
-                    tb.Background = System.Windows.Media.Brushes.LightCoral;
+                var name = "c" + i.ToString();
+                UpdateConstraint(name, false);
             }
         }
 
-        private int getHalf(Circle c)
+        private Border GetConstraint(string name)
         {
-            var x = c.getPosition().X;
-            var tableX = table.getPosition().X;
-            if (x >= tableX)
-                return 1;
-            else
-                return 2;
+            return _constraintStackPanel.Children.OfType<Border>().Select(e => e as Border).FirstOrDefault(b => b.Name.Equals(name));
         }
 
-        private void initiateRedBrush()
-        {
-            for (int i = 1; i <= singleConstraints.Count(); ++i)
-            {
-                string name = "c" + i.ToString();
-                updateConstraint(name, false);
-            }
-        }
-
-        private Border getConstraint(string name)
-        {
-            foreach (UIElement e in constraintStackPanel.Children)
-            {
-                if (e is Border)
-                {
-                    Border b = e as Border;
-                    if (b.Name.Equals(name))
-                        return b;
-                }
-            }
-            return null;
-        }
-
-        public void takePicture(string info)
+        public void TakePicture(string info)
         {
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() => takePicture(info));
+                Dispatcher.Invoke(() => TakePicture(info));
                 return;
             }
 
-            Bitmap Screenshot = new Bitmap((int)this.Width, (int)this.Height-30);
-            Graphics G = Graphics.FromImage(Screenshot);
+            var screenshot = new Bitmap((int)Width, (int)Height-30);
+            var g = Graphics.FromImage(screenshot);
             string fileName;
             // snip wanted area
-            if (laptop)
+            if (Laptop)
             {
-                G.CopyFromScreen(80, 0, 0, 0, new System.Drawing.Size((int)this.Width, (int)this.Height), CopyPixelOperation.SourceCopy);
-                fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + testPerson + "\\Trial" + id + "-" + pictureId + "-" + info + ".bmp";
+                g.CopyFromScreen(80, 0, 0, 0, new System.Drawing.Size((int)this.Width, (int)this.Height), CopyPixelOperation.SourceCopy);
+                fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + TestPerson + "\\Trial" + Id + "-" + _pictureId + "-" + info + ".bmp";
             }
             else
             {
-                G.CopyFromScreen(350, 150, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
-                fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + testPerson + "\\Trial" + id + "-" + pictureId + "-" + info + ".bmp";
+                g.CopyFromScreen(360, 210, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
+                fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + TestPerson + "\\Trial" + Id + "-" + _pictureId + "-" + info + ".bmp";
             }
             // save uncompressed bitmap to disk
             
             
             
             System.IO.FileStream fs = System.IO.File.Open(fileName, System.IO.FileMode.OpenOrCreate);
-            Screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Bmp);
+            screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Bmp);
             fs.Close();
 
-            pictureId++;
+            _pictureId++;
         }
 
-        public void showExerciseEnd()
+        public void ShowExerciseEnd()
         {
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() => showExerciseEnd());
+                Dispatcher.Invoke(() => ShowExerciseEnd());
                 return;
             }
 
-            Border b = new Border()
+            var b = new Border
             {
                 BorderThickness = new Thickness(3),
                 BorderBrush = System.Windows.Media.Brushes.Black,
@@ -821,7 +715,7 @@ namespace BachelorProject
                 Margin = new Thickness(80, 250, 0, 0)
             };
 
-            TextBlock tb = new TextBlock()
+            var tb = new TextBlock
             {
                 Padding = new Thickness(80),
                 FontSize = 30,
@@ -844,67 +738,70 @@ namespace BachelorProject
 
         private void Reset_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            takePicture("resetButton");
+            TakePicture("resetButton");
 
-            foreach (Circle el in persons)
+            foreach (var el in _persons)
             {
                 // Reset the location of the object (add to sender's renderTransform
                 // newPosition minus currentElement's position
-                var rt = ((UIElement)el.getEllipse()).RenderTransform;
-                var offsetX = rt.Value.OffsetX;
-                var offsetY = rt.Value.OffsetY;
+                var rt = el.GetEllipse().RenderTransform;
+                //var offsetX = rt.Value.OffsetX;
+                //var offsetY = rt.Value.OffsetY;
                 rt.SetValue(TranslateTransform.XProperty, 0.0);
                 rt.SetValue(TranslateTransform.YProperty, 0.0);
 
-                GeneralTransform generalTransform1 = MyCanvas.TransformToVisual(el.getEllipse());
-                System.Windows.Point currentPoint = generalTransform1.Inverse.Transform(new System.Windows.Point(0, 0));
-
-                if (el.getRadius() < circleRadius)
+                var generalTransform1 = MyCanvas.TransformToVisual(el.GetEllipse());
+                if (generalTransform1.Inverse != null)
                 {
-                    Circle seat = el.getSeat();
-                    el.stopsSittingOn(seat);
-                }
-                var newCenterX = currentPoint.X + circleRadius;
-                var newCenterY = currentPoint.Y + circleRadius;
+                    var currentPoint = generalTransform1.Inverse.Transform(new System.Windows.Point(0, 0));
 
-                el.updatePosition(new System.Windows.Point(newCenterX, newCenterY));
+                    if (el.GetRadius() < CircleRadius)
+                    {
+                        var seat = el.GetSeat();
+                        el.StopsSittingOn(seat);
+                    }
+                    var newCenterX = currentPoint.X + CircleRadius;
+                    var newCenterY = currentPoint.Y + CircleRadius;
+
+                    el.UpdatePosition(new System.Windows.Point(newCenterX, newCenterY));
+                }
 
                 // resize object
-                el.updateRadius(circleRadius);
+                el.UpdateRadius(CircleRadius);
             }
-            tracker.SendMessage("RESET BUTTON PRESSED");
+            _tracker.SendMessage("RESET BUTTON PRESSED");
         }
 
         private void Continue_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            takePicture("continueButton");
-            tracker.SendMessage("CONTINUE BUTTON PRESSED");
-            skip = true;
+            TakePicture("continueButton");
+            _tracker.SendMessage("CONTINUE BUTTON PRESSED");
+            Skip = true;
         }
 
-        private void Help_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        /*private void Help_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            tracker.SendMessage("HELP BUTTON PRESSED");
-            constraintHelp = true;
-            takePicture("helpButton");
-        }
+            _tracker.SendMessage("HELP BUTTON PRESSED");
+            _constraintHelp = true;
+            TakePicture("helpButton");
+        }*/
 
         private void Done_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            doneButtonKlicked = true;
+            _doneButtonKlicked = true;
             //CheckConstraints();
-            bool done = ConstraintsFullfilled();
-            doneButtonKlicked = false;
+            var done = ConstraintsFullfilled();
+            _doneButtonKlicked = false;
 
             foreach (UIElement uie in MyCanvas.Children)
             {
                 if (uie is Border)
                 {
-                    Border b = uie as Border;
-                    if (b.Name.Equals("done"))
-                        doneBorder = b;
-                    else if (b.Name.Equals("notDone"))
-                        notDoneBorder = b;
+                    var b = uie as Border;
+                    if (b.Name.Equals("Done"))
+                        _doneBorder = b;
+                    else if (b.Name.Equals("NotDone"))
+                        _notDoneBorder = b;
                     else uie.Opacity = 0.2;
                 }
                 else uie.Opacity = 0.2;
@@ -912,19 +809,19 @@ namespace BachelorProject
             
             if (done)
             {
-                tracker.SendMessage("DONE BUTTON PRESSED (DONE)");
-                takePicture("doneButton(done)");
+                _tracker.SendMessage("DONE BUTTON PRESSED (DONE)");
+                TakePicture("doneButton(done)");
                 // change margin so that it is visible
-                Canvas.SetZIndex(doneBorder, 100);
-                doneBorder.Margin = new Thickness(150, 200, 0, 0);
+                Panel.SetZIndex(_doneBorder, 100);
+                _doneBorder.Margin = new Thickness(150, 200, 0, 0);
             }
             else
             {
-                tracker.SendMessage("DONE BUTTON PRESSED (NOT DONE)");
-                takePicture("doneButton(notDone)");
+                _tracker.SendMessage("DONE BUTTON PRESSED (NOT DONE)");
+                TakePicture("doneButton(notDone)");
                 // change margin so that it is visible
-                Canvas.SetZIndex(notDoneBorder, 100);
-                notDoneBorder.Margin = new Thickness(150, 200, 0, 0);
+                Panel.SetZIndex(_notDoneBorder, 100);
+                _notDoneBorder.Margin = new Thickness(150, 200, 0, 0);
             }
         }
 
@@ -932,7 +829,7 @@ namespace BachelorProject
         // -> zum nächsten Screen weiterleiten
         private void Done_Continue_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            skip = true;
+            Skip = true;
         }
 
         // OK-Button nachdem Fertig-Button gedrückt wurde und noch nicht alle Wünsche erfüllt sind
@@ -945,8 +842,8 @@ namespace BachelorProject
                 if (uie is Ellipse && !(uie as Ellipse).Name.Equals("table"))
                     uie.Opacity = 0.8;
             }
-            Canvas.SetZIndex(notDoneBorder, 100);
-            notDoneBorder.Margin = new Thickness(1500, 2000, 0, 0);
+            Panel.SetZIndex(_notDoneBorder, 100);
+            _notDoneBorder.Margin = new Thickness(1500, 2000, 0, 0);
         }
 
 
@@ -962,76 +859,71 @@ namespace BachelorProject
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (this.current.InputElement != null)
-            {
-                this.current.X = Mouse.GetPosition((IInputElement)sender).X;
-                this.current.Y = Mouse.GetPosition((IInputElement)sender).Y;
-                this.current.InputElement.CaptureMouse();
-            }
+            if (_current.InputElement == null) return;
+            _current.X = Mouse.GetPosition((IInputElement)sender).X;
+            _current.Y = Mouse.GetPosition((IInputElement)sender).Y;
+            _current.InputElement.CaptureMouse();
         }
 
         private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (this.current.InputElement != null)
+            if (_current.InputElement != null)
             {
-                this.current.IsDragging = false;
-                this.current.InputElement.ReleaseMouseCapture();
-                this.current.InputElement = null;
+                _current.IsDragging = false;
+                _current.InputElement.ReleaseMouseCapture();
+                _current.InputElement = null;
             }
-            var pos = e.GetPosition(MyCanvas);
+            //var pos = e.GetPosition(MyCanvas);
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
             // if mouse is down when its moving, then it's dragging current
             if (e.LeftButton == MouseButtonState.Pressed)
-                this.current.IsDragging = true;
+                _current.IsDragging = true;
 
-            if (this.current.IsDragging && current.InputElement != null)
-            {
-                // Retrieve the current position of the mouse.
-                var newX = Mouse.GetPosition((IInputElement)sender).X;
-                var newY = Mouse.GetPosition((IInputElement)sender).Y;
+            if (!_current.IsDragging || _current.InputElement == null) return;
+            // Retrieve the current position of the mouse.
+            var newX = Mouse.GetPosition((IInputElement)sender).X;
+            var newY = Mouse.GetPosition((IInputElement)sender).Y;
 
-                // Reset the location of the object (add to sender's renderTransform
-                // newPosition minus currentElement's position
-                var rt = ((UIElement)this.current.InputElement).RenderTransform;
-                var offsetX = rt.Value.OffsetX;
-                var offsetY = rt.Value.OffsetY;
-                rt.SetValue(TranslateTransform.XProperty, offsetX + newX - current.X);
-                rt.SetValue(TranslateTransform.YProperty, offsetY + newY - current.Y);
+            // Reset the location of the object (add to sender's renderTransform
+            // newPosition minus currentElement's position
+            var rt = ((UIElement)_current.InputElement).RenderTransform;
+            var offsetX = rt.Value.OffsetX;
+            var offsetY = rt.Value.OffsetY;
+            rt.SetValue(TranslateTransform.XProperty, offsetX + newX - _current.X);
+            rt.SetValue(TranslateTransform.YProperty, offsetY + newY - _current.Y);
 
-                // Update position of the mouse
-                current.X = newX;
-                current.Y = newY;
+            // Update position of the mouse
+            _current.X = newX;
+            _current.Y = newY;
 
-                var mousePos = e.GetPosition(MyCanvas);
-                trial.UpdateAoi(currentCircle);
-                updatePosition();
-            }
+            //var mousePos = e.GetPosition(MyCanvas);
+            _trial.UpdateAoi(_currentCircle);
+            UpdatePosition();
         }
 
         private void ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.current.InputElement = (IInputElement)sender;
-            foreach (Circle c in persons)
+            _current.InputElement = (IInputElement)sender;
+            foreach (Circle c in _persons.Where(c => c.GetName().Equals(((Ellipse)sender).Name)))
             {
-                if (c.getName().Equals(((Ellipse)sender).Name))
-                {
-                    currentCircle = c;
-                    break;
-                }
+                _currentCircle = c;
+                break;
             }
         }
 
-        private void updatePosition()
+        private void UpdatePosition()
         {
-            Ellipse el = this.current.InputElement as Ellipse;
-            GeneralTransform generalTransform1 = MyCanvas.TransformToVisual(el);
-            System.Windows.Point currentPoint = generalTransform1.Inverse.Transform(new System.Windows.Point(0, 0));
-            var newCenterX = currentPoint.X + circleRadius;
-            var newCenterY = currentPoint.Y + circleRadius;
-            currentCircle.updatePosition(new System.Windows.Point(newCenterX, newCenterY));
+            var el = _current.InputElement as Ellipse;
+            if (el == null) return;
+            var generalTransform1 = MyCanvas.TransformToVisual(el);
+            if (generalTransform1.Inverse == null) return;
+            var currentPoint = generalTransform1.Inverse.Transform(new System.Windows.Point(0, 0));
+            var newCenterX = currentPoint.X + CircleRadius;
+            var newCenterY = currentPoint.Y + CircleRadius;
+            _currentCircle.UpdatePosition(new System.Windows.Point(newCenterX, newCenterY));
         }
     }
 

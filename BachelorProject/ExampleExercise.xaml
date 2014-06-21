@@ -36,14 +36,14 @@
         <Button 
             Width="120"
             Height="60"
-            Margin="280,720"
+            Margin="150,720"
             Content="Weiter"
             FontSize="30"
             FontWeight="Bold"
             Cursor="Hand"
             PreviewMouseDown="Continue_Button_MouseDown"/>
 
-        <Button 
+        <!--<Button 
             Width="120"
             Height="60"
             Margin="150,720"
@@ -51,7 +51,7 @@
             FontSize="30"
             FontWeight="Bold"
             Cursor="Hand"
-            PreviewMouseDown="Help_Button_MouseDown"/>
+            PreviewMouseDown="Help_Button_MouseDown"/>-->
 
         <Button 
             Width="120"
@@ -157,9 +157,9 @@
             </Ellipse.RenderTransform>
         </Ellipse>
 
-        <Border Name="done" Margin="1500,2000" BorderBrush="Black" BorderThickness="4" Background="White">
+        <Border Name="Done" Margin="1500,2000" BorderBrush="Black" BorderThickness="4" Background="White">
             <VirtualizingStackPanel Margin="40">
-                <TextBlock Name="doneTextBlock"  
+                <TextBlock Name="DoneTextBlock"  
                            Width="800" 
                            FontSize="30" 
                            TextWrapping="WrapWithOverflow" 
@@ -179,9 +179,9 @@
             </VirtualizingStackPanel>
         </Border>
 
-        <Border Name="notDone" Margin="1500,2000" BorderBrush="Black" BorderThickness="4" Background="White">
+        <Border Name="NotDone" Margin="1500,2000" BorderBrush="Black" BorderThickness="4" Background="White">
             <VirtualizingStackPanel Margin="40">
-                <TextBlock Name="notDoneTextBlock"  
+                <TextBlock Name="NotDoneTextBlock"  
                            Width="800" 
                            FontSize="30" 
                            TextWrapping="WrapWithOverflow" 

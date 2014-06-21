@@ -1,54 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BachelorProject
+﻿namespace BachelorProject.Trials
 {
     class Trial10 : ExampleExercise
     {
         public Trial10()
-            : base()
-        { id = 10; }
+        { Id = 10; }
 
-        public override bool checkActualConstraints()
+        public override bool CheckActualConstraints()
         {
 
-            if (notSittingNextToEachOther(p3, p6))
-                updateConstraint("c1", true);
+            if (NotSittingNextToEachOther(P3, P6))
+                UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p1,p2))
-                updateConstraint("c2", true);
+            if (SittingNextToEachOther(P1,P2))
+                UpdateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (oneNeighbourSharingFood(p3))
-                updateConstraint("c3", true);
+            if (OneNeighbourSharingFood(P3))
+                UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (noNeighbourSharingFood(p5))
-                updateConstraint("c4", true);
+            if (NoNeighbourSharingFood(P5))
+                UpdateConstraint("c4", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p6, p4))
-                updateConstraint("c5", true);
+            if (NotSittingNextToEachOther(P6, P4))
+                UpdateConstraint("c5", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p2, p6))
-                updateConstraint("c6", true);
+            if (NotSittingNextToEachOther(P2, P6))
+                UpdateConstraint("c6", true);
             else constraintsFullfilled = false;
 
-            if (notSharingFood(p3))
-                updateConstraint("c7", true);
+            if (NotSharingFood(P3))
+                UpdateConstraint("c7", true);
             else constraintsFullfilled = false;
 
-            if (notSharingFood(p4))
-                updateConstraint("c8", true);
+            if (NotSharingFood(P4))
+                UpdateConstraint("c8", true);
             else constraintsFullfilled = false;
 
-            if (numberSittingOn(0))
-                updateConstraint("c9", true);
+            if (NumberSittingOn(0))
+                UpdateConstraint("c9", true);
             else constraintsFullfilled = false;
 
             /*

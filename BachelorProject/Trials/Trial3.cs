@@ -1,37 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows;
-
-namespace BachelorProject
+﻿namespace BachelorProject.Trials
 {
     class Trial3 : ExampleExercise
     {
 
 
         public Trial3()
-            : base()
-        { id = 3; }
+        { Id = 3; }
 
-        public override bool checkActualConstraints()
+        public override bool CheckActualConstraints()
         {
-            if (sharingFood(p2, p3))
-                updateConstraint("c1", true);
+            if (SharingFood(P2, P3))
+                UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (sittingOn(p4, p1))
-                updateConstraint("c2", true);
+            if (SittingOn(P4, P1))
+                UpdateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p6, p2))
-                updateConstraint("c3", true);
+            if (SittingNextToEachOther(P6, P2))
+                UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p5, p6))
-                updateConstraint("c4", true);
+            if (NotSittingNextToEachOther(P5, P6))
+                UpdateConstraint("c4", true);
             else constraintsFullfilled = false;
             
 

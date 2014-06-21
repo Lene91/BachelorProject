@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows;
+﻿using System.Windows;
 
-namespace BachelorProject
+namespace BachelorProject.Helper
 {
     /// Quelle: http://denismorozov.blogspot.de/2008/01/drag-controls-in-wpf-using.html
     public class Element
@@ -16,19 +8,17 @@ namespace BachelorProject
 
         #region Fields
 
-        bool isDragging = false;
+        bool _isDragging;
 
-        IInputElement inputElement = null;
+        IInputElement _inputElement;
 
-        double x, y = 0;
+        double _x, _y;
 
         #endregion
 
 
 
         #region Constructor
-
-        public Element() { }
 
         #endregion
 
@@ -39,14 +29,14 @@ namespace BachelorProject
         public IInputElement InputElement
         {
 
-            get { return this.inputElement; }
+            get { return _inputElement; }
 
             set
             {
 
-                this.inputElement = value;
+                _inputElement = value;
 
-                this.isDragging = false;
+                _isDragging = false;
 
             }
 
@@ -55,27 +45,27 @@ namespace BachelorProject
         public double X
         {
 
-            get { return this.x; }
+            get { return _x; }
 
-            set { this.x = value; }
+            set { _x = value; }
 
         }
 
         public double Y
         {
 
-            get { return this.y; }
+            get { return _y; }
 
-            set { this.y = value; }
+            set { _y = value; }
 
         }
 
         public bool IsDragging
         {
 
-            get { return this.isDragging; }
+            get { return _isDragging; }
 
-            set { this.isDragging = value; }
+            set { _isDragging = value; }
 
         }
 

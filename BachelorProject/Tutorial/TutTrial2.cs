@@ -1,37 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows;
-
-namespace BachelorProject
+﻿namespace BachelorProject.Tutorial
 {
     class TutTrial2 : ExampleExercise
     {
 
 
         public TutTrial2()
-            : base()
-        { id = 1002; }
+        { Id = 1002; }
 
-        public override bool checkActualConstraints()
+        public override bool CheckActualConstraints()
         {
-            if (notSittingNextToEachOther(p4, p2))
-                updateConstraint("c1", true);
+            if (NotSittingNextToEachOther(P4, P2))
+                UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p5, p1))
-                updateConstraint("c2", true);
+            if (SittingNextToEachOther(P5, P1))
+                UpdateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (sittingOn(p2,p1))
-                updateConstraint("c3", true);
+            if (SittingOn(P2,P1))
+                UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (sharingFood(p3,p4))
-                updateConstraint("c4", true);
+            if (SharingFood(P3,P4))
+                UpdateConstraint("c4", true);
             else constraintsFullfilled = false;
 
 

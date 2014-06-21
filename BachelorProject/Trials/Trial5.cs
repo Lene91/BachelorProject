@@ -1,41 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BachelorProject
+﻿namespace BachelorProject.Trials
 {
     class Trial5 : ExampleExercise
     {
         public Trial5()
-            : base()
-        { id = 5; }
+        { Id = 5; }
 
-        public override bool checkActualConstraints()
+        public override bool CheckActualConstraints()
         {
-            if (notSittingNextToEachOther(p2, p4))
-                updateConstraint("c1", true);
+            if (NotSittingNextToEachOther(P2, P4))
+                UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p5, p1))
-                updateConstraint("c2", true);
+            if (SittingNextToEachOther(P5, P1))
+                UpdateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (notSittingOn(p2, p4))
-                updateConstraint("c3", true);
+            if (NotSittingOn(P2, P4))
+                UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p1, p2))
-                updateConstraint("c4", true);
+            if (NotSittingNextToEachOther(P1, P2))
+                UpdateConstraint("c4", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p3, p2))
-                updateConstraint("c5", true);
+            if (SittingNextToEachOther(P3, P2))
+                UpdateConstraint("c5", true);
             else constraintsFullfilled = false;
 
-            if (sittingNextToEachOther(p4, p5))
-                updateConstraint("c6", true);
+            if (SittingNextToEachOther(P4, P5))
+                UpdateConstraint("c6", true);
             else constraintsFullfilled = false;
 
 

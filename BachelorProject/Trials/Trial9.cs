@@ -1,49 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BachelorProject
+﻿namespace BachelorProject.Trials
 {
     class Trial9 : ExampleExercise
     {
         public Trial9()
-            : base()
-        { id = 9; }
+        { Id = 9; }
 
-        public override bool checkActualConstraints()
+        public override bool CheckActualConstraints()
         {
-            if (atLeastOneNeighbourSharingFood(p3))
-                updateConstraint("c1", true);
+            if (AtLeastOneNeighbourSharingFood(P3))
+                UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (notSharingFood(p1, p4))
-                updateConstraint("c2", true);
+            if (NotSharingFood(P1, P4))
+                UpdateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p2, p3))
-                updateConstraint("c3", true);
+            if (NotSittingNextToEachOther(P2, P3))
+                UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (sharingFood(p5))
-                updateConstraint("c4", true);
+            if (SharingFood(P5))
+                UpdateConstraint("c4", true);
             else constraintsFullfilled = false;
 
-            if (sharingFood(p4))
-                updateConstraint("c5", true);
+            if (SharingFood(P4))
+                UpdateConstraint("c5", true);
             else constraintsFullfilled = false;
 
-            if (sharingFood(p2))
-                updateConstraint("c6", true);
+            if (SharingFood(P2))
+                UpdateConstraint("c6", true);
             else constraintsFullfilled = false;
 
-            if (notSharingFood(p1,p5))
-                updateConstraint("c7", true);
+            if (NotSharingFood(P1,P5))
+                UpdateConstraint("c7", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p5,p3))
-                updateConstraint("c8", true);
+            if (NotSittingNextToEachOther(P5,P3))
+                UpdateConstraint("c8", true);
             else constraintsFullfilled = false;
 
             /*

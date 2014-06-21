@@ -1,49 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BachelorProject
+﻿namespace BachelorProject.Trials
 {
     class Trial8 : ExampleExercise
     {
         public Trial8()
-            : base()
-        { id = 8; }
+        { Id = 8; }
 
-        public override bool checkActualConstraints()
+        public override bool CheckActualConstraints()
         {
-            if (sittingNextToEachOther(p2, p1))
-                updateConstraint("c1", true);
+            if (SittingNextToEachOther(P2, P1))
+                UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p3, p1))
-                updateConstraint("c2", true);
+            if (NotSittingNextToEachOther(P3, P1))
+                UpdateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (oneNeighbourSharingFood(p5))
-                updateConstraint("c3", true);
+            if (OneNeighbourSharingFood(P5))
+                UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (oneNeighbourIsSeat(p1))
-                updateConstraint("c4", true);
+            if (OneNeighbourIsSeat(P1))
+                UpdateConstraint("c4", true);
             else constraintsFullfilled = false;
 
-            if (notSittingNextToEachOther(p2,p4))
-                updateConstraint("c5", true);
+            if (NotSittingNextToEachOther(P2,P4))
+                UpdateConstraint("c5", true);
             else constraintsFullfilled = false;
 
-            if (notSharingFood(p1))
-                updateConstraint("c6", true);
+            if (NotSharingFood(P1))
+                UpdateConstraint("c6", true);
             else constraintsFullfilled = false;
 
-            if (notSittingOnSomeone(p3))
-                updateConstraint("c7", true);
+            if (NotSittingOnSomeone(P3))
+                UpdateConstraint("c7", true);
             else constraintsFullfilled = false;
 
-            if (isSeat(p5))
-                updateConstraint("c8", true);
+            if (IsSeat(P5))
+                UpdateConstraint("c8", true);
             else constraintsFullfilled = false;
 
 

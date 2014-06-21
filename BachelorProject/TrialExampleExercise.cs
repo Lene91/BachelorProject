@@ -1,26 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
+using BachelorProject.Helper;
 using ExperimentTemplate;
-using System.Diagnostics;
 using Logging;
-using Eyetracker;
-using Eyetracker.EyeEvents;
-using Eyetracker.EyeEvents.FixationDetectionStrategies;
-using Eyetracker.Eyelink;
-using Eyetracker.MouseTracker;
 using System.Windows;
-using System.CodeDom.Compiler;
-using System.Reflection;
-using System.Windows.Input;
-using System.Windows.Controls;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Windows.Forms;
+
 
 namespace BachelorProject
 {
@@ -32,43 +18,43 @@ namespace BachelorProject
 
     class TrialExampleExercise : Trial, IAoiUpdate
     {
-        private readonly ExampleExercise screen;
+        private readonly ExampleExercise _screen;
         private static readonly Logger Log = Logger.GetLogger(typeof(TrialExampleExercise));
-        private static int counter = 0;
-        private bool constraintsThreadIsRunning = false;
-        private string constraints;
-        private List<string> names;
-        private int trialID;
-        private double screenWidth = 1200;
-        private double screenHeight = 800;
-        private double offsetX;
-        private double offsetY;
-        private bool timeLimit;
-        private System.Timers.Timer timer;
-        private System.Timers.Timer timer2;
+        private static int _counter;
+        private bool _constraintsThreadIsRunning;
+        private string _constraints;
+        private List<string> _names;
+        private readonly int _trialId;
+        private const double ScreenWidth = 1200;
+        private const double ScreenHeight = 800;
+        private readonly double _offsetX;
+        private readonly double _offsetY;
+        private readonly bool _timeLimit;
+        private System.Timers.Timer _timer;
+        private System.Timers.Timer _timer2;
 
         public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = tracking;
             Screen = trial;
-            screen = trial;
-            this.constraints = constraints;
-            this.names = names;
-            this.trialID = trial.getID();
-            this.timeLimit = timeLimit;
+            _screen = trial;
+            _constraints = constraints;
+            _names = names;
+            _trialId = trial.GetId();
+            _timeLimit = timeLimit;
 
-            offsetX = (SystemParameters.FullPrimaryScreenWidth - screenWidth) / 2;
-            offsetY = (SystemParameters.FullPrimaryScreenHeight - screenHeight) / 2;
-            screen.Initialize(this, numberOfPersons, constraints, names, Tracker, constraintHelp);
-            CreateAois(screen.GetPersons());
+            _offsetX = (SystemParameters.FullPrimaryScreenWidth - ScreenWidth) / 2;
+            _offsetY = (SystemParameters.FullPrimaryScreenHeight - ScreenHeight) / 2;
+            _screen.Initialize(this, numberOfPersons, constraints, names, Tracker, constraintHelp);
+            CreateAois(_screen.GetPersons());
         }
 
-        private void CreateAois(List<Circle> persons)
+        private void CreateAois(IEnumerable<Circle> persons)
         {
             foreach (var person in persons)
             {
-                AOIs.Add(new MyAOI(person));
+                AOIs.Add(new MyAoi(person));
             }
         }
 
@@ -79,14 +65,14 @@ namespace BachelorProject
 
         protected override void OnShowing()
         {
-            Tracker.SendMessage("TRIAL_START " + trialID);
-            Log.Info("Showing screen " + counter + " and Trial " + trialID + ".");
-            if (timeLimit)
+            Tracker.SendMessage("TRIAL_START " + _trialId);
+            Log.Info("Showing screen " + _counter + " and Trial " + _trialId + ".");
+            if (_timeLimit)
             {
-                timer = new System.Timers.Timer(300000); // 5 Minuten = 300000
-                timer.Elapsed += new System.Timers.ElapsedEventHandler(endTrial);
-                timer.AutoReset = false;
-                timer.Enabled = true;
+                _timer = new System.Timers.Timer(300000); // 5 Minuten = 300000
+                //_timer.Elapsed += new System.Timers.ElapsedEventHandler(endTrial);
+                _timer.AutoReset = false;
+                _timer.Enabled = true;
             }
 
             if (Tracker != null)
@@ -115,7 +101,7 @@ namespace BachelorProject
             Tracker.SendMessage("fixation start");
             foreach (var aoi in AOIs)
             {
-                var pos = new PointF((float)(e.AveragePosition.X - offsetX), (float)(e.AveragePosition.Y - offsetY));
+                var pos = new PointF((float)(e.AveragePosition.X - _offsetX), (float)(e.AveragePosition.Y - _offsetY));
                 //if (aoi.Contains(pos))
                 //Tracker.SendMessage(aoi + " contains " + pos);
 
@@ -140,15 +126,15 @@ namespace BachelorProject
 
         private void endTrial(object source, System.Timers.ElapsedEventArgs e)
         {
-            screen.takePicture("timeElapsed");
-            screen.showExerciseEnd();
-            timer2 = new System.Timers.Timer(300);
-            timer2.Elapsed += new System.Timers.ElapsedEventHandler(skip);
-            timer2.AutoReset = false;
-            timer2.Enabled = true;
+            _screen.TakePicture("timeElapsed");
+            _screen.ShowExerciseEnd();
+            _timer2 = new System.Timers.Timer(300);
+            //_timer2.Elapsed += new System.Timers.ElapsedEventHandler(Skip);
+            _timer2.AutoReset = false;
+            _timer2.Enabled = true;
         }
 
-        private void skip(object source, System.Timers.ElapsedEventArgs e)
+        private void Skip(object source, System.Timers.ElapsedEventArgs e)
         {
             Tracker.SendMessage("TIME ELAPSED.");
             SkipTrial();
@@ -156,25 +142,25 @@ namespace BachelorProject
 
         protected override void OnShown()
         {
-            Log.Info("Screen " + counter + " and Trial " + trialID + " are shown.");
+            Log.Info("Screen " + _counter + " and Trial " + _trialId + " are shown.");
 
             var constraintsThread = new Thread(CheckConstraints);
-            constraintsThreadIsRunning = true;
+            _constraintsThreadIsRunning = true;
             constraintsThread.Start();
         }
 
         private void CheckConstraints()
         {
             //int counter = 50;
-            while (constraintsThreadIsRunning)
+            while (_constraintsThreadIsRunning)
             {
-                if (screen.skip)
+                if (_screen.Skip)
                 {
-                    screen.skip = false;
+                    _screen.Skip = false;
                     SkipTrial();
                 }
 
-                screen.ConstraintsFullfilled();
+                _screen.ConstraintsFullfilled();
 
                 /*if (screen.ConstraintsFullfilled())
                     counter--;
@@ -192,34 +178,28 @@ namespace BachelorProject
 
         protected override void OnHiding()
         {
-            Log.Info("Hiding screen " + counter + " and Trial " + trialID + "...");
-            constraintsThreadIsRunning = false;
+            Log.Info("Hiding screen " + _counter + " and Trial " + _trialId + "...");
+            _constraintsThreadIsRunning = false;
             DeleteAois();
         }
 
         protected override void OnHidden()
         {
-            Tracker.SendMessage("TRIAL_STOP " + trialID);
-            Log.Info("Screen " + counter + " and Trial " + trialID + " hidden.");
-            counter++;
+            Tracker.SendMessage("TRIAL_STOP " + _trialId);
+            Log.Info("Screen " + _counter + " and Trial " + _trialId + " hidden.");
+            _counter++;
         }
 
         public void UpdateAoi(Circle person)
         {
             var updatedAoi = GetUpdatedAoi(person);
-            updatedAoi.Set((int)person.getPosition().X, (int)person.getPosition().Y, person.getRadius());
+            updatedAoi.Set((int)person.GetPosition().X, (int)person.GetPosition().Y, person.GetRadius());
         }
 
-        private MyAOI GetUpdatedAoi(Circle person)
+        private MyAoi GetUpdatedAoi(Circle person)
         {
-            foreach (var aoi in AOIs)
-            {
-                if (aoi.Name.Equals(person.getName()))
-                    return (MyAOI)aoi;
-            }
+            return AOIs.Where(aoi => aoi.Name.Equals(person.GetName())).Cast<MyAoi>().FirstOrDefault();
             //Debug.Assert(false);
-            return null;
         }
-
     }
 }

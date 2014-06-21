@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using Eyetracker;
 
-namespace BachelorProject
+namespace BachelorProject.Helper
 {
-    class MyAOI : AreaOfInterest
+    class MyAoi : AreaOfInterest
     {
-        public MyAOI(Circle person)
-            : base(AoiType.Ellipse, getPoints(person), person.getName())
+        public MyAoi(Circle person)
+            : base(AoiType.Ellipse, GetPoints(person), person.GetName())
         {
         }
 
-        public static Point[] getPoints(Circle person)
+        public static Point[] GetPoints(Circle person)
         {
-            var p = person.getPosition();
-            var topLeft = new Point((int)(p.X - person.getRadius()), (int)(p.Y - person.getRadius()));
-            var bottomRight = new Point((int)(p.X + person.getRadius()), (int)(p.Y + person.getRadius()));
-            return new Point[] {topLeft, bottomRight};
+            var p = person.GetPosition();
+            var topLeft = new Point((int)(p.X - person.GetRadius()), (int)(p.Y - person.GetRadius()));
+            var bottomRight = new Point((int)(p.X + person.GetRadius()), (int)(p.Y + person.GetRadius()));
+            return new[] {topLeft, bottomRight};
         }
 
         public void Set(int x, int y, double r)

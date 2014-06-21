@@ -7,6 +7,6 @@
       Width="1200" Height="800" Background="LightGray">
 
     <Canvas>
-        <TextBlock Name="t1" Text="Drücke ein letztes Mal 'Alt' + 'Tab' um zum Fragebogen zu gelangen. Gleich hast du es geschafft." Width="800" TextWrapping="WrapWithOverflow" Background="Transparent" FontSize="40" Margin="200"/>
+        <TextBlock Name="T1" Text="Drücke ein letztes Mal 'Alt' + 'Tab' um zum Fragebogen zu gelangen. Gleich hast du es geschafft." Width="800" TextWrapping="WrapWithOverflow" Background="Transparent" FontSize="40" Margin="200"/>
     </Canvas>
 </UserControl>

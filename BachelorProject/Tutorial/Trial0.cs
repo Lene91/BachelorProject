@@ -1,59 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Media;
-using System.Diagnostics;
 using System.Windows.Documents;
+using System.Windows.Media;
 
-namespace BachelorProject
+namespace BachelorProject.Tutorial
 {
     class Trial0 : ExampleExercise
     {
         public Trial0()
-            : base()
         { 
-            id = 0;
-            initializeTutorial();
+            Id = 0;
+            InitializeTutorial();
         }
 
-        public override bool checkActualConstraints()
+        public override bool CheckActualConstraints()
         {
-            if (sittingNextToEachOther(p2, p4))
-                updateConstraint("c1", true);
+            if (SittingNextToEachOther(P2, P4))
+                UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
 
-            if (sittingOn(p3, p2))
-                updateConstraint("c2", true);
+            if (SittingOn(P3, P2))
+                UpdateConstraint("c2", true);
             else constraintsFullfilled = false;
 
-            if (sharingFood(p1,p4))
-                updateConstraint("c3", true);
+            if (SharingFood(P1,P4))
+                UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
             return constraintsFullfilled;
         }
 
-        public void initializeTutorial()
+        public void InitializeTutorial()
         {
-            Border b = new Border
+            var b = new Border
             {
                 BorderThickness = new Thickness(4),
                 BorderBrush = Brushes.Black,
                 Margin = new Thickness(780, 475, 0, 0) //550
             };
 
-            ScrollViewer sv = new ScrollViewer
+            var sv = new ScrollViewer
             {
                 Width = 400, //600
                 Height = 290, //235
                 VerticalScrollBarVisibility = ScrollBarVisibility.Visible
             };
 
-            TextBlock tb = new TextBlock
+            var tb = new TextBlock
             {
                 //Text = text,
                 Background = Brushes.White,
@@ -71,7 +64,7 @@ namespace BachelorProject
                            " ausprobieren. Klicke auf den Fertig-Button, wenn du" +
                            " die Aufgabe gelöst hast. Dein Platzierungsvorschlag" +
                            " wird dann geprüft und wenn du alle Wünsche erfüllt hast," +
-                           " gelangst zu ein paar weiteren Übungsaufgaben." +
+                           " gelangst du zu ein paar weiteren Übungsaufgaben." +
                            " Ist dies nicht der Fall, hast du die Möglichkeit, deine" +
                            " Lösung noch einmal zu überarbeiten.") 
                            { FontStyle = FontStyles.Italic, FontSize = 22 });
@@ -83,34 +76,30 @@ namespace BachelorProject
 
         private string getTutorialText()
         {
-            string tutorialText = "Hier siehst du nun alle Komponenten, die" +
-                " du benötigst, um eine Aufgabe zu erfüllen. \n \n Die Aufgabe" +
-                " kann nur gelöst werden, wenn" +
-                " alle Personen am Tisch sitzen. Platziere dafür den Kreis" +
-                " einer Person so nah am Tisch, dass die Ränder der beiden" +
-                " Kreise sich berühren. \n \n Möchten zwei Personen nebeneinander" +
-                " sitzen, so darf sich keine Person zwischen ihnen befinden." +
-                " Sitzen beispielsweise nur zwei Personen am Tisch, so sitzen diese immer" +
-                " nebeneinander. \n \n Wenn sich zwei Personen ein Essen teilen" +
-                " möchten, müssen sie am Tisch sitzen und die Kreise der Personen" +
-                " müssen sich überschneiden. Es können sich nicht mehr als zwei Personen ein Essen teilen," +
-                " es ist jedoch möglich, dass es mehrere Paare gibt, die sich jeweils zu zweit ein" +
-                " Essen teilen möchten. \n \n An der Feier nehmen auch ein paar Kleinkinder teil," +
-                " die keinen eigenen Stuhl brauchen, sondern auf dem Schoß eines Elternteils platziert" +
-                " werden müssen. Möchte ein Kind auf dem Schoß einer" +
-                " Person sitzen, so musst du den Kreis des Kindes auf den der Person ziehen." +
-                " Der Kreis des Kindes verkleinert sich dann" +
-                " automatisch. \n \n" +
-                " Eine Person kann sich entweder ein Essen teilen oder bei einer anderen auf dem Schoß sitzen" +
-                " bzw. jemanden auf dem Schoß sitzen haben. Beides gleichzeitig ist nicht vorgesehen.\n \n" +
-                " Du kannst alle deine Änderungen rückgängig machen," +
-                " indem du auf den Reset-Button klickst. \n \n" +
-                "Wenn du nicht mehr weiter weißt, kannst du auf den Hilfe-Button klicken" +
-                " und die Textboxen werden entsprechend der bereits erfüllten und noch" +
-                " nicht erfüllten Wünsche eingefärbt. Verwende den Hilfe-Button so selten wie" +
-                " möglich. (In diesem Tutorial kannst du ihn ruhig zum Testen verwenden.) \n \n" +
-                "Solltest du trotz Klicken des Hilfe-Buttons nicht mehr weiter wissen, kannst" +
-                " du auf den Weiter-Button klicken und du gelangst zur nächsten Aufgabe. \n \n";
+            const string tutorialText = "Hier siehst du nun alle Komponenten, die" +
+                                        " du benötigst, um eine Aufgabe zu erfüllen. \n \n Die Aufgabe" +
+                                        " kann nur gelöst werden, wenn" +
+                                        " alle Personen am Tisch sitzen. Platziere dafür den Kreis" +
+                                        " einer Person so nah am Tisch, dass die Ränder der beiden" +
+                                        " Kreise sich berühren. \n \n Möchten zwei Personen nebeneinander" +
+                                        " sitzen, so darf sich keine Person zwischen ihnen befinden." +
+                                        " Sitzen beispielsweise nur zwei Personen am Tisch, so sitzen diese immer" +
+                                        " nebeneinander. \n \n Wenn sich zwei Personen ein Essen teilen" +
+                                        " möchten, müssen sie am Tisch sitzen und die Kreise der Personen" +
+                                        " müssen sich überschneiden. Es können sich nicht mehr als zwei Personen ein Essen teilen," +
+                                        " es ist jedoch möglich, dass es mehrere Paare gibt, die sich jeweils zu zweit ein" +
+                                        " Essen teilen möchten. \n \n An der Feier nehmen auch ein paar Kleinkinder teil," +
+                                        " die keinen eigenen Stuhl brauchen, sondern auf dem Schoß eines Elternteils platziert" +
+                                        " werden müssen. Möchte ein Kind auf dem Schoß einer" +
+                                        " Person sitzen, so musst du den Kreis des Kindes auf den der Person ziehen." +
+                                        " Der Kreis des Kindes verkleinert sich dann" +
+                                        " automatisch. \n \n" +
+                                        " Eine Person kann sich entweder ein Essen teilen oder bei einer anderen auf dem Schoß sitzen" +
+                                        " bzw. jemanden auf dem Schoß sitzen haben. Beides gleichzeitig ist nicht vorgesehen.\n \n" +
+                                        " Du kannst alle deine Änderungen rückgängig machen," +
+                                        " indem du auf den Reset-Button klickst. \n \n" +
+                                        "Wenn du keine Lösung findest, kannst" +
+                                        " du auf den Weiter-Button klicken und du gelangst zur nächsten Aufgabe. \n \n";
             return tutorialText;
         }
     }

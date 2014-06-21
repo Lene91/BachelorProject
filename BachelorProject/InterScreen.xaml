@@ -7,7 +7,7 @@
       Width="1200" Height="800" Background="LightGray">
 
     <Canvas>
-        <TextBlock Name="t1" Text="Drücke 'Alt' + 'Tab' um zum Fragebogen zu gelangen." Background="Transparent" TextWrapping="WrapWithOverflow" FontSize="40" Width="800" Margin="200,250"/>
-        <TextBlock Name="t2" Text="Hast du den Fragebogen ausgefüllt, so gelangst du mit der Leertaste zur nächsten Aufgabe." Background="Transparent"  TextWrapping="WrapWithOverflow" FontSize="40" Width="800" Margin="200,400"/>
+        <TextBlock Name="T1" Text="Drücke 'Alt' + 'Tab' um zum Fragebogen zu gelangen." Background="Transparent" TextWrapping="WrapWithOverflow" FontSize="40" Width="800" Margin="200,250"/>
+        <TextBlock Name="T2" Text="Hast du den Fragebogen ausgefüllt, so gelangst du mit der Leertaste zur nächsten Aufgabe." Background="Transparent"  TextWrapping="WrapWithOverflow" FontSize="40" Width="800" Margin="200,400"/>
     </Canvas>
 </UserControl>

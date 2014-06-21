@@ -1,195 +1,178 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Diagnostics;
 
-namespace BachelorProject
+namespace BachelorProject.Helper
 {
     /// <summary>
     /// Hilfsklasse Kreis, repräsentiert eine Person, die am Tisch platziert werden muss, bzw. den Tisch
     /// </summary>
     public class Circle
     {
-        private string name;
-        private double radius;
-        private Point position;
-        private Ellipse ellipse;
-        private int touchEpsilon = 5;
-        private int overlapEpsilon = 10;
-        private int enterEpsilon = 5;
-        private int leaveEpsilon = 40;
-        private static HashSet<Circle> sittingPersons = new HashSet<Circle>();
-        public bool isSitter = false;
-        public bool isSittingOnSomeone = false;
-        private Circle seat = null; // Person, auf der dieser Kreis drauf sitzt
+        private readonly string _name;
+        private double _radius;
+        private Point _position;
+        private readonly Ellipse _ellipse;
+        //private int touchEpsilon = 5;
+        private const int OverlapEpsilon = 10;
+        private const int EnterEpsilon = 5;
+        private const int LeaveEpsilon = 40;
+        private static readonly HashSet<Circle> SittingPersons = new HashSet<Circle>();
+        public bool IsSitter = false;
+        public bool IsSittingOnSomeone = false;
+        private Circle _seat; // Person, auf der dieser Kreis drauf sitzt
 
-        public Circle(Ellipse ellipse,int id)
+        public Circle(Ellipse ellipse)
         {
-            this.ellipse = ellipse;
-            this.name = ellipse.Name;
-            this.radius = ellipse.Width/2;
-            this.position = new Point(ellipse.Margin.Left + radius, ellipse.Margin.Top + radius);
-            id++;
+            _ellipse = ellipse;
+            _name = ellipse.Name;
+            _radius = ellipse.Width/2;
+            _position = new Point(ellipse.Margin.Left + _radius, ellipse.Margin.Top + _radius);
         }
 
-        public Point getPosition()
+        public Point GetPosition()
         {
-            return position;
+            return _position;
         }
 
-        public string getName()
+        public string GetName()
         {
-            return name;
+            return _name;
         }
 
-        public Ellipse getEllipse()
+        public Ellipse GetEllipse()
         {
-            return ellipse;
+            return _ellipse;
         }
 
-        public double getRadius()
+        public double GetRadius()
         {
-            return radius;
+            return _radius;
         }
 
-        public void updateRadius(double r)
+        public void UpdateRadius(double r)
         {
-            this.radius = r;
-            ellipse.Height = 2*r;
-            ellipse.Width = 2*r;
+            _radius = r;
+            _ellipse.Height = 2*r;
+            _ellipse.Width = 2*r;
         }
 
-        public void updatePosition(Point pos)
+        public void UpdatePosition(Point pos)
         {
-            this.position = pos;
+            _position = pos;
         }
 
-        public void setSeat(Circle c)
+        public void SetSeat(Circle c)
         {
-            this.seat = c;
+            _seat = c;
         }
 
-        public void unSetSeat(Circle c)
+        public void UnSetSeat(Circle c)
         {
-            this.seat = null;
+            _seat = null;
         }
 
-        public Circle getSeat()
+        public Circle GetSeat()
         {
-            return seat;
+            return _seat;
         }
 
-        public bool touches(Circle c)
+        public bool Touches(Circle c)
         {
-            var actualDist = distance(c.getPosition(), position);
-            var touchDist = c.radius + radius;
+            var actualDist = Distance(c.GetPosition(), _position);
+            var touchDist = c._radius + _radius;
             var dist = actualDist - touchDist;
-            if (dist > - 15 &&  dist < 10)
+            if (dist > -25 &&  dist < 20)
             {
-                sittingPersons.Add(this);
+                SittingPersons.Add(this);
                 return true;
             }
-            sittingPersons.Remove(this);
+            SittingPersons.Remove(this);
             return false;
         }
 
-        public bool sitsNextTo(Circle c)
+        public bool SitsNextTo(Circle c)
         {
             return false;
         }
 
-        public bool overlaps(Circle c)
+        public bool Overlaps(Circle c)
         {
-            if (distance(c.getPosition(),position) + overlapEpsilon < (c.getRadius() + radius))
-                return true;
-            return false;
+            return Distance(c.GetPosition(),_position) + OverlapEpsilon < (c.GetRadius() + _radius);
         }
 
-        public bool sitsOn(Circle c)
+        public bool SitsOn(Circle c)
         {
-            if (seat != null && seat.Equals(c))
-                return true;
-            return false;
+            return _seat != null && _seat.Equals(c);
         }
 
-        public void checkSitting(Circle c)
+        public void CheckSitting(Circle c)
         {
-            if (seatLeaves(c))
-                updateSitting(c);
-            if (enters(c))
-                isSittingOn(c);
-            else if (leaves(c))
-                stopsSittingOn(c);
+            if (SeatLeaves(c))
+                UpdateSitting(c);
+            if (Enters(c))
+                IsSittingOn(c);
+            else if (Leaves(c))
+                StopsSittingOn(c);
         }
 
-        private bool seatLeaves(Circle c)
+        private bool SeatLeaves(Circle c)
         {
-            if (distance(c.getPosition(), position) > leaveEpsilon && this.Equals(c.seat))
-                return true;
-            return false;
+            return Distance(c.GetPosition(), _position) > LeaveEpsilon && Equals(c._seat);
         }
 
-        private void updateSitting(Circle c)
+        private void UpdateSitting(Circle c)
         {
-            c.updateRadius(50);
-            Canvas.SetZIndex(c.getEllipse(), 0);
-            c.isSittingOnSomeone = false;
-            c.seat = null;
-            this.isSitter = false;
+            c.UpdateRadius(50);
+            Panel.SetZIndex(c.GetEllipse(), 0);
+            c.IsSittingOnSomeone = false;
+            c._seat = null;
+            IsSitter = false;
         }
         
-        private bool enters(Circle c)
+        private bool Enters(Circle c)
         {
-            if (distance(c.getPosition(), position) < enterEpsilon) // || c.getRadius() > radius)
-                return true;
-            return false;
+            return Distance(c.GetPosition(), _position) < EnterEpsilon;
         }
 
-        private void isSittingOn(Circle c)
+        private void IsSittingOn(Circle c)
         {
-            Canvas.SetZIndex(ellipse, 50);
-            ellipse.Width = 80;
-            ellipse.Height = 80;
-            var newRadius = 40;
-            ellipse.Margin = new Thickness(ellipse.Margin.Left + radius - newRadius, ellipse.Margin.Top + radius - newRadius, 0, 0);
+            Panel.SetZIndex(_ellipse, 50);
+            _ellipse.Width = 80;
+            _ellipse.Height = 80;
+            const int newRadius = 40;
+            _ellipse.Margin = new Thickness(_ellipse.Margin.Left + _radius - newRadius, _ellipse.Margin.Top + _radius - newRadius, 0, 0);
             //position = new Point(position.X - radius + newRadius, position.Y - radius + newRadius);
-            radius = newRadius;
+            _radius = newRadius;
 
-            c.isSitter = true;
-            this.isSittingOnSomeone = true;
-            seat = c;
+            c.IsSitter = true;
+            IsSittingOnSomeone = true;
+            _seat = c;
         }
 
-        private bool leaves(Circle c)
+        private bool Leaves(Circle c)
         {
-            if (seat != null && distance(c.getPosition(), position) > leaveEpsilon && seat.Equals(c))
-                return true;
-            return false;
+            return _seat != null && Distance(c.GetPosition(), _position) > LeaveEpsilon && _seat.Equals(c);
         }
 
-        public void stopsSittingOn(Circle c)
+        public void StopsSittingOn(Circle c)
         {
-            Canvas.SetZIndex(ellipse, 0);
-            ellipse.Width = 100;
-            ellipse.Height = 100;
-            var oldRadius = 50;
-            ellipse.Margin = new Thickness(ellipse.Margin.Left - oldRadius + radius, ellipse.Margin.Top - oldRadius + radius, 0, 0);
+            Panel.SetZIndex(_ellipse, 0);
+            _ellipse.Width = 100;
+            _ellipse.Height = 100;
+            const int oldRadius = 50;
+            _ellipse.Margin = new Thickness(_ellipse.Margin.Left - oldRadius + _radius, _ellipse.Margin.Top - oldRadius + _radius, 0, 0);
             //position = new Point(position.X + oldRadius - radius, position.Y + oldRadius - radius);
-            radius = oldRadius;
-            c.isSitter = false;
-            this.isSittingOnSomeone = false;
-            seat = null;
+            _radius = oldRadius;
+            c.IsSitter = false;
+            IsSittingOnSomeone = false;
+            _seat = null;
         }
 
 
-        public double distance(Point p1, Point p2)
+        public double Distance(Point p1, Point p2)
         {
             return Math.Sqrt( Math.Pow(p2.X-p1.X,2) + Math.Pow(p2.Y-p1.Y,2) );
         }

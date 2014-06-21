@@ -1,25 +1,11 @@
-﻿using ExperimentTemplate;
+﻿using BachelorProject.Trials;
+using BachelorProject.Tutorial;
+using ExperimentTemplate;
 using Eyetracker.MouseTracker;
 using Eyetracker.EyeTribe;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.CodeDom.Compiler;
-using System.Reflection;
-using System.Windows.Shapes;
-using Eyetracker;
-using System.Threading;
-using System.Windows.Input;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Navigation;
-using System.Text.RegularExpressions;
 
 
 namespace BachelorProject
@@ -27,17 +13,17 @@ namespace BachelorProject
 
     class EntryPoint
     {
-        private static Dictionary<int, string> allConstraints = new Dictionary<int, string>();
-        private static List<string> allNames = new List<string>();
-        private static List<ExampleExercise> allTrials;
-        private static int numberOfTrials = 3;
+        private static readonly Dictionary<int, string> AllConstraints = new Dictionary<int, string>();
+        private static readonly List<string> AllNames = new List<string>();
+        private static List<ExampleExercise> _allTrials;
+        //private static int numberOfTrials = 3;
 
 
         [STAThread]
         static void Main()
         {
-            var experiment = new Experiment(new MouseTracker())
-            //var experiment = new Experiment(new EyeTribeTracker())
+            //var experiment = new Experiment(new MouseTracker())
+            var experiment = new Experiment(new EyeTribeTracker())
             {
                 ShowDefaultStartScreen = false,
                 ShowDebugEndScreen = false,
@@ -46,10 +32,10 @@ namespace BachelorProject
 
 
             // Dateien, die für alle Trials benötigt werden -> Container befüllen
-            readConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
-            readNames("names.txt"); // shuffle()-Aufruf gibt neu sortierte Liste zurück
-            allTrials = new List<ExampleExercise>() { new Trial1(), new Trial2(), new Trial3() };
-            int[] numberOfPersons = { 5, 4, 4 };
+            ReadConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
+            ReadNames("names.txt"); // shuffle()-Aufruf gibt neu sortierte Liste zurück
+            _allTrials = new List<ExampleExercise> { new Trial1(), new Trial2(), new Trial3() };
+            //int[] numberOfPersons = { 5, 4, 4 };
 
 
             // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper
@@ -63,35 +49,35 @@ namespace BachelorProject
             
             // Tutorial mit Ausprobieren
             var trial0 = new Trial0();
-            var tutorialTrial = new TrialExampleExercise(5, allConstraints[0], shuffledNames(), trial0, true, false, false);
+            var tutorialTrial = new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), trial0, true, false, false);
             experiment.AddTrial(tutorialTrial);
             // 3 Übungsaufgaben
-            experiment.AddTrial(new TrialExampleExercise(3, allConstraints[1], shuffledNames(), new TutTrial1(), true, false, false));
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[2], shuffledNames(), new TutTrial2(), true, false, false));
-            experiment.AddTrial(new TrialExampleExercise(4, allConstraints[3], shuffledNames(), new TutTrial3(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[2], ShuffledNames(), new TutTrial2(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(), true, false, false));
             experiment.AddTrial(new TrialStartScreen());
 
 
             // PILOTSTUDIE
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[4], shuffledNames(), new Trial1(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[4], ShuffledNames(), new Trial1(), true, false, false));
             experiment.AddTrial(new TrialInterScreen());
-            experiment.AddTrial(new TrialExampleExercise(4, allConstraints[5], shuffledNames(), new Trial2(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[5], ShuffledNames(), new Trial2(), true, false, false));
             experiment.AddTrial(new TrialInterScreen());
-            experiment.AddTrial(new TrialExampleExercise(6, allConstraints[6], shuffledNames(), new Trial3(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[6], ShuffledNames(), new Trial3(), true, false, false));
             experiment.AddTrial(new TrialInterScreen());
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[7], shuffledNames(), new Trial4(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[7], ShuffledNames(), new Trial4(), true, false, false));
             experiment.AddTrial(new TrialInterScreen());
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[8], shuffledNames(), new Trial5(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[8], ShuffledNames(), new Trial5(), true, false, false));
             experiment.AddTrial(new TrialInterScreen());
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[9], shuffledNames(), new Trial6(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[9], ShuffledNames(), new Trial6(), true, false, false));
             experiment.AddTrial(new TrialInterScreen());
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[10], shuffledNames(), new Trial7(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[10], ShuffledNames(), new Trial7(), true, false, false));
             experiment.AddTrial(new TrialInterScreen());
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[11], shuffledNames(), new Trial8(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[11], ShuffledNames(), new Trial8(), true, false, false));
             experiment.AddTrial(new TrialInterScreen());
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[12], shuffledNames(), new Trial9(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[12], ShuffledNames(), new Trial9(), true, false, false));
             experiment.AddTrial(new TrialInterScreen());
-            experiment.AddTrial(new TrialExampleExercise(6, allConstraints[13], shuffledNames(), new Trial10(), true, false, false));
+            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[13], ShuffledNames(), new Trial10(), true, false, false));
             
             //allTrials = shuffledTrials();
 
@@ -126,59 +112,59 @@ namespace BachelorProject
             experiment.Run();
         }
 
-        private static void readConstraints(string filename)
+        private static void ReadConstraints(string filename)
         {
             string line;
-            System.IO.StreamReader file = new System.IO.StreamReader(@filename, Encoding.Default);
+            var file = new System.IO.StreamReader(@filename, Encoding.Default);
             while ((line = file.ReadLine()) != null)
             {
-                var trialNumber = Convert.ToInt32(line.Substring(0, line.IndexOf(";")));
-                var constraints = line.Substring(line.IndexOf(";") + 1);
-                allConstraints.Add(trialNumber, constraints);
+                var trialNumber = Convert.ToInt32(line.Substring(0, line.IndexOf(";", StringComparison.Ordinal)));
+                var constraints = line.Substring(line.IndexOf(";", StringComparison.Ordinal) + 1);
+                AllConstraints.Add(trialNumber, constraints);
             }
             file.Close();
         }
 
-        private static void readNames(string filename)
+        private static void ReadNames(string filename)
         {
             string line;
-            System.IO.StreamReader file = new System.IO.StreamReader(@filename, Encoding.Default);
+            var file = new System.IO.StreamReader(@filename, Encoding.Default);
             while ((line = file.ReadLine()) != null)
             {
-                allNames.Add(line);
+                AllNames.Add(line);
             }
             file.Close();
         }
 
-        private static List<string> shuffledNames()
+        private static List<string> ShuffledNames()
         {
             // Source http://stackoverflow.com/questions/5383498/shuffle-rearrange-randomly-a-liststring
-            int n = allNames.Count;
-            Random rnd = new Random();
+            var n = AllNames.Count;
+            var rnd = new Random();
             while (n > 1)
             {
-                int k = (rnd.Next(0, n) % n);
+                var k = (rnd.Next(0, n) % n);
                 n--;
-                string value = allNames[k];
-                allNames[k] = allNames[n];
-                allNames[n] = value;
+                var value = AllNames[k];
+                AllNames[k] = AllNames[n];
+                AllNames[n] = value;
             }
-            return allNames;
+            return AllNames;
         }
 
-        private static List<ExampleExercise> shuffledTrials()
+        private static List<ExampleExercise> ShuffledTrials()
         {
-            int n = allTrials.Count;
-            Random rnd = new Random();
+            var n = _allTrials.Count;
+            var rnd = new Random();
             while (n > 1)
             {
-                int k = (rnd.Next(0, n) % n);
+                var k = (rnd.Next(0, n) % n);
                 n--;
-                var value = allTrials[k];
-                allTrials[k] = allTrials[n];
-                allTrials[n] = value;
+                var value = _allTrials[k];
+                _allTrials[k] = _allTrials[n];
+                _allTrials[n] = value;
             }
-            return allTrials;
+            return _allTrials;
         }
     }
 }
