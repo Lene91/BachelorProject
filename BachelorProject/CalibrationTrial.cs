@@ -9,6 +9,7 @@ namespace BachelorProject
 {
     class CalibrationTrial : Trial
     {
+
         protected override void OnShown()
         {
             Tracker.CalibrationFinished += Tracker_CalibrationFinished;
@@ -18,7 +19,7 @@ namespace BachelorProject
         private void Tracker_CalibrationFinished(object sender, EventArgs args)
         {
             Tracker.CalibrationFinished -= Tracker_CalibrationFinished;
-            EndTrial();
+            //EndTrial();
         }
     }
 }
