@@ -55,6 +55,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CalibrationTrial.cs" />
     <Compile Include="EndScreen.xaml.cs">
       <DependentUpon>EndScreen.xaml</DependentUpon>
     </Compile>

@@ -11,6 +11,7 @@ using BachelorProject.Helper;
 using Eyetracker;
 using System.Drawing;
 //using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace BachelorProject
 {
@@ -22,7 +23,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 1;
-        private const bool Laptop = false;
+        private const bool Laptop = true;
 
         private IAoiUpdate _trial;
 
@@ -69,6 +70,8 @@ namespace BachelorProject
         
         private Border _doneBorder = new Border();
         private Border _notDoneBorder = new Border();
+        private Border _firstHintWindow = new Border();
+        private Border _secondHintWindow = new Border();
 
         private bool _doneButtonKlicked;
 
@@ -629,6 +632,36 @@ namespace BachelorProject
         /*
          * **********************************************************
          *                                                          *
+         *                       HINTS                              *
+         *                                                          *
+         ************************************************************
+         */
+
+        public void ShowHint()
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => ShowHint());
+                return;
+            }
+            foreach (UIElement uie in MyCanvas.Children)
+            {
+                if (uie is Border)
+                {
+                    Border b = uie as Border;
+                    if (b.Name.Equals("FirstHintWindow"))
+                        _firstHintWindow = b;
+                    else if (b.Name.Equals("SecondHintWindow"))
+                        _secondHintWindow = b;
+                }
+            }
+            _firstHintWindow.Margin = new Thickness(200, 100, 0, 0);
+            Panel.SetZIndex(_firstHintWindow, 100);
+        }
+
+        /*
+         * **********************************************************
+         *                                                          *
          *              HELPER FUNCTIONS                            *
          *                                                          *
          ************************************************************
@@ -844,6 +877,37 @@ namespace BachelorProject
             }
             Panel.SetZIndex(_notDoneBorder, 100);
             _notDoneBorder.Margin = new Thickness(1500, 2000, 0, 0);
+        }
+
+        private void Help_Wanted_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _tracker.SendMessage("HELP WANTED");
+
+            _firstHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
+
+            _secondHintWindow.Margin = new Thickness(200, 100, 0, 0);
+            Panel.SetZIndex(_secondHintWindow, 100);
+        }
+
+        private void Help_Not_Wanted_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _tracker.SendMessage("HELP NOT WANTED");
+
+            _firstHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
+        }
+
+        private void Helpful_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _tracker.SendMessage("HELPFUL");
+
+            _secondHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
+        }
+
+        private void Not_Helpful_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _tracker.SendMessage("NOT HELPFUL");
+
+            _secondHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
         }
 
 

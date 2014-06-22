@@ -30,10 +30,12 @@ namespace BachelorProject
         private readonly double _offsetX;
         private readonly double _offsetY;
         private readonly bool _timeLimit;
+        private readonly bool _hints;
         private System.Timers.Timer _timer;
         private System.Timers.Timer _timer2;
+        private System.Timers.Timer _hintTimer;
 
-        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp)
+        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp, bool hints)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = tracking;
@@ -43,6 +45,7 @@ namespace BachelorProject
             _names = names;
             _trialId = trial.GetId();
             _timeLimit = timeLimit;
+            _hints = hints;
 
             _offsetX = (SystemParameters.FullPrimaryScreenWidth - ScreenWidth) / 2;
             _offsetY = (SystemParameters.FullPrimaryScreenHeight - ScreenHeight) / 2;
@@ -74,6 +77,13 @@ namespace BachelorProject
                 _timer.AutoReset = false;
                 _timer.Enabled = true;
             }
+            if (_hints)
+            {
+                _hintTimer = new System.Timers.Timer(3000);
+                _hintTimer.Elapsed += new System.Timers.ElapsedEventHandler(ShowHint);
+                _hintTimer.AutoReset = false;
+                _hintTimer.Enabled = true;
+            }
 
             if (Tracker != null)
             {
@@ -83,6 +93,10 @@ namespace BachelorProject
             }
         }
 
+        private void ShowHint(object source, System.Timers.ElapsedEventArgs e)
+        {
+            _screen.ShowHint();
+        }
 
         private void Tracker_GazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
         {

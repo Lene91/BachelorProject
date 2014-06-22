@@ -201,6 +201,74 @@
                         PreviewMouseDown="Done_Back_Button_MouseDown"/>
             </VirtualizingStackPanel>
         </Border>
+
+        <Border Name="FirstHintWindow" Margin="2000,1000" BorderBrush="Black" BorderThickness="4" Width="800">
+            <VirtualizingStackPanel Background="White" Orientation="Horizontal" >
+                <TextBlock Padding="100" TextAlignment="Center" FontSize="30" Width="800">
+                Möchtest du jetzt einen Hinweis erhalten?
+                <LineBreak/>
+                <LineBreak/>
+                <LineBreak/>
+                <Button 
+                    Name="Btn1" 
+                    Margin="20" 
+                    FontSize="30" 
+                    FontWeight="Bold" 
+                    Width="100" 
+                    Height="75"
+                    PreviewMouseDown="Help_Wanted_Button_MouseDown">
+                    Ja
+                </Button>
+                <Button 
+                    Name="Btn2" 
+                    Margin="20" 
+                    FontSize="30" 
+                    FontWeight="Bold" 
+                    Width="100" 
+                    Height="75"
+                    PreviewMouseDown="Help_Not_Wanted_Button_MouseDown">
+                    Nein
+                </Button>
+            </TextBlock>
+            </VirtualizingStackPanel>
+        </Border>
+
+        <Border Name="SecondHintWindow" Margin="2000,1000" BorderBrush="Black" BorderThickness="4" Width="800">
+            <VirtualizingStackPanel Background="White" Orientation="Horizontal" >
+                <TextBlock Padding="100" TextAlignment="Center" FontSize="30" Width="800">
+                    <Run FontSize="35" FontWeight="Bold"> Hinweis </Run>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Name="Hint">BeispielText für einen Hinweis</Run>
+                    <LineBreak/>
+                    <LineBreak/>
+                    Ist dieser Hinweis hilfreich?
+                    <LineBreak/>
+                    <LineBreak/>
+                <Button 
+                    Name="Btn3" 
+                    Margin="20" 
+                    FontSize="30" 
+                    FontWeight="Bold" 
+                    Width="100" 
+                    Height="75"
+                    PreviewMouseDown="Helpful_Button_MouseDown">
+                    Ja
+                </Button>
+                <Button 
+                    Name="Btn4" 
+                    Margin="20" 
+                    FontSize="30" 
+                    FontWeight="Bold" 
+                    Width="100" 
+                    Height="75"
+                    PreviewMouseDown="Not_Helpful_Button_MouseDown">
+                    Nein
+                </Button>
+                </TextBlock>
+            </VirtualizingStackPanel>
+        </Border>
+
         <!-- <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>
         <Ellipse
             Name="Legend1"
