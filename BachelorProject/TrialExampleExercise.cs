@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Windows.Threading;
 using BachelorProject.Helper;
 using ExperimentTemplate;
 using Logging;
@@ -33,7 +36,7 @@ namespace BachelorProject
         private readonly bool _hints;
         private System.Timers.Timer _timer;
         private System.Timers.Timer _timer2;
-        private System.Timers.Timer _hintTimer;
+        private DispatcherTimer _hintTimer = new DispatcherTimer();
 
         public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp, bool hints)
         {
@@ -70,20 +73,6 @@ namespace BachelorProject
         {
             Tracker.SendMessage("TRIAL_START " + _trialId);
             Log.Info("Showing screen " + _counter + " and Trial " + _trialId + ".");
-            if (_timeLimit)
-            {
-                _timer = new System.Timers.Timer(300000); // 5 Minuten = 300000
-                //_timer.Elapsed += new System.Timers.ElapsedEventHandler(endTrial);
-                _timer.AutoReset = false;
-                _timer.Enabled = true;
-            }
-            if (_hints)
-            {
-                _hintTimer = new System.Timers.Timer(3000);
-                _hintTimer.Elapsed += new System.Timers.ElapsedEventHandler(ShowHint);
-                _hintTimer.AutoReset = false;
-                _hintTimer.Enabled = true;
-            }
 
             if (Tracker != null)
             {
@@ -93,23 +82,11 @@ namespace BachelorProject
             }
         }
 
-        private void ShowHint(object source, System.Timers.ElapsedEventArgs e)
-        {
-            _screen.ShowHint();
-        }
 
         private void Tracker_GazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
         {
             Tracker.SendMessage(e.Position.ToString());
-            foreach (var aoi in AOIs)
-            {
-                var pos = new PointF((float)(e.Position.X - _offsetX), (float)(e.Position.Y - _offsetY));
-                //if (aoi.Contains(pos))
-                //Tracker.SendMessage(aoi + " contains " + pos);
-
-                if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y && aoi.Points[1].Y > pos.Y)
-                    Tracker.SendMessage(aoi + " contains " + pos);
-            }
+            
             /*if (screen.skip)
             {
                 screen.skip = false;
@@ -122,7 +99,7 @@ namespace BachelorProject
         {
 
             Tracker.SendMessage("fixation start");
-            /*foreach (var aoi in AOIs)
+            foreach (var aoi in AOIs)
             {
                 var pos = new PointF((float)(e.AveragePosition.X - _offsetX), (float)(e.AveragePosition.Y - _offsetY));
                 //if (aoi.Contains(pos))
@@ -130,7 +107,7 @@ namespace BachelorProject
 
                 if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y && aoi.Points[1].Y > pos.Y)
                     Tracker.SendMessage(aoi + " contains " + pos);
-            }*/
+            }
             /*foreach (var aoi in AOIs) {
                 Debug.WriteLine(aoi.Name + " -> " + e.AveragePosition + " :: " + aoi.Points[0] + ", " + aoi.Points[1]);
                 var pos = new PointF(e.AveragePosition.X - 400, e.AveragePosition.Y - 200);
@@ -167,9 +144,34 @@ namespace BachelorProject
         {
             Log.Info("Screen " + _counter + " and Trial " + _trialId + " are shown.");
 
+            if (_timeLimit)
+            {
+                _timer = new System.Timers.Timer(300000); // 5 Minuten = 300000
+                //_timer.Elapsed += new System.Timers.ElapsedEventHandler(endTrial);
+                _timer.AutoReset = false;
+                _timer.Enabled = true;
+            }
+
+            if (_hints)
+            {
+                /*_hintTimer = new System.Timers.Timer(3000);
+                _hintTimer.Elapsed += new System.Timers.ElapsedEventHandler(ShowHint);
+                _hintTimer.AutoReset = false;
+                _hintTimer.Enabled = true;
+                 */
+                _hintTimer.Interval = TimeSpan.FromMinutes(2);
+                _hintTimer.Tick += ShowHint;
+                _hintTimer.Start();
+            }
             var constraintsThread = new Thread(CheckConstraints);
             _constraintsThreadIsRunning = true;
             constraintsThread.Start();
+        }
+
+        private void ShowHint(object sender, EventArgs e)
+        {
+            _screen.ShowHint();
+            _hintTimer.Stop();
         }
 
         private void CheckConstraints()

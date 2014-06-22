@@ -21,8 +21,8 @@ namespace BachelorProject
         [STAThread]
         static void Main()
         {
-            var experiment = new Experiment(new MouseTracker())
-            //var experiment = new Experiment(new EyeTribeTracker())
+            //var experiment = new Experiment(new MouseTracker())
+            var experiment = new Experiment(new EyeTribeTracker())
             {
                 ShowDefaultStartScreen = false,
                 ShowDebugEndScreen = false,
@@ -37,33 +37,39 @@ namespace BachelorProject
             //int[] numberOfPersons = { 5, 4, 4 };
 
 
-            // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper
+            // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper, hints
 
             // TUTORIAL
 
-            experiment.AddTrial(new Introduction(new IntroScreen1()));
+            /*experiment.AddTrial(new Introduction(new IntroScreen1()));
             experiment.AddTrial(new Introduction(new IntroScreen2()));
             experiment.AddTrial(new Introduction(new IntroScreen3()));
             experiment.AddTrial(new Introduction(new IntroScreen4()));
-            
+            */
             // Tutorial mit Ausprobieren
             var trial0 = new Trial0();
             var tutorialTrial = new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), trial0, true, false, false, false);
-            experiment.AddTrial(tutorialTrial);
+            /*experiment.AddTrial(tutorialTrial);
             // 3 Übungsaufgaben
             experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, false));
             experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[2], ShuffledNames(), new TutTrial2(), true, false, false, false));
             experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(), true, false, false, false));
             experiment.AddTrial(new TrialStartScreen());
+            */
+            //experiment.AddTrial(new CalibrationTrial());
+            // PILOTSTUDIE
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[4], ShuffledNames(), new Trial1(), true, false, false, false));
+            experiment.AddTrial(new TrialInterScreen());
 
             experiment.AddTrial(new CalibrationTrial());
-            // PILOTSTUDIE
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[4], ShuffledNames(), new Trial1(), true, false, false, true));
-            experiment.AddTrial(new TrialInterScreen());
             experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[5], ShuffledNames(), new Trial2(), true, false, false, true));
             experiment.AddTrial(new TrialInterScreen());
+
+            experiment.AddTrial(new CalibrationTrial());
             experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[6], ShuffledNames(), new Trial3(), true, false, false, true));
             experiment.AddTrial(new TrialInterScreen());
+
+            experiment.AddTrial(new CalibrationTrial());
             experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[7], ShuffledNames(), new Trial4(), true, false, false, true));
             experiment.AddTrial(new TrialInterScreen());
             experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[8], ShuffledNames(), new Trial5(), true, false, false, true));

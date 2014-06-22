@@ -157,18 +157,20 @@
             </Ellipse.RenderTransform>
         </Ellipse>
 
-        <Border Name="Done" Margin="1500,2000" BorderBrush="Black" BorderThickness="4" Background="White">
-            <VirtualizingStackPanel Margin="40">
+
+        <VirtualizingStackPanel Name="Done" Margin="2000,1000">
+            <Border BorderBrush="Black" BorderThickness="4" Background="White">
                 <TextBlock Name="DoneTextBlock"  
                            Width="800" 
                            FontSize="30" 
+                           Padding="50"
                            TextWrapping="WrapWithOverflow" 
                            TextAlignment="Center">
                     Glückwunsch! 
                     <LineBreak>
                     </LineBreak>Du hast alle Wünsche erfüllt. Klicke auf den Button, um fortzufahren.
                     <LineBreak/>
-                </TextBlock>
+                    <LineBreak/>
                 <Button Width="120"
                         Height="60"
                         Content="OK"
@@ -176,13 +178,18 @@
                         FontWeight="Bold"
                         Cursor="Hand"
                         PreviewMouseDown="Done_Continue_Button_MouseDown"/>
-            </VirtualizingStackPanel>
+                    <LineBreak/>
+                </TextBlock>
         </Border>
+        </VirtualizingStackPanel>
+        
 
-        <Border Name="NotDone" Margin="1500,2000" BorderBrush="Black" BorderThickness="4" Background="White">
-            <VirtualizingStackPanel Margin="40">
+        <VirtualizingStackPanel Name="NotDone" Margin="2000,1000">
+            <Border BorderBrush="Black" BorderThickness="4" Background="White">
+            
                 <TextBlock Name="NotDoneTextBlock"  
                            Width="800" 
+                           Padding="50"
                            FontSize="30" 
                            TextWrapping="WrapWithOverflow" 
                            TextAlignment="Center">
@@ -191,19 +198,24 @@
                     <LineBreak/>
                     Möchtest du sehen, welche Wünsche du bereits erfüllt hast, klicke auf den Hilfe-Button. Wenn du nicht mehr weiter weißt, klicke auf den Weiter-Button und du gelangst zur nächsten Aufgabe.
                     <LineBreak/>
-                </TextBlock>
-                <Button Width="120"
+                    <LineBreak/>
+                    <Button Width="120"
                         Height="60"
                         Content="OK"
                         FontSize="30"
                         FontWeight="Bold"
                         Cursor="Hand"
                         PreviewMouseDown="Done_Back_Button_MouseDown"/>
-            </VirtualizingStackPanel>
+                    <LineBreak/>
+                </TextBlock>
+                
         </Border>
+        </VirtualizingStackPanel>
+        
 
-        <Border Name="FirstHintWindow" Margin="2000,1000" BorderBrush="Black" BorderThickness="4" Width="800">
-            <VirtualizingStackPanel Background="White" Orientation="Horizontal" >
+        <VirtualizingStackPanel Name="FirstHintWindow" Margin="2000,1000" Background="White" Orientation="Horizontal" >
+            <Border  BorderBrush="Black" BorderThickness="4" Width="800">
+            
                 <TextBlock Padding="100" TextAlignment="Center" FontSize="30" Width="800">
                 Möchtest du jetzt einen Hinweis erhalten?
                 <LineBreak/>
@@ -230,11 +242,12 @@
                     Nein
                 </Button>
             </TextBlock>
-            </VirtualizingStackPanel>
+            
         </Border>
+        </VirtualizingStackPanel>
 
-        <Border Name="SecondHintWindow" Margin="2000,1000" BorderBrush="Black" BorderThickness="4" Width="800">
-            <VirtualizingStackPanel Background="White" Orientation="Horizontal" >
+        <VirtualizingStackPanel Name="SecondHintWindow" Margin="2000,1000" Background="White" Orientation="Horizontal" >
+            <Border BorderBrush="Black" BorderThickness="4" Width="800">
                 <TextBlock Padding="100" TextAlignment="Center" FontSize="30" Width="800">
                     <Run FontSize="35" FontWeight="Bold"> Hinweis </Run>
                     <LineBreak/>
@@ -266,8 +279,9 @@
                     Nein
                 </Button>
                 </TextBlock>
+            </Border>
             </VirtualizingStackPanel>
-        </Border>
+        
 
         <!-- <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>
         <Ellipse

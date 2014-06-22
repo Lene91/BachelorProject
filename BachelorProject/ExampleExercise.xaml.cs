@@ -23,7 +23,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 1;
-        private const bool Laptop = true;
+        private const bool Laptop = false;
 
         private IAoiUpdate _trial;
 
@@ -67,11 +67,11 @@ namespace BachelorProject
 
         private int _pictureId = 1;
 
-        
-        private Border _doneBorder = new Border();
-        private Border _notDoneBorder = new Border();
-        private Border _firstHintWindow = new Border();
-        private Border _secondHintWindow = new Border();
+
+        private VirtualizingPanel _donePanel = new VirtualizingStackPanel();
+        private VirtualizingPanel _notDonePanel = new VirtualizingStackPanel();
+        private VirtualizingPanel _firstHintWindow = new VirtualizingStackPanel();
+        private VirtualizingPanel _secondHintWindow = new VirtualizingStackPanel();
 
         private bool _doneButtonKlicked;
 
@@ -646,9 +646,9 @@ namespace BachelorProject
             }
             foreach (UIElement uie in MyCanvas.Children)
             {
-                if (uie is Border)
+                if (uie is VirtualizingPanel)
                 {
-                    Border b = uie as Border;
+                    var b = uie as VirtualizingPanel;
                     if (b.Name.Equals("FirstHintWindow"))
                         _firstHintWindow = b;
                     else if (b.Name.Equals("SecondHintWindow"))
@@ -822,19 +822,18 @@ namespace BachelorProject
         private void Done_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _doneButtonKlicked = true;
-            //CheckConstraints();
             var done = ConstraintsFullfilled();
             _doneButtonKlicked = false;
 
             foreach (UIElement uie in MyCanvas.Children)
             {
-                if (uie is Border)
+                if (uie is VirtualizingPanel)
                 {
-                    var b = uie as Border;
-                    if (b.Name.Equals("Done"))
-                        _doneBorder = b;
-                    else if (b.Name.Equals("NotDone"))
-                        _notDoneBorder = b;
+                    var vp = uie as VirtualizingPanel;
+                    if (vp.Name.Equals("Done"))
+                        _donePanel = vp;
+                    else if (vp.Name.Equals("NotDone"))
+                        _notDonePanel = vp;
                     else uie.Opacity = 0.2;
                 }
                 else uie.Opacity = 0.2;
@@ -845,16 +844,16 @@ namespace BachelorProject
                 _tracker.SendMessage("DONE BUTTON PRESSED (DONE)");
                 TakePicture("doneButton(done)");
                 // change margin so that it is visible
-                Panel.SetZIndex(_doneBorder, 100);
-                _doneBorder.Margin = new Thickness(150, 200, 0, 0);
+                Panel.SetZIndex(_donePanel, 100);
+                _donePanel.Margin = new Thickness(200, 100, 0, 0);
             }
             else
             {
                 _tracker.SendMessage("DONE BUTTON PRESSED (NOT DONE)");
                 TakePicture("doneButton(notDone)");
                 // change margin so that it is visible
-                Panel.SetZIndex(_notDoneBorder, 100);
-                _notDoneBorder.Margin = new Thickness(150, 200, 0, 0);
+                Panel.SetZIndex(_notDonePanel, 100);
+                _notDonePanel.Margin = new Thickness(200, 100, 0, 0);
             }
         }
 
@@ -875,8 +874,8 @@ namespace BachelorProject
                 if (uie is Ellipse && !(uie as Ellipse).Name.Equals("table"))
                     uie.Opacity = 0.8;
             }
-            Panel.SetZIndex(_notDoneBorder, 100);
-            _notDoneBorder.Margin = new Thickness(1500, 2000, 0, 0);
+            Panel.SetZIndex(_notDonePanel, 100);
+            _notDonePanel.Margin = new Thickness(2000, 1000, 0, 0);
         }
 
         private void Help_Wanted_Button_MouseDown(object sender, MouseButtonEventArgs e)
