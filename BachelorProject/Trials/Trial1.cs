@@ -9,6 +9,7 @@
 
         public override bool CheckActualConstraints()
         {
+            
             if (SharingFood(P2, P3))
                 UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
@@ -24,6 +25,7 @@
             if (SittingNextToEachOther(P2, P4))
                 UpdateConstraint("c4", true);
             else constraintsFullfilled = false;
+            
             /*
             if (sittingNextToEachOther(p1, p2))
                 updateConstraint("c1", true);
