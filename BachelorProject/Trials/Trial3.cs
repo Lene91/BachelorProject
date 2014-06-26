@@ -9,6 +9,38 @@
 
         public override bool CheckActualConstraints()
         {
+            if (AtLeastOneNeighbourSharingFood(P3))
+                UpdateConstraint("c1", true);
+            else constraintsFullfilled = false;
+
+            if (NotSharingFood(P1, P4))
+                UpdateConstraint("c2", true);
+            else constraintsFullfilled = false;
+
+            if (NotSittingNextToEachOther(P2, P3))
+                UpdateConstraint("c3", true);
+            else constraintsFullfilled = false;
+
+            if (SharingFood(P5))
+                UpdateConstraint("c4", true);
+            else constraintsFullfilled = false;
+
+            if (SharingFood(P4))
+                UpdateConstraint("c5", true);
+            else constraintsFullfilled = false;
+
+            if (SharingFood(P2))
+                UpdateConstraint("c6", true);
+            else constraintsFullfilled = false;
+
+            if (NotSharingFood(P1, P5))
+                UpdateConstraint("c7", true);
+            else constraintsFullfilled = false;
+
+            if (NotSittingNextToEachOther(P5, P3))
+                UpdateConstraint("c8", true);
+            else constraintsFullfilled = false;
+            /*
             if (SharingFood(P2, P3))
                 UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
@@ -24,7 +56,7 @@
             if (NotSittingNextToEachOther(P5, P6))
                 UpdateConstraint("c4", true);
             else constraintsFullfilled = false;
-            
+            */
 
             /*
             if (numberSharingFood(1))

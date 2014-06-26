@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 using BachelorProject.Helper;
 using Eyetracker;
 using System.Drawing;
-//using System.Windows.Forms;
+using System.Windows.Forms;
 using System.Diagnostics;
 
 namespace BachelorProject
@@ -23,7 +23,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 1;
-        private const bool Laptop = false;
+        private const bool Laptop = true;
 
         private IAoiUpdate _trial;
 
@@ -66,6 +66,8 @@ namespace BachelorProject
         private bool _constraintHelp;
 
         private int _pictureId = 1;
+
+        private int counter = 0;
 
 
         private VirtualizingPanel _donePanel = new VirtualizingStackPanel();
@@ -261,7 +263,7 @@ namespace BachelorProject
             _constraintStackPanel = new StackPanel
             {
                 Name = "ConstraintPanel",
-                Orientation = Orientation.Vertical,
+                Orientation = System.Windows.Controls.Orientation.Vertical,
                 Width = 400,
                 Height = 550,
                 Margin = new Thickness(800, 260, 0, 0)
@@ -370,9 +372,14 @@ namespace BachelorProject
                 return;
             }
 
-            // Mauskoordinaten speichern
-            var pos = Mouse.GetPosition(null);
-            _tracker.SendMessage("MousePos " + pos.ToString());
+            if (counter == 200)
+            {                
+                // Mauskoordinaten speichern
+                var pos = Mouse.GetPosition(null);
+                _tracker.SendMessage("MousePos " + pos.ToString());
+                counter = 0;
+            }
+            counter++;
 
             if (_constraintHelp || _doneButtonKlicked)
             {
@@ -656,7 +663,7 @@ namespace BachelorProject
                 }
             }
             _firstHintWindow.Margin = new Thickness(200, 100, 0, 0);
-            Panel.SetZIndex(_firstHintWindow, 100);
+            System.Windows.Controls.Panel.SetZIndex(_firstHintWindow, 100);
         }
 
         /*
@@ -706,26 +713,36 @@ namespace BachelorProject
                 return;
             }
 
-            var screenshot = new Bitmap((int)Width, (int)Height-30);
+            var mousePos = System.Windows.Forms.Cursor.Position;
+            var screenshot = new Bitmap((int)Width, (int)Height - 30);
             var g = Graphics.FromImage(screenshot);
+
+            
             string fileName;
             // snip wanted area
             if (Laptop)
             {
                 g.CopyFromScreen(80, 0, 0, 0, new System.Drawing.Size((int)this.Width, (int)this.Height), CopyPixelOperation.SourceCopy);
-                fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + TestPerson + "\\Trial" + Id + "-" + _pictureId + "-" + info + ".bmp";
+                fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + TestPerson + "\\Trial" + Id + "-" + _pictureId + "-" + info + ".jpg";
+                mousePos.X = mousePos.X - 80;
             }
             else
             {
                 g.CopyFromScreen(360, 210, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
-                fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + TestPerson + "\\Trial" + Id + "-" + _pictureId + "-" + info + ".bmp";
+                fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + TestPerson + "\\Trial" + Id + "-" + _pictureId + "-" + info + ".jpg";
+                mousePos.X = mousePos.X - 360;
+                mousePos.Y = mousePos.Y - 210;
             }
-            // save uncompressed bitmap to disk
-            
-            
-            
+
+            // Maus Cursor auf Graphics-Objekt zeichnen
+            var icon = new Icon(SystemIcons.Hand, 12, 12);
+            var image = System.Drawing.Image.FromFile("cursor.png");
+            g.DrawImage(image, mousePos);
+
+
+            // save compressed jpg to disk
             System.IO.FileStream fs = System.IO.File.Open(fileName, System.IO.FileMode.OpenOrCreate);
-            screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Bmp);
+            screenshot.Save(fs, System.Drawing.Imaging.ImageFormat.Jpeg);
             fs.Close();
 
             _pictureId++;
@@ -844,7 +861,7 @@ namespace BachelorProject
                 _tracker.SendMessage("DONE BUTTON PRESSED (DONE)");
                 TakePicture("doneButton(done)");
                 // change margin so that it is visible
-                Panel.SetZIndex(_donePanel, 100);
+                System.Windows.Controls.Panel.SetZIndex(_donePanel, 100);
                 _donePanel.Margin = new Thickness(200, 100, 0, 0);
             }
             else
@@ -852,7 +869,7 @@ namespace BachelorProject
                 _tracker.SendMessage("DONE BUTTON PRESSED (NOT DONE)");
                 TakePicture("doneButton(notDone)");
                 // change margin so that it is visible
-                Panel.SetZIndex(_notDonePanel, 100);
+                System.Windows.Controls.Panel.SetZIndex(_notDonePanel, 100);
                 _notDonePanel.Margin = new Thickness(200, 100, 0, 0);
             }
         }
@@ -874,7 +891,7 @@ namespace BachelorProject
                 if (uie is Ellipse && !(uie as Ellipse).Name.Equals("table"))
                     uie.Opacity = 0.8;
             }
-            Panel.SetZIndex(_notDonePanel, 100);
+            System.Windows.Controls.Panel.SetZIndex(_notDonePanel, 100);
             _notDonePanel.Margin = new Thickness(2000, 1000, 0, 0);
         }
 
@@ -885,7 +902,7 @@ namespace BachelorProject
             _firstHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
 
             _secondHintWindow.Margin = new Thickness(200, 100, 0, 0);
-            Panel.SetZIndex(_secondHintWindow, 100);
+            System.Windows.Controls.Panel.SetZIndex(_secondHintWindow, 100);
         }
 
         private void Help_Not_Wanted_Button_MouseDown(object sender, MouseButtonEventArgs e)
@@ -935,11 +952,13 @@ namespace BachelorProject
                 _current.IsDragging = false;
                 _current.InputElement.ReleaseMouseCapture();
                 _current.InputElement = null;
+                TakePicture("stopDragging");
+                _tracker.SendMessage("STOP DRAGGING " + _currentCircle.GetName());
             }
             //var pos = e.GetPosition(MyCanvas);
         }
 
-        private void Canvas_MouseMove(object sender, MouseEventArgs e)
+        private void Canvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             // if mouse is down when its moving, then it's dragging current
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -975,6 +994,8 @@ namespace BachelorProject
                 _currentCircle = c;
                 break;
             }
+            TakePicture("startDragging");
+            _tracker.SendMessage("START DRAGGING " + _currentCircle.GetName());
         }
 
         private void UpdatePosition()

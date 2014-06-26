@@ -8,7 +8,35 @@
 
         public override bool CheckActualConstraints()
         {
-            if (SharingFood(P2, P3))
+            if (NotSittingNextToEachOther(P2, P4))
+                UpdateConstraint("c1", true);
+            else constraintsFullfilled = false;
+
+            if (SittingNextToEachOther(P5, P1))
+                UpdateConstraint("c2", true);
+            else constraintsFullfilled = false;
+
+            if (NotSittingOn(P2, P4))
+                UpdateConstraint("c3", true);
+            else constraintsFullfilled = false;
+
+            if (NotSittingNextToEachOther(P1, P2))
+                UpdateConstraint("c4", true);
+            else constraintsFullfilled = false;
+
+            if (SittingNextToEachOther(P3, P2))
+                UpdateConstraint("c5", true);
+            else constraintsFullfilled = false;
+
+            if (SittingNextToEachOther(P4, P5))
+                UpdateConstraint("c6", true);
+            else constraintsFullfilled = false;
+
+            if (IsNotSeat(P2))
+                UpdateConstraint("c7", true);
+            else constraintsFullfilled = false;
+
+            /*if (SharingFood(P2, P3))
                 UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
 
@@ -23,7 +51,7 @@
             if (NotSittingNextToEachOther(P1, P4))
                 UpdateConstraint("c4", true);
             else constraintsFullfilled = false;
-            
+            */
 
             /*
             if (notSittingNextToEachOther(p2,p4))

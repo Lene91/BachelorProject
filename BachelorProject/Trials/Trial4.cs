@@ -7,6 +7,31 @@
 
         public override bool CheckActualConstraints()
         {
+            if (SharingFood(P2))
+                UpdateConstraint("c1", true);
+            else constraintsFullfilled = false;
+
+            if (SittingOnSomeone(P4))
+                UpdateConstraint("c2", true);
+            else constraintsFullfilled = false;
+
+            if (OneNeighbourSharingFood(P1))
+                UpdateConstraint("c3", true);
+            else constraintsFullfilled = false;
+
+            if (OneNeighbourIsSeat(P3))
+                UpdateConstraint("c4", true);
+            else constraintsFullfilled = false;
+
+            if (OneNeighbourIsSeat(P1))
+                UpdateConstraint("c5", true);
+            else constraintsFullfilled = false;
+
+            if (NotSharingFood(P1,P2))
+                UpdateConstraint("c6", true);
+            else constraintsFullfilled = false;
+
+            /*
             if (SittingNextToEachOther(P2, P3))
                 UpdateConstraint("c1", true);
             else constraintsFullfilled = false;
@@ -42,7 +67,7 @@
             if (NumberSharingFood(1))
                 UpdateConstraint("c9", true);
             else constraintsFullfilled = false;
-
+            */
             /*
             if (sittingNextToEachOther(p3, p2))
                 updateConstraint("c1", true);
