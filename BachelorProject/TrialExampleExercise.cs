@@ -33,12 +33,12 @@ namespace BachelorProject
         private readonly double _offsetX;
         private readonly double _offsetY;
         private readonly bool _timeLimit;
-        private readonly bool _hints;
-        private System.Timers.Timer _timer;
-        private System.Timers.Timer _timer2;
+        private readonly int _hintModus;
+        private DispatcherTimer _timer = new DispatcherTimer();
+        private DispatcherTimer _timer2 = new DispatcherTimer();
         private DispatcherTimer _hintTimer = new DispatcherTimer();
 
-        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp, bool hints)
+        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp, int hintModus, string hint)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = tracking;
@@ -48,11 +48,11 @@ namespace BachelorProject
             _names = names;
             _trialId = trial.GetId();
             _timeLimit = timeLimit;
-            _hints = hints;
+            _hintModus = hintModus;
 
             _offsetX = (SystemParameters.FullPrimaryScreenWidth - ScreenWidth) / 2;
             _offsetY = (SystemParameters.FullPrimaryScreenHeight - ScreenHeight) / 2;
-            _screen.Initialize(this, numberOfPersons, constraints, names, Tracker, constraintHelp);
+            _screen.Initialize(this, numberOfPersons, constraints, names, Tracker, constraintHelp, hintModus, hint);
             CreateAois(_screen.GetPersons());
         }
 
@@ -124,17 +124,16 @@ namespace BachelorProject
         }
          */
 
-        private void endTrial(object source, System.Timers.ElapsedEventArgs e)
+        private void EndTrial(object sender, EventArgs e)
         {
             _screen.TakePicture("timeElapsed");
             _screen.ShowExerciseEnd();
-            _timer2 = new System.Timers.Timer(300);
-            //_timer2.Elapsed += new System.Timers.ElapsedEventHandler(Skip);
-            _timer2.AutoReset = false;
-            _timer2.Enabled = true;
+            _timer2.Interval = TimeSpan.FromSeconds(3);
+            _timer2.Tick += Skip;
+            _timer2.Start();
         }
 
-        private void Skip(object source, System.Timers.ElapsedEventArgs e)
+        private void Skip(object sender, EventArgs e)
         {
             Tracker.SendMessage("TIME ELAPSED.");
             SkipTrial();
@@ -146,37 +145,42 @@ namespace BachelorProject
 
             if (_timeLimit)
             {
-                _timer = new System.Timers.Timer(300000); // 5 Minuten = 300000
-                //_timer.Elapsed += new System.Timers.ElapsedEventHandler(endTrial);
-                _timer.AutoReset = false;
-                _timer.Enabled = true;
+                _timer.Interval = TimeSpan.FromMinutes(5);
+                _timer.Tick += EndTrial;
+                _timer.Start();
             }
 
-            if (_hints)
+            switch (_hintModus)
             {
-                /*_hintTimer = new System.Timers.Timer(3000);
-                _hintTimer.Elapsed += new System.Timers.ElapsedEventHandler(ShowHint);
-                _hintTimer.AutoReset = false;
-                _hintTimer.Enabled = true;
-                 */
-                _hintTimer.Interval = TimeSpan.FromMinutes(2);
-                _hintTimer.Tick += ShowHint;
-                _hintTimer.Start();
+                case 1:
+                    _hintTimer.Interval = TimeSpan.FromMinutes(0.5);
+                    _hintTimer.Tick += LookForClicks;
+                    _hintTimer.Start();
+                    break;
+                case 2:
+                    _hintTimer.Interval = TimeSpan.FromMinutes(3);
+                    _hintTimer.Tick += ShowHint;
+                    _hintTimer.Start();
+                    break;
             }
             var constraintsThread = new Thread(CheckConstraints);
             _constraintsThreadIsRunning = true;
             constraintsThread.Start();
         }
 
+        private void LookForClicks(object sender, EventArgs e)
+        {
+            _screen.StartNoClickTimer();
+        }
+
         private void ShowHint(object sender, EventArgs e)
         {
-            _screen.ShowHint();
+            _screen.ShowHint(sender,e);
             _hintTimer.Stop();
         }
 
         private void CheckConstraints()
         {
-            //int counter = 50;
             while (_constraintsThreadIsRunning)
             {
                 if (_screen.Skip)
@@ -186,18 +190,6 @@ namespace BachelorProject
                 }
 
                 _screen.ConstraintsFullfilled();
-
-                /*if (screen.ConstraintsFullfilled())
-                    counter--;
-
-                if (counter < 0)
-                {
-                    screen.takePicture();
-                    SkipTrial();
-                }
-
-                System.Threading.Thread.Sleep(10);
-                 */
             }
         }
 

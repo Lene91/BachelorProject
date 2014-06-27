@@ -228,6 +228,7 @@
                     FontWeight="Bold" 
                     Width="100" 
                     Height="75"
+                    Cursor="Hand"
                     PreviewMouseDown="Help_Wanted_Button_MouseDown">
                     Ja
                 </Button>
@@ -238,6 +239,7 @@
                     FontWeight="Bold" 
                     Width="100" 
                     Height="75"
+                    Cursor="Hand"
                     PreviewMouseDown="Help_Not_Wanted_Button_MouseDown">
                     Nein
                 </Button>
@@ -246,38 +248,37 @@
         </Border>
         </VirtualizingStackPanel>
 
-        <VirtualizingStackPanel Name="SecondHintWindow" Margin="2000,1000" Background="White" Orientation="Horizontal" >
-            <Border BorderBrush="Black" BorderThickness="4" Width="800">
-                <TextBlock Padding="100" TextAlignment="Center" FontSize="30" Width="800">
-                    <Run FontSize="35" FontWeight="Bold"> Hinweis </Run>
+        <VirtualizingStackPanel Name="SecondHintWindow" Margin="200,4900" Background="White" Orientation="Horizontal"  >
+            <Border BorderBrush="Black" BorderThickness="4" Width="760">
+                <TextBlock Padding="10" TextAlignment="Center" FontSize="25" TextWrapping="WrapWithOverflow">
+                <!--<Run FontSize="30" FontWeight="Bold"> Hinweis </Run>
                     <LineBreak/>
                     <LineBreak/>
-                    <Run Name="Hint">BeispielText für einen Hinweis</Run>
+                    Lisa möchte auf dem Schoß von jemandem sitzen.
                     <LineBreak/>
                     <LineBreak/>
                     Ist dieser Hinweis hilfreich?
                     <LineBreak/>
-                    <LineBreak/>
                 <Button 
                     Name="Btn3" 
                     Margin="20" 
-                    FontSize="30" 
+                    FontSize="25" 
                     FontWeight="Bold" 
-                    Width="100" 
-                    Height="75"
+                    Width="75" 
+                    Height="50"
                     PreviewMouseDown="Helpful_Button_MouseDown">
                     Ja
                 </Button>
                 <Button 
                     Name="Btn4" 
                     Margin="20" 
-                    FontSize="30" 
+                    FontSize="25" 
                     FontWeight="Bold" 
-                    Width="100" 
-                    Height="75"
+                    Width="75" 
+                    Height="50"
                     PreviewMouseDown="Not_Helpful_Button_MouseDown">
                     Nein
-                </Button>
+                </Button>-->
                 </TextBlock>
             </Border>
             </VirtualizingStackPanel>

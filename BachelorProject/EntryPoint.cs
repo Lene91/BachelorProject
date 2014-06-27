@@ -15,8 +15,10 @@ namespace BachelorProject
     {
         private static readonly Dictionary<int, string> AllConstraints = new Dictionary<int, string>();
         private static readonly List<string> AllNames = new List<string>();
+        private static readonly List<string> AllHints = new List<string>();
         private static List<ExampleExercise> _allTrials;
         //private static int numberOfTrials = 3;
+        
 
         [STAThread]
         static void Main()
@@ -33,11 +35,15 @@ namespace BachelorProject
             // Dateien, die für alle Trials benötigt werden -> Container befüllen
             ReadConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
             ReadNames("names.txt"); // shuffle()-Aufruf gibt neu sortierte Liste zurück
+            ReadHints("hints.txt");
             _allTrials = new List<ExampleExercise> { new Trial1(), new Trial2(), new Trial3() };
             //int[] numberOfPersons = { 5, 4, 4 };
 
 
-            // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper
+            // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper, hintModus
+            // hintModus:   0 -> no hints
+            //              1 -> 15s without click, not before 30s
+            //              2 -> resetButton clicked, or after 3min
 
             // TUTORIAL
 
@@ -58,27 +64,27 @@ namespace BachelorProject
             */
             experiment.AddTrial(new CalibrationTrial());
             // PILOTSTUDIE
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[4], ShuffledNames(), new Trial1(), true, false, false, true));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[4], ShuffledNames(), new Trial1(), true, true, false, 2, AllHints[0]));
             experiment.AddTrial(new TrialInterScreen());
 
             experiment.AddTrial(new CalibrationTrial());
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[5], ShuffledNames(), new Trial2(), true, false, false, true));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[5], ShuffledNames(), new Trial2(), true, false, false, 2, AllHints[1]));
             experiment.AddTrial(new TrialInterScreen());
 
             experiment.AddTrial(new CalibrationTrial());
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[6], ShuffledNames(), new Trial3(), true, false, false, true));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[6], ShuffledNames(), new Trial3(), true, false, false, 2, AllHints[2]));
             experiment.AddTrial(new TrialInterScreen());
 
             experiment.AddTrial(new CalibrationTrial());
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[7], ShuffledNames(), new Trial4(), true, false, false, true));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[7], ShuffledNames(), new Trial4(), true, false, false, 2, AllHints[3]));
             experiment.AddTrial(new TrialInterScreen());
 
             experiment.AddTrial(new CalibrationTrial());
-            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[8], ShuffledNames(), new Trial5(), true, false, false, true));
+            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[8], ShuffledNames(), new Trial5(), true, false, false, 2, AllHints[4]));
             experiment.AddTrial(new TrialInterScreen());
 
             experiment.AddTrial(new CalibrationTrial());
-            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[9], ShuffledNames(), new Trial6(), true, false, false, true));
+            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[9], ShuffledNames(), new Trial6(), true, false, false, 2, AllHints[5]));
             
             
             //allTrials = shuffledTrials();
@@ -112,6 +118,17 @@ namespace BachelorProject
             experiment.DoCalibration();
 
             experiment.Run();
+        }
+
+        private static void ReadHints(string filename)
+        {
+            string line;
+            var file = new System.IO.StreamReader(@filename, Encoding.Default);
+            while ((line = file.ReadLine()) != null)
+            {
+                AllHints.Add(line);
+            }
+            file.Close();
         }
 
         private static void ReadConstraints(string filename)

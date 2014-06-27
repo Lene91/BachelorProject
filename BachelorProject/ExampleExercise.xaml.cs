@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 //using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using BachelorProject.Helper;
 using Eyetracker;
 using System.Drawing;
@@ -23,7 +25,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 1;
-        private const bool Laptop = true;
+        private const bool Laptop = false;
 
         private IAoiUpdate _trial;
 
@@ -65,18 +67,29 @@ namespace BachelorProject
 
         private bool _constraintHelp;
 
+        private int _hintModus;
+
         private int _pictureId = 1;
 
-        private int counter = 0;
+        private bool _hintDelivered = false;
 
+        private int _counter = 0;
+
+        private bool _infoShown = false;
 
         private VirtualizingPanel _donePanel = new VirtualizingStackPanel();
         private VirtualizingPanel _notDonePanel = new VirtualizingStackPanel();
         private VirtualizingPanel _firstHintWindow = new VirtualizingStackPanel();
         private VirtualizingPanel _secondHintWindow = new VirtualizingStackPanel();
+        private Run _hintRun = new Run();
 
         private bool _doneButtonKlicked;
 
+        private readonly DispatcherTimer _noClickTimer = new DispatcherTimer();
+        private readonly DispatcherTimer _resetHintTimer = new DispatcherTimer();
+        private readonly DispatcherTimer _waitTimer = new DispatcherTimer();
+
+        private string _hint;
 
         public ExampleExercise()
         {
@@ -91,7 +104,7 @@ namespace BachelorProject
          ************************************************************
          */
 
-        public void Initialize(IAoiUpdate trial, int numberOfPersons, string constraints, List<string> names, ITracker tracker, bool constraintHelp)
+        public void Initialize(IAoiUpdate trial, int numberOfPersons, string constraints, List<string> names, ITracker tracker, bool constraintHelp, int hintModus, string hint)
         {
             _trial = trial;
             _numberOfPersons = numberOfPersons;
@@ -99,6 +112,8 @@ namespace BachelorProject
             _names = names;
             _tracker = tracker;
             _constraintHelp = constraintHelp;
+            _hintModus = hintModus;
+            _hint = hint;
 
             _circleNames = new List<string> { "Person1", "Person2", "Person3", "Person4", "Person5", "Person6" };
             _persons = new List<Circle>();
@@ -112,6 +127,7 @@ namespace BachelorProject
             InitializeLeftInterface();
             InitializeConstraints();
             InitializeBigCircles();
+            InitializeHints();
         }
 
         public List<Circle> GetPersons()
@@ -342,6 +358,17 @@ namespace BachelorProject
 
         }
 
+        private void InitializeHints()
+        {
+            string newHint = _hint;
+            var index = 0;
+            for (var i = 1; i <= _numberOfPersons; ++i)
+            {
+                newHint = newHint.Replace(i.ToString(), _names[i - 1]);
+            }
+            _hint = newHint;
+        }
+
         public int GetId()
         {
             return Id;
@@ -372,14 +399,16 @@ namespace BachelorProject
                 return;
             }
 
-            if (counter == 200)
+
+
+            if (_counter == 200)
             {                
                 // Mauskoordinaten speichern
                 var pos = Mouse.GetPosition(null);
                 _tracker.SendMessage("MousePos " + pos.ToString());
-                counter = 0;
+                _counter = 0;
             }
-            counter++;
+            _counter++;
 
             if (_constraintHelp || _doneButtonKlicked)
             {
@@ -644,26 +673,83 @@ namespace BachelorProject
          ************************************************************
          */
 
-        public void ShowHint()
+        public void ShowHint(object sender, EventArgs e)
         {
-            if (!Dispatcher.CheckAccess())
+            if (_hintDelivered) return;
+            if (_infoShown)
             {
-                Dispatcher.Invoke(() => ShowHint());
+                _waitTimer.Interval = TimeSpan.FromSeconds(4);
+                _waitTimer.Tick += ShowHint;
+                _waitTimer.Start();
                 return;
             }
-            foreach (UIElement uie in MyCanvas.Children)
+            if (!Dispatcher.CheckAccess())
             {
-                if (uie is VirtualizingPanel)
+                Dispatcher.Invoke(() => ShowHint(sender,e));
+                return;
+            }
+            foreach (var b in MyCanvas.Children.OfType<VirtualizingPanel>().Select(uie => uie))
+            {
+                if (b.Name.Equals("FirstHintWindow"))
+                    _firstHintWindow = b;
+                else if (b.Name.Equals("SecondHintWindow"))
+                    _secondHintWindow = b;
+            }
+            
+            foreach (var tb in _secondHintWindow.Children.OfType<Border>().Select(x => x).Select(bo => bo.Child as TextBlock))
+            {
+                if (tb == null) return;
+                tb.Inlines.Add(new Run
                 {
-                    var b = uie as VirtualizingPanel;
-                    if (b.Name.Equals("FirstHintWindow"))
-                        _firstHintWindow = b;
-                    else if (b.Name.Equals("SecondHintWindow"))
-                        _secondHintWindow = b;
-                }
+                    FontSize = 30,
+                    FontWeight = FontWeights.Bold,
+                    Text = "Hinweis"
+                });
+                tb.Inlines.Add(new LineBreak());
+                tb.Inlines.Add(new LineBreak());
+                tb.Inlines.Add(new Run { Text = _hint });
+                tb.Inlines.Add(new LineBreak());
+                tb.Inlines.Add(new LineBreak());
+                tb.Inlines.Add(new Run{ Text="Ist dieser Hinweis hilfreich?"});
+                tb.Inlines.Add(new LineBreak());
+                var btn3 = new System.Windows.Controls.Button
+                {
+                    Name = "Btn3", 
+                    Margin = new Thickness(20), 
+                    FontSize = 25, 
+                    FontWeight = FontWeights.Bold,
+                    Width = 75,
+                    Height = 50,
+                    Cursor = System.Windows.Input.Cursors.Hand,
+                    Content = "Ja"
+                };
+                btn3.Click += Helpful_Button_MouseDown;
+                tb.Inlines.Add(btn3);
+                var btn4 = new System.Windows.Controls.Button
+                {
+                    Name = "Btn4",
+                    Margin = new Thickness(20),
+                    FontSize = 25,
+                    FontWeight = FontWeights.Bold,
+                    Width = 75,
+                    Height = 50,
+                    Cursor = System.Windows.Input.Cursors.Hand,
+                    Content = "Nein"
+                };
+                btn4.Click += Not_Helpful_Button_MouseDown;
+                tb.Inlines.Add(btn4);
             }
             _firstHintWindow.Margin = new Thickness(200, 100, 0, 0);
             System.Windows.Controls.Panel.SetZIndex(_firstHintWindow, 100);
+            _tracker.SendMessage("HINT SHOWN");
+            _hintDelivered = true;
+        }
+
+        public void StartNoClickTimer()
+        {
+            _noClickTimer.Interval = TimeSpan.FromMinutes(0.25);
+            _noClickTimer.Tick += ShowHint;
+            _noClickTimer.Start();
         }
 
         /*
@@ -773,6 +859,7 @@ namespace BachelorProject
                 Text = "Deine Zeit ist abgelaufen. In wenigen Sekunden geht es weiter."
             };
 
+            System.Windows.Controls.Panel.SetZIndex(b, 100);
             b.Child = tb;
             MyCanvas.Children.Add(b);
         }
@@ -820,6 +907,12 @@ namespace BachelorProject
                 el.UpdateRadius(CircleRadius);
             }
             _tracker.SendMessage("RESET BUTTON PRESSED");
+            if (_hintModus == 2)
+            {
+                _resetHintTimer.Interval = TimeSpan.FromSeconds(4);
+                _resetHintTimer.Tick += ShowHint;
+                _resetHintTimer.Start();
+            }
         }
 
         private void Continue_Button_MouseDown(object sender, MouseButtonEventArgs e)
@@ -838,6 +931,7 @@ namespace BachelorProject
 
         private void Done_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            _infoShown = true;
             _doneButtonKlicked = true;
             var done = ConstraintsFullfilled();
             _doneButtonKlicked = false;
@@ -855,7 +949,7 @@ namespace BachelorProject
                 }
                 else uie.Opacity = 0.2;
             }
-            
+
             if (done)
             {
                 _tracker.SendMessage("DONE BUTTON PRESSED (DONE)");
@@ -893,6 +987,7 @@ namespace BachelorProject
             }
             System.Windows.Controls.Panel.SetZIndex(_notDonePanel, 100);
             _notDonePanel.Margin = new Thickness(2000, 1000, 0, 0);
+            _infoShown = false;
         }
 
         private void Help_Wanted_Button_MouseDown(object sender, MouseButtonEventArgs e)
@@ -901,7 +996,7 @@ namespace BachelorProject
 
             _firstHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
 
-            _secondHintWindow.Margin = new Thickness(200, 100, 0, 0);
+            _secondHintWindow.Margin = new Thickness(20, 490, 0, 0);
             System.Windows.Controls.Panel.SetZIndex(_secondHintWindow, 100);
         }
 
@@ -912,18 +1007,18 @@ namespace BachelorProject
             _firstHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
         }
 
-        private void Helpful_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Helpful_Button_MouseDown(object sender, RoutedEventArgs e)
         {
             _tracker.SendMessage("HELPFUL");
 
-            _secondHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
+            _secondHintWindow.Margin = new Thickness(2000, 4900, 0, 0);
         }
 
-        private void Not_Helpful_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Not_Helpful_Button_MouseDown(object sender, RoutedEventArgs e)
         {
             _tracker.SendMessage("NOT HELPFUL");
 
-            _secondHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
+            _secondHintWindow.Margin = new Thickness(2000, 4900, 0, 0);
         }
 
 
@@ -939,6 +1034,13 @@ namespace BachelorProject
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (_noClickTimer != null && _hintModus == 1)
+            {
+                _noClickTimer.Stop();
+                _noClickTimer.Interval = TimeSpan.FromSeconds(15);
+                _noClickTimer.Tick += ShowHint;
+                _noClickTimer.Start();
+            }
             if (_current.InputElement == null) return;
             _current.X = Mouse.GetPosition((IInputElement)sender).X;
             _current.Y = Mouse.GetPosition((IInputElement)sender).Y;
