@@ -86,12 +86,14 @@ namespace BachelorProject
         private void Tracker_GazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
         {
             Tracker.SendMessage(e.Position.ToString());
-            
-            /*if (screen.skip)
+
+            var pos = new PointF((float)(e.Position.X - _offsetX), (float)(e.Position.Y - _offsetY));
+            foreach (var aoi in AOIs)
             {
-                screen.skip = false;
-                //SkipTrial();
-            }*/
+                if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y &&
+                    aoi.Points[1].Y > pos.Y)
+                    Tracker.SendMessage(aoi + " contains " + pos);
+            }
         }
 
 
@@ -99,15 +101,15 @@ namespace BachelorProject
         {
 
             Tracker.SendMessage("fixation start");
-            foreach (var aoi in AOIs)
+            /*foreach (var aoi in AOIs)
             {
                 var pos = new PointF((float)(e.AveragePosition.X - _offsetX), (float)(e.AveragePosition.Y - _offsetY));
                 //if (aoi.Contains(pos))
-                //Tracker.SendMessage(aoi + " contains " + pos);
+                    //Tracker.SendMessage(aoi + " contains " + pos);
 
                 if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y && aoi.Points[1].Y > pos.Y)
                     Tracker.SendMessage(aoi + " contains " + pos);
-            }
+            }*/
             /*foreach (var aoi in AOIs) {
                 Debug.WriteLine(aoi.Name + " -> " + e.AveragePosition + " :: " + aoi.Points[0] + ", " + aoi.Points[1]);
                 var pos = new PointF(e.AveragePosition.X - 400, e.AveragePosition.Y - 200);

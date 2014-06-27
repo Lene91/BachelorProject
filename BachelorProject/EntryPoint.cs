@@ -23,8 +23,8 @@ namespace BachelorProject
         [STAThread]
         static void Main()
         {
-            var experiment = new Experiment(new MouseTracker())
-            //var experiment = new Experiment(new EyeTribeTracker())
+            //var experiment = new Experiment(new MouseTracker())
+            var experiment = new Experiment(new EyeTribeTracker())
             {
                 ShowDefaultStartScreen = false,
                 ShowDebugEndScreen = false,
@@ -62,7 +62,7 @@ namespace BachelorProject
             experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(), true, false, false, false));
             experiment.AddTrial(new TrialStartScreen());
             */
-            experiment.AddTrial(new CalibrationTrial());
+            //experiment.AddTrial(new CalibrationTrial());
             // PILOTSTUDIE
             experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[4], ShuffledNames(), new Trial1(), true, true, false, 2, AllHints[0]));
             experiment.AddTrial(new TrialInterScreen());
