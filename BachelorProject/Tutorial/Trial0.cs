@@ -64,7 +64,7 @@ namespace BachelorProject.Tutorial
                            " ausprobieren. Klicke auf den Fertig-Button, wenn du" +
                            " die Aufgabe gelöst hast. Dein Platzierungsvorschlag" +
                            " wird dann geprüft und wenn du alle Sitzwünsche erfüllt hast," +
-                           " gelangst du zum nächsten Bildschirm." +
+                           " gelangst du zu einer weiteren Übungsaufgabe." +
                            " Sind noch nicht alle Wünsche erfüllt, so erhälst du die" + 
                            " Möglichkeit, deine Platzierung noch einmal zu überarbeiten.") 
                            { FontStyle = FontStyles.Italic, FontSize = 22 });

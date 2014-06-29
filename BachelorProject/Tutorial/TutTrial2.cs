@@ -21,7 +21,7 @@
                 UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (SharingFood(P3,P4))
+            if (OneNeighbourSharingFood(P5))
                 UpdateConstraint("c4", true);
             else constraintsFullfilled = false;
 

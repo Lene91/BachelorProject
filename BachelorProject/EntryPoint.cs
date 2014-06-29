@@ -58,22 +58,18 @@ namespace BachelorProject
             var trial0 = new Trial0();
             var tutorialTrial = new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), trial0, true, false, false, 0, "");
             experiment.AddTrial(tutorialTrial);
-            // 3 Übungsaufgaben
-            experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, 0, ""));
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[2], ShuffledNames(), new TutTrial2(), true, false, false, 0, ""));
-            experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(), true, false, false, 0, ""));
+            // 1 Übungsaufgabe
+            //experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, 0, ""));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(), true, false, false, 0, ""));
+            //experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(), true, false, false, 0, ""));
             experiment.AddTrial(new Introduction(new IntroScreen5()));
-            experiment.AddTrial(new TrialStartScreen());
-            
-            //experiment.AddTrial(new CalibrationTrial());
-            
 
             // HAUPTSTUDIE
 
             _allTrials = ShuffledTrials();
             _hintModi = ShuffledHintModi();
 
-            var numberOfTutTrials = 4;
+            var numberOfTutTrials = 2;
             var numberOfTrials = _allTrials.Count;
             for (int i = 0; i < numberOfTrials; ++i)
             {
