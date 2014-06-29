@@ -6,6 +6,7 @@ using Eyetracker.EyeTribe;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 
 namespace BachelorProject
@@ -17,14 +18,15 @@ namespace BachelorProject
         private static readonly List<string> AllNames = new List<string>();
         private static readonly List<string> AllHints = new List<string>();
         private static List<ExampleExercise> _allTrials;
+        private static List<int> _hintModi = new List<int>{ 0, 0, 1, 1, 2, 2 };
         //private static int numberOfTrials = 3;
         
 
         [STAThread]
         static void Main()
         {
-            //var experiment = new Experiment(new MouseTracker())
-            var experiment = new Experiment(new EyeTribeTracker())
+            var experiment = new Experiment(new MouseTracker())
+            //var experiment = new Experiment(new EyeTribeTracker())
             {
                 ShowDefaultStartScreen = false,
                 ShowDebugEndScreen = false,
@@ -36,8 +38,8 @@ namespace BachelorProject
             ReadConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
             ReadNames("names.txt"); // shuffle()-Aufruf gibt neu sortierte Liste zurück
             ReadHints("hints.txt");
-            _allTrials = new List<ExampleExercise> { new Trial1(), new Trial2(), new Trial3() };
-            //int[] numberOfPersons = { 5, 4, 4 };
+            _allTrials = new List<ExampleExercise> { new Trial1(), new Trial2(), new Trial3(), new Trial4(), new Trial5(), new Trial6() };
+            int[] numberOfPersons = { 6, 5, 5, 5, 6, 6 };
 
 
             // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper, hintModus
@@ -64,7 +66,8 @@ namespace BachelorProject
             */
             //experiment.AddTrial(new CalibrationTrial());
             // PILOTSTUDIE
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[4], ShuffledNames(), new Trial1(), true, true, false, 2, AllHints[0]));
+            
+            /*experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[4], ShuffledNames(), new Trial1(), true, true, false, 2, AllHints[0]));
             experiment.AddTrial(new TrialInterScreen());
 
             experiment.AddTrial(new CalibrationTrial());
@@ -85,33 +88,32 @@ namespace BachelorProject
 
             experiment.AddTrial(new CalibrationTrial());
             experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[9], ShuffledNames(), new Trial6(), true, false, false, 2, AllHints[5]));
-            
-            
-            //allTrials = shuffledTrials();
-
-            //experiment.AddTrial(new TrialExampleExercise(6, allConstraints[11], shuffledNames(), new Trial11(), true, true));
-            //experiment.AddTrial(new TrialInterScreen());
-            //experiment.AddTrial(new TrialExampleExercise(4, allConstraints[1], shuffledNames(), new Trial1(), true, true));
-            /*experiment.AddTrial(new TrialExampleExercise(5, allConstraints[2], shuffledNames(), new Trial2(), true));
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[3], shuffledNames(), new Trial3(), true));
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[4], shuffledNames(), new Trial4(), true));
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[5], shuffledNames(), new Trial5(), true));
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[6], shuffledNames(), new Trial6(), true));
-            experiment.AddTrial(new TrialExampleExercise(6, allConstraints[7], shuffledNames(), new Trial7(), true));
-            experiment.AddTrial(new TrialExampleExercise(4, allConstraints[8], shuffledNames(), new Trial8(), true));
-            experiment.AddTrial(new TrialExampleExercise(5, allConstraints[9], shuffledNames(), new Trial9(), true));
-            experiment.AddTrial(new TrialExampleExercise(6, allConstraints[10], shuffledNames(), new Trial10(), true));
             */
+            
+            _allTrials = ShuffledTrials();
+            _hintModi = ShuffledHintModi();
 
-            /*for (int i = 0; i < numberOfTrials; ++i)
+            var numberOfTutTrials = 4;
+            var numberOfTrials = _allTrials.Count;
+            for (int i = 0; i < numberOfTrials; ++i)
             {
-                var trial = allTrials[i];
-                var id = trial.getID();
-                var index = id - 1;
-                experiment.AddTrial(new TrialExampleExercise(numberOfPersons[index], allConstraints[id], shuffledNames(), trial, true));
-            }*/
+                // Kalibrierung
+                experiment.AddTrial(new CalibrationTrial());
 
-            experiment.AddTrial(new TrialEndScreen());
+                //Trial
+                var trial = _allTrials[i];
+                var id = trial.GetId();
+                var index = id - 1;
+                var constraintIndex = index + numberOfTutTrials;
+                var rnd = new Random();
+                var hintModus = rnd.Next(0, 3);
+                experiment.AddTrial(new TrialExampleExercise(numberOfPersons[index], AllConstraints[constraintIndex], ShuffledNames(), trial, true, false, false, _hintModi[index], AllHints[index]));
+                
+                //Zwischenscreen -> Fragebogen
+                experiment.AddTrial(new TrialInterScreen());
+            }
+
+            //experiment.AddTrial(new TrialEndScreen());
 
 
             experiment.ConfigureTracker();
@@ -184,6 +186,21 @@ namespace BachelorProject
                 _allTrials[n] = value;
             }
             return _allTrials;
+        }
+
+        private static List<int> ShuffledHintModi()
+        {
+            var n = _hintModi.Count;
+            var rnd = new Random();
+            while (n > 1)
+            {
+                var k = (rnd.Next(0, n) % n);
+                n--;
+                var value = _hintModi[k];
+                _hintModi[k] = _hintModi[n];
+                _hintModi[n] = value;
+            }
+            return _hintModi;
         }
     }
 }

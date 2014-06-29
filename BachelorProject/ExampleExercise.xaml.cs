@@ -25,7 +25,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 1;
-        private const bool Laptop = false;
+        private const bool Laptop = true;
 
         private IAoiUpdate _trial;
 
@@ -155,6 +155,16 @@ namespace BachelorProject
                 _persons.Remove(_persons[i]);
                 _circleNames.Remove(_circleNames[i]);
             }
+
+            // Trialnumber unten links anzeigen
+            TextBlock tb = new TextBlock
+            {
+                Margin = new Thickness(5, 780, 0, 0),
+                FontSize = 15,
+                Foreground = System.Windows.Media.Brushes.Gray,
+                Text = Id + " - " + _hintModus
+            };
+            MyCanvas.Children.Add(tb);
         }
 
         private void InitializeColors()

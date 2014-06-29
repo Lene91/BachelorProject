@@ -22,8 +22,16 @@
                 UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            if (SittingNextToEachOther(P2, P4))
+            if (NotSittingNextToEachOther(P6, P3))
                 UpdateConstraint("c4", true);
+            else constraintsFullfilled = false;
+
+            if (NotSharingFood(P6, P4))
+                UpdateConstraint("c5", true);
+            else constraintsFullfilled = false;
+
+            if (SittingNextToEachOther(P2, P4))
+                UpdateConstraint("c6", true);
             else constraintsFullfilled = false;
             
             /*

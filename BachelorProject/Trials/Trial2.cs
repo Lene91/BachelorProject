@@ -36,6 +36,11 @@
                 UpdateConstraint("c7", true);
             else constraintsFullfilled = false;
 
+            if (NumberSharingFood(0))
+                UpdateConstraint("c8", true);
+            else constraintsFullfilled = false;
+
+
             /*if (SharingFood(P2, P3))
                 UpdateConstraint("c1", true);
             else constraintsFullfilled = false;

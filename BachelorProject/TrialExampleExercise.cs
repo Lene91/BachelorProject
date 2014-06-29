@@ -50,6 +50,8 @@ namespace BachelorProject
             _timeLimit = timeLimit;
             _hintModus = hintModus;
 
+            Tracker.SendMessage("Trial " + _trialId + " - " + numberOfPersons + " Persons - HintModus: " + _hintModus);
+
             _offsetX = (SystemParameters.FullPrimaryScreenWidth - ScreenWidth) / 2;
             _offsetY = (SystemParameters.FullPrimaryScreenHeight - ScreenHeight) / 2;
             _screen.Initialize(this, numberOfPersons, constraints, names, Tracker, constraintHelp, hintModus, hint);

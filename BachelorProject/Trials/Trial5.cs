@@ -31,8 +31,12 @@
                 UpdateConstraint("c6", true);
             else constraintsFullfilled = false;
 
-            if (IsSeat(P5))
+            if (OneNeighbourSharingFood(P6))
                 UpdateConstraint("c7", true);
+            else constraintsFullfilled = false;
+
+            if (NumberSittingOn(0))
+                UpdateConstraint("c8", true);
             else constraintsFullfilled = false;
 
             /*
