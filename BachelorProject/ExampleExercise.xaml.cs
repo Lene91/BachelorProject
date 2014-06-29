@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -25,7 +26,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 1;
-        private const bool Laptop = true;
+        private const bool Laptop = false;
 
         private IAoiUpdate _trial;
 
@@ -85,11 +86,11 @@ namespace BachelorProject
 
         private bool _doneButtonKlicked;
 
-        private readonly DispatcherTimer _noClickTimer = new DispatcherTimer();
-        private readonly DispatcherTimer _resetHintTimer = new DispatcherTimer();
-        private readonly DispatcherTimer _waitTimer = new DispatcherTimer();
+        private DispatcherTimer _noClickTimer = new DispatcherTimer();
+        private DispatcherTimer _resetHintTimer = new DispatcherTimer();
 
         private string _hint;
+        private bool _hintThreadIsRunning = false;
 
         public ExampleExercise()
         {
@@ -688,9 +689,9 @@ namespace BachelorProject
             if (_hintDelivered) return;
             if (_infoShown)
             {
-                _waitTimer.Interval = TimeSpan.FromSeconds(4);
-                _waitTimer.Tick += ShowHint;
-                _waitTimer.Start();
+                var hintThread = new Thread(() => CheckInfoShown(sender, e));
+                _hintThreadIsRunning = true;
+                hintThread.Start();
                 return;
             }
             if (!Dispatcher.CheckAccess())
@@ -755,9 +756,21 @@ namespace BachelorProject
             _hintDelivered = true;
         }
 
+        private void CheckInfoShown(object sender, EventArgs e)
+        {
+            while (_hintThreadIsRunning)
+            {
+                if (!_infoShown)
+                {
+                    ShowHint(sender,e);
+                    _hintThreadIsRunning = false;
+                }
+            }
+        }
+
         public void StartNoClickTimer()
         {
-            _noClickTimer.Interval = TimeSpan.FromMinutes(0.25);
+            _noClickTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(20)};
             _noClickTimer.Tick += ShowHint;
             _noClickTimer.Start();
         }
@@ -919,7 +932,7 @@ namespace BachelorProject
             _tracker.SendMessage("RESET BUTTON PRESSED");
             if (_hintModus == 2)
             {
-                _resetHintTimer.Interval = TimeSpan.FromSeconds(4);
+                _resetHintTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(4)};
                 _resetHintTimer.Tick += ShowHint;
                 _resetHintTimer.Start();
             }
@@ -955,9 +968,9 @@ namespace BachelorProject
                         _donePanel = vp;
                     else if (vp.Name.Equals("NotDone"))
                         _notDonePanel = vp;
-                    else uie.Opacity = 0.2;
+                    //else uie.Opacity = 0.2;
                 }
-                else uie.Opacity = 0.2;
+                //else uie.Opacity = 0.2;
             }
 
             if (done)
@@ -989,15 +1002,21 @@ namespace BachelorProject
         // -> zurück zur aktuellen Aufgabe
         private void Done_Back_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            foreach (UIElement uie in MyCanvas.Children)
+            /*foreach (UIElement uie in MyCanvas.Children)
             {
                 uie.Opacity = 1;
                 if (uie is Ellipse && !(uie as Ellipse).Name.Equals("table"))
                     uie.Opacity = 0.8;
-            }
+            }*/
             System.Windows.Controls.Panel.SetZIndex(_notDonePanel, 100);
             _notDonePanel.Margin = new Thickness(2000, 1000, 0, 0);
             _infoShown = false;
+            
+            if (_noClickTimer.IsEnabled)
+            {
+                _noClickTimer.Stop();
+                StartNoClickTimer();
+            }
         }
 
         private void Help_Wanted_Button_MouseDown(object sender, MouseButtonEventArgs e)
@@ -1013,6 +1032,13 @@ namespace BachelorProject
         private void Help_Not_Wanted_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _tracker.SendMessage("HELP NOT WANTED");
+
+            if (_hintModus == 1)
+            {
+                _noClickTimer.Stop();
+                StartNoClickTimer();
+            }
+            _hintDelivered = false;
 
             _firstHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
         }
@@ -1044,12 +1070,10 @@ namespace BachelorProject
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (_noClickTimer != null && _hintModus == 1)
+            if (_noClickTimer.IsEnabled && _hintModus == 1)
             {
                 _noClickTimer.Stop();
-                _noClickTimer.Interval = TimeSpan.FromSeconds(15);
-                _noClickTimer.Tick += ShowHint;
-                _noClickTimer.Start();
+                StartNoClickTimer();
             }
             if (_current.InputElement == null) return;
             _current.X = Mouse.GetPosition((IInputElement)sender).X;

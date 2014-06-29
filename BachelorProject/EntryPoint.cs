@@ -42,10 +42,10 @@ namespace BachelorProject
             int[] numberOfPersons = { 6, 5, 5, 5, 6, 6 };
 
 
-            // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper, hintModus
+            // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper, hintModus, hint
             // hintModus:   0 -> no hints
-            //              1 -> 15s without click, not before 30s
-            //              2 -> resetButton clicked, or after 3min
+            //              1 -> 15s without click, not before 45s, if not wanted -> start again
+            //              2 -> resetButton clicked, or after 2min
 
             // TUTORIAL
 
@@ -107,7 +107,7 @@ namespace BachelorProject
                 var constraintIndex = index + numberOfTutTrials;
                 var rnd = new Random();
                 var hintModus = rnd.Next(0, 3);
-                experiment.AddTrial(new TrialExampleExercise(numberOfPersons[index], AllConstraints[constraintIndex], ShuffledNames(), trial, true, false, false, _hintModi[index], AllHints[index]));
+                experiment.AddTrial(new TrialExampleExercise(numberOfPersons[index], AllConstraints[constraintIndex], ShuffledNames(), trial, true, true, false, 1, AllHints[index])); //_hintModi[index]
                 
                 //Zwischenscreen -> Fragebogen
                 experiment.AddTrial(new TrialInterScreen());

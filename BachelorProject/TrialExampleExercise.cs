@@ -102,7 +102,7 @@ namespace BachelorProject
         private void Tracker_FixationStart(object sender, Eyetracker.EyeEvents.FixationEventArgs e)
         {
 
-            Tracker.SendMessage("fixation start");
+            //Tracker.SendMessage("fixation start");
             /*foreach (var aoi in AOIs)
             {
                 var pos = new PointF((float)(e.AveragePosition.X - _offsetX), (float)(e.AveragePosition.Y - _offsetY));
@@ -130,15 +130,22 @@ namespace BachelorProject
 
         private void EndTrial(object sender, EventArgs e)
         {
+            _timer.Stop();
             _screen.TakePicture("timeElapsed");
             _screen.ShowExerciseEnd();
-            _timer2.Interval = TimeSpan.FromSeconds(3);
+            _timer2 = new DispatcherTimer {Interval = TimeSpan.FromSeconds(3)};
             _timer2.Tick += Skip;
             _timer2.Start();
         }
 
         private void Skip(object sender, EventArgs e)
         {
+            if (_timer.IsEnabled)
+                _timer.Stop();
+            if (_hintTimer.IsEnabled)
+                _hintTimer.Stop();
+            if (_timer2.IsEnabled)
+                _timer2.Stop();
             Tracker.SendMessage("TIME ELAPSED.");
             SkipTrial();
         }
@@ -149,7 +156,7 @@ namespace BachelorProject
 
             if (_timeLimit)
             {
-                _timer.Interval = TimeSpan.FromMinutes(5);
+                _timer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(5) };
                 _timer.Tick += EndTrial;
                 _timer.Start();
             }
@@ -157,12 +164,12 @@ namespace BachelorProject
             switch (_hintModus)
             {
                 case 1:
-                    _hintTimer.Interval = TimeSpan.FromMinutes(0.5);
+                    _hintTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(45) };
                     _hintTimer.Tick += LookForClicks;
                     _hintTimer.Start();
                     break;
                 case 2:
-                    _hintTimer.Interval = TimeSpan.FromMinutes(3);
+                    _hintTimer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(2) };
                     _hintTimer.Tick += ShowHint;
                     _hintTimer.Start();
                     break;
@@ -189,6 +196,12 @@ namespace BachelorProject
             {
                 if (_screen.Skip)
                 {
+                    if(_timer.IsEnabled)
+                        _timer.Stop();
+                    if (_hintTimer.IsEnabled)
+                        _hintTimer.Stop();
+                    if (_timer2.IsEnabled)
+                        _timer2.Stop();
                     _screen.Skip = false;
                     SkipTrial();
                 }
