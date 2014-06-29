@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="BachelorProject.IntroScreen5"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d"
+      Width="1200" Height="800" Background="LightGray">
+
+
+    <Canvas Name="MyCanvas">
+        <Line
+            X1="800" Y1="0"
+            X2="800" Y2="800"
+            Stroke="Black"
+            StrokeThickness="4" />
+        <Line
+            X1="800" Y1="270"
+            X2="1200" Y2="270"
+            Stroke="Black"
+            StrokeThickness="4" />
+        <Border BorderThickness="4" BorderBrush="Black" Margin="100">
+            <TextBlock
+            Padding="10"
+            Width="1000"
+            Height="600"
+            Background="White"
+            FontSize="30"
+            TextAlignment="Center"
+            TextWrapping="WrapWithOverflow">
+            <LineBreak/>
+            <Run FontSize="50" FontWeight="Bold">Abschließende Hinweise</Run>
+            <LineBreak/>
+            <LineBreak/>
+                Im Folgenden werden dir nun sechs Platzierungsaufgaben angezeigt, die du lösen sollst. Pro Aufgabe gibt es ein Zeitlimit von fünf Minuten
+                und nach jeder Aufgabe musst du ein paar Fragen beantworten.
+            <LineBreak/>
+                Zwischendurch wirst du gelegentlich gefragt, ob du gerne einen Hinweis als Hilfe hättest. Wenn du dich dafür entscheidest, bekommst du einen Tipp und musst dann noch
+                bewerten, wie hilfreich dieser war.
+            <LineBreak/>
+                Nun kann es gleich losgehen! Und vergiss nicht: Es ist überhaupt nicht schlimm, wenn du eine Aufgabe nicht lösen kannst.
+                
+            <LineBreak/>
+            <LineBreak/>
+            <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>
+            </TextBlock>
+        </Border>
+
+    </Canvas>
+</UserControl>

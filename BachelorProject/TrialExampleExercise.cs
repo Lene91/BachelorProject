@@ -181,6 +181,7 @@ namespace BachelorProject
 
         private void LookForClicks(object sender, EventArgs e)
         {
+            _hintTimer.Stop();
             _screen.StartNoClickTimer();
         }
 

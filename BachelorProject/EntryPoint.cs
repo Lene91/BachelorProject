@@ -49,47 +49,27 @@ namespace BachelorProject
 
             // TUTORIAL
 
-            /*experiment.AddTrial(new Introduction(new IntroScreen1()));
+            experiment.AddTrial(new Introduction(new IntroScreen1()));
             experiment.AddTrial(new Introduction(new IntroScreen2()));
             experiment.AddTrial(new Introduction(new IntroScreen3()));
             experiment.AddTrial(new Introduction(new IntroScreen4()));
             
             // Tutorial mit Ausprobieren
             var trial0 = new Trial0();
-            var tutorialTrial = new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), trial0, true, false, false, false);
+            var tutorialTrial = new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), trial0, true, false, false, 0, "");
             experiment.AddTrial(tutorialTrial);
             // 3 Übungsaufgaben
-            experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, false));
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[2], ShuffledNames(), new TutTrial2(), true, false, false, false));
-            experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(), true, false, false, false));
+            experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, 0, ""));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[2], ShuffledNames(), new TutTrial2(), true, false, false, 0, ""));
+            experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(), true, false, false, 0, ""));
+            experiment.AddTrial(new Introduction(new IntroScreen5()));
             experiment.AddTrial(new TrialStartScreen());
-            */
+            
             //experiment.AddTrial(new CalibrationTrial());
-            // PILOTSTUDIE
             
-            /*experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[4], ShuffledNames(), new Trial1(), true, true, false, 2, AllHints[0]));
-            experiment.AddTrial(new TrialInterScreen());
 
-            experiment.AddTrial(new CalibrationTrial());
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[5], ShuffledNames(), new Trial2(), true, false, false, 2, AllHints[1]));
-            experiment.AddTrial(new TrialInterScreen());
+            // HAUPTSTUDIE
 
-            experiment.AddTrial(new CalibrationTrial());
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[6], ShuffledNames(), new Trial3(), true, false, false, 2, AllHints[2]));
-            experiment.AddTrial(new TrialInterScreen());
-
-            experiment.AddTrial(new CalibrationTrial());
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[7], ShuffledNames(), new Trial4(), true, false, false, 2, AllHints[3]));
-            experiment.AddTrial(new TrialInterScreen());
-
-            experiment.AddTrial(new CalibrationTrial());
-            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[8], ShuffledNames(), new Trial5(), true, false, false, 2, AllHints[4]));
-            experiment.AddTrial(new TrialInterScreen());
-
-            experiment.AddTrial(new CalibrationTrial());
-            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[9], ShuffledNames(), new Trial6(), true, false, false, 2, AllHints[5]));
-            */
-            
             _allTrials = ShuffledTrials();
             _hintModi = ShuffledHintModi();
 
@@ -107,7 +87,7 @@ namespace BachelorProject
                 var constraintIndex = index + numberOfTutTrials;
                 var rnd = new Random();
                 var hintModus = rnd.Next(0, 3);
-                experiment.AddTrial(new TrialExampleExercise(numberOfPersons[index], AllConstraints[constraintIndex], ShuffledNames(), trial, true, true, false, 1, AllHints[index])); //_hintModi[index]
+                experiment.AddTrial(new TrialExampleExercise(numberOfPersons[index], AllConstraints[constraintIndex], ShuffledNames(), trial, true, true, false, _hintModi[index], AllHints[index]));
                 
                 //Zwischenscreen -> Fragebogen
                 experiment.AddTrial(new TrialInterScreen());

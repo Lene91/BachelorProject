@@ -63,10 +63,10 @@ namespace BachelorProject.Tutorial
             tb.Inlines.Add(new Run("Jetzt kannst du das Tool noch ein wenig" +
                            " ausprobieren. Klicke auf den Fertig-Button, wenn du" +
                            " die Aufgabe gelöst hast. Dein Platzierungsvorschlag" +
-                           " wird dann geprüft und wenn du alle Wünsche erfüllt hast," +
-                           " gelangst du zu ein paar weiteren Übungsaufgaben." +
-                           " Ist dies nicht der Fall, hast du die Möglichkeit, deine" +
-                           " Lösung noch einmal zu überarbeiten.") 
+                           " wird dann geprüft und wenn du alle Sitzwünsche erfüllt hast," +
+                           " gelangst du zum nächsten Bildschirm." +
+                           " Sind noch nicht alle Wünsche erfüllt, so erhälst du die" + 
+                           " Möglichkeit, deine Platzierung noch einmal zu überarbeiten.") 
                            { FontStyle = FontStyles.Italic, FontSize = 22 });
 
             sv.Content = tb;
@@ -79,9 +79,7 @@ namespace BachelorProject.Tutorial
             const string tutorialText = "Hier siehst du nun alle Komponenten, die" +
                                         " du benötigst, um eine Aufgabe zu erfüllen. \n \n Die Aufgabe" +
                                         " kann nur gelöst werden, wenn" +
-                                        " alle Personen am Tisch sitzen. Platziere dafür den Kreis" +
-                                        " einer Person so nah am Tisch, dass die Ränder der beiden" +
-                                        " Kreise sich berühren. \n \n Möchten zwei Personen nebeneinander" +
+                                        " alle Personen am Tisch sitzen. \n \n Möchten zwei Personen nebeneinander" +
                                         " sitzen, so darf sich keine Person zwischen ihnen befinden." +
                                         " Sitzen beispielsweise nur zwei Personen am Tisch, so sitzen diese immer" +
                                         " nebeneinander. \n \n Wenn sich zwei Personen ein Essen teilen" +
@@ -93,7 +91,8 @@ namespace BachelorProject.Tutorial
                                         " werden müssen. Möchte ein Kind auf dem Schoß einer" +
                                         " Person sitzen, so musst du den Kreis des Kindes auf den der Person ziehen." +
                                         " Der Kreis des Kindes verkleinert sich dann" +
-                                        " automatisch. \n \n" +
+                                        " automatisch. Sitzt ein Kind auf dem Schoß eines Erwachsenen, so sitzen die beiden nicht" +
+                                        " nebeneinander, haben jedoch die gleichen Nachbarn. \n \n" +
                                         " Eine Person kann sich entweder ein Essen teilen oder bei einer anderen auf dem Schoß sitzen" +
                                         " bzw. jemanden auf dem Schoß sitzen haben. Beides gleichzeitig ist nicht vorgesehen.\n \n" +
                                         " Du kannst alle deine Änderungen rückgängig machen," +

@@ -112,6 +112,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Tutorial\IntroScreen5.xaml.cs">
+      <DependentUpon>IntroScreen5.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tutorial\Trial0.cs" />
     <Compile Include="Trials\Trial1.cs" />
     <Compile Include="Trials\Trial2.cs" />
@@ -165,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Tutorial\IntroScreen4.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tutorial\IntroScreen5.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

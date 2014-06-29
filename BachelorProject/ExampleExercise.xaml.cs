@@ -26,7 +26,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 1;
-        private const bool Laptop = false;
+        private const bool Laptop = true;
 
         private IAoiUpdate _trial;
 

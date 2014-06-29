@@ -21,11 +21,11 @@
             X2="1200" Y2="270"
             Stroke="Black"
             StrokeThickness="4" />
-        <Border BorderThickness="4" BorderBrush="Black" Margin="600,100">
+        <Border BorderThickness="4" BorderBrush="Black" Margin="600,40">
         <TextBlock
             Padding="30"
             Width="550"
-            Height="600"
+            Height="700"
             Background="White"
             FontSize="30"
             TextWrapping="WrapWithOverflow"
@@ -34,9 +34,11 @@
             <Run FontSize="40" FontWeight="Bold" >Übersichtsbildschirm</Run>
             <LineBreak/>
             <LineBreak/>
-            Hier siehst du den Tisch, der als großer grauer Kreis dargestellt ist und die Personen, die durch kleinere bunte Kreise symbolisiert werden.
+            Hier siehst du den Tisch, der als großer grauer Kreis dargestellt ist, und die Personen, die durch kleinere bunte Kreise symbolisiert werden.
             <LineBreak/>
             Die Personenkreise kannst du mithilfe der Maus verschieben.
+            <LineBreak/>
+            Soll eine Person am Tisch sitzen, so musst du sie so verschieben, dass sich die Kreisränder der Person und des Tisches berühren.
             <LineBreak/>
             <LineBreak/>
             <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>
