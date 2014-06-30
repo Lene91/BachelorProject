@@ -54,8 +54,11 @@ namespace BachelorProject
 
             _offsetX = (SystemParameters.FullPrimaryScreenWidth - ScreenWidth) / 2;
             _offsetY = (SystemParameters.FullPrimaryScreenHeight - ScreenHeight) / 2;
+
             _screen.Initialize(this, numberOfPersons, constraints, names, Tracker, constraintHelp, hintModus, hint);
             CreateAois(_screen.GetPersons());
+            _screen.SendAois(AOIs);
+
         }
 
         private void CreateAois(IEnumerable<Circle> persons)
@@ -87,14 +90,19 @@ namespace BachelorProject
 
         private void Tracker_GazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
         {
-            Tracker.SendMessage(e.Position.ToString());
+            //Tracker.SendMessage(e.Position.ToString());
+            
 
             var pos = new PointF((float)(e.Position.X - _offsetX), (float)(e.Position.Y - _offsetY));
+
+            _screen.Show(pos, e.LeftPupilSize + ", " + e.RightPupilSize + ", " + sender.ToString());
             foreach (var aoi in AOIs)
             {
                 if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y &&
                     aoi.Points[1].Y > pos.Y)
+                {
                     Tracker.SendMessage(aoi + " contains " + pos);
+                }
             }
         }
 
@@ -228,6 +236,9 @@ namespace BachelorProject
         public void UpdateAoi(Circle person)
         {
             var updatedAoi = GetUpdatedAoi(person);
+
+            Debug.WriteLine(updatedAoi.Name);
+            Debug.WriteLine("hallo " + (int)person.GetPosition().X);
             updatedAoi.Set((int)person.GetPosition().X, (int)person.GetPosition().Y, person.GetRadius());
         }
 

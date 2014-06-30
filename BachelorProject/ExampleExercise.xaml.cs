@@ -25,8 +25,8 @@ namespace BachelorProject
     public partial class ExampleExercise
     {
         // IMPORTANT!
-        private const int TestPerson = 1;
-        private const bool Laptop = true;
+        private const int TestPerson = 3;
+        private const bool Laptop = false;
 
         private IAoiUpdate _trial;
 
@@ -92,6 +92,11 @@ namespace BachelorProject
         private string _hint;
         private bool _hintThreadIsRunning = false;
 
+        private string _toShow;
+        private PointF _position;
+
+        private IList<AreaOfInterest> _aois = new List<AreaOfInterest>();
+
         public ExampleExercise()
         {
             InitializeComponent();
@@ -129,6 +134,11 @@ namespace BachelorProject
             InitializeConstraints();
             InitializeBigCircles();
             InitializeHints();
+        }
+
+        public void SendAois(IList<AreaOfInterest> aois)
+        {
+            _aois = aois;
         }
 
         public List<Circle> GetPersons()
@@ -410,9 +420,27 @@ namespace BachelorProject
                 return;
             }
 
+            foreach (UIElement uie in MyCanvas.Children)
+            {
+                if (uie is TextBlock && (uie as TextBlock).Name.Equals("tb"))
+                {
+                    (uie as TextBlock).Text = _position.ToString() + ", " + _toShow;
+                    (uie as TextBlock).Margin = new Thickness(_position.X, _position.Y,0,0);
+                }
+            }
 
+            foreach (var aoi in _aois)
+            {
+                if (aoi.Points[0].X < _position.X && aoi.Points[1].X > _position.X && aoi.Points[0].Y < _position.Y &&
+                    aoi.Points[1].Y > _position.Y)
+                {
+                    Border b = GetConstraint("c1");
+                    TextBlock tb = b.Child as TextBlock;
+                    tb.Text = aoi.Name;
+                }
+            }
 
-            if (_counter == 200)
+            if (_counter == 300)
             {                
                 // Mauskoordinaten speichern
                 var pos = Mouse.GetPosition(null);
@@ -1144,6 +1172,12 @@ namespace BachelorProject
             var newCenterX = currentPoint.X + CircleRadius;
             var newCenterY = currentPoint.Y + CircleRadius;
             _currentCircle.UpdatePosition(new System.Windows.Point(newCenterX, newCenterY));
+        }
+
+        public void Show(PointF p, String s)
+        {
+            _position = p;
+            _toShow = s;
         }
     }
 

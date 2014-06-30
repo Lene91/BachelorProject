@@ -25,8 +25,8 @@ namespace BachelorProject
         [STAThread]
         static void Main()
         {
-            var experiment = new Experiment(new MouseTracker())
-            //var experiment = new Experiment(new EyeTribeTracker())
+            //var experiment = new Experiment(new MouseTracker())
+            var experiment = new Experiment(new EyeTribeTracker())
             {
                 ShowDefaultStartScreen = false,
                 ShowDebugEndScreen = false,
@@ -42,14 +42,16 @@ namespace BachelorProject
             int[] numberOfPersons = { 6, 5, 5, 5, 6, 6 };
 
 
+            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[2], ShuffledNames(), new Trial1(), true, false, false, 0, ""));
+
             // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper, hintModus, hint
             // hintModus:   0 -> no hints
-            //              1 -> 15s without click, not before 45s, if not wanted -> start again
+            //              1 -> 20s without click, not before 45s, if not wanted -> start again
             //              2 -> resetButton clicked, or after 2min
 
             // TUTORIAL
 
-            experiment.AddTrial(new Introduction(new IntroScreen1()));
+            /*experiment.AddTrial(new Introduction(new IntroScreen1()));
             experiment.AddTrial(new Introduction(new IntroScreen2()));
             experiment.AddTrial(new Introduction(new IntroScreen3()));
             experiment.AddTrial(new Introduction(new IntroScreen4()));
@@ -63,7 +65,7 @@ namespace BachelorProject
             experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(), true, false, false, 0, ""));
             //experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(), true, false, false, 0, ""));
             experiment.AddTrial(new Introduction(new IntroScreen5()));
-
+            */
             // HAUPTSTUDIE
 
             _allTrials = ShuffledTrials();

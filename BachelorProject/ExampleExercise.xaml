@@ -22,6 +22,8 @@
             X2="1200" Y2="260"
             Stroke="Black"
             StrokeThickness="4" />
+        
+        <TextBlock Name="tb" FontSize="30">Unknown</TextBlock>
 
         <Button 
             Width="120"
