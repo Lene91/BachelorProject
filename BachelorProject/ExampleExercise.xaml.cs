@@ -80,8 +80,7 @@ namespace BachelorProject
 
         private VirtualizingPanel _donePanel = new VirtualizingStackPanel();
         private VirtualizingPanel _notDonePanel = new VirtualizingStackPanel();
-        private VirtualizingPanel _firstHintWindow = new VirtualizingStackPanel();
-        private VirtualizingPanel _secondHintWindow = new VirtualizingStackPanel();
+        private VirtualizingPanel _hintWindow = new VirtualizingStackPanel();
         private Run _hintRun = new Run();
 
         private bool _doneButtonKlicked;
@@ -382,7 +381,6 @@ namespace BachelorProject
         private void InitializeHints()
         {
             string newHint = _hint;
-            var index = 0;
             for (var i = 1; i <= _numberOfPersons; ++i)
             {
                 newHint = newHint.Replace(i.ToString(), _names[i - 1]);
@@ -729,13 +727,11 @@ namespace BachelorProject
             }
             foreach (var b in MyCanvas.Children.OfType<VirtualizingPanel>().Select(uie => uie))
             {
-                if (b.Name.Equals("FirstHintWindow"))
-                    _firstHintWindow = b;
-                else if (b.Name.Equals("SecondHintWindow"))
-                    _secondHintWindow = b;
+                if (b.Name.Equals("HintWindow"))
+                    _hintWindow = b;
             }
             
-            foreach (var tb in _secondHintWindow.Children.OfType<Border>().Select(x => x).Select(bo => bo.Child as TextBlock))
+            foreach (var tb in _hintWindow.Children.OfType<Border>().Select(x => x).Select(bo => bo.Child as TextBlock))
             {
                 if (tb == null) return;
                 tb.Inlines.Add(new Run
@@ -778,8 +774,8 @@ namespace BachelorProject
                 btn4.Click += Not_Helpful_Button_MouseDown;
                 tb.Inlines.Add(btn4);
             }
-            _firstHintWindow.Margin = new Thickness(200, 100, 0, 0);
-            System.Windows.Controls.Panel.SetZIndex(_firstHintWindow, 100);
+            _hintWindow.Margin = new Thickness(20, 490, 0, 0);
+            System.Windows.Controls.Panel.SetZIndex(_hintWindow, 100);
             _tracker.SendMessage("HINT SHOWN");
             _hintDelivered = true;
         }
@@ -1049,7 +1045,7 @@ namespace BachelorProject
             }
         }
 
-        private void Help_Wanted_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        /*private void Help_Wanted_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _tracker.SendMessage("HELP WANTED");
 
@@ -1072,19 +1068,20 @@ namespace BachelorProject
 
             _firstHintWindow.Margin = new Thickness(2000, 1000, 0, 0);
         }
+        `*/
 
         private void Helpful_Button_MouseDown(object sender, RoutedEventArgs e)
         {
             _tracker.SendMessage("HELPFUL");
 
-            _secondHintWindow.Margin = new Thickness(2000, 4900, 0, 0);
+            _hintWindow.Margin = new Thickness(2000, 4900, 0, 0);
         }
 
         private void Not_Helpful_Button_MouseDown(object sender, RoutedEventArgs e)
         {
             _tracker.SendMessage("NOT HELPFUL");
 
-            _secondHintWindow.Margin = new Thickness(2000, 4900, 0, 0);
+            _hintWindow.Margin = new Thickness(2000, 4900, 0, 0);
         }
 
 

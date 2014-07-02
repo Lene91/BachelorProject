@@ -42,7 +42,7 @@ namespace BachelorProject
             int[] numberOfPersons = { 6, 5, 5, 5, 6, 6 };
 
 
-            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[2], ShuffledNames(), new Trial1(), true, false, false, 0, ""));
+            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[2], ShuffledNames(), new Trial1(), true, false, false, 2, "Testhinweis"));
 
             // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper, hintModus, hint
             // hintModus:   0 -> no hints

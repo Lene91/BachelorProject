@@ -215,7 +215,7 @@
         </VirtualizingStackPanel>
         
 
-        <VirtualizingStackPanel Name="FirstHintWindow" Margin="2000,1000" Background="White" Orientation="Horizontal" >
+        <!--<VirtualizingStackPanel Name="FirstHintWindow" Margin="2000,1000" Background="White" Orientation="Horizontal" >
             <Border  BorderBrush="Black" BorderThickness="4" Width="800">
             
                 <TextBlock Padding="100" TextAlignment="Center" FontSize="30" Width="800">
@@ -249,8 +249,8 @@
             
         </Border>
         </VirtualizingStackPanel>
-
-        <VirtualizingStackPanel Name="SecondHintWindow" Margin="200,4900" Background="White" Orientation="Horizontal"  >
+-->
+        <VirtualizingStackPanel Name="HintWindow" Margin="200,4900" Background="White" Orientation="Horizontal"  >
             <Border BorderBrush="Black" BorderThickness="4" Width="760">
                 <TextBlock Padding="10" TextAlignment="Center" FontSize="25" TextWrapping="WrapWithOverflow">
                 <!--<Run FontSize="30" FontWeight="Bold"> Hinweis </Run>
