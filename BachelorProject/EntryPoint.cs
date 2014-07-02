@@ -25,8 +25,8 @@ namespace BachelorProject
         [STAThread]
         static void Main()
         {
-            //var experiment = new Experiment(new MouseTracker())
-            var experiment = new Experiment(new EyeTribeTracker())
+            var experiment = new Experiment(new MouseTracker())
+            //var experiment = new Experiment(new EyeTribeTracker())
             {
                 ShowDefaultStartScreen = false,
                 ShowDebugEndScreen = false,

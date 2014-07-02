@@ -26,7 +26,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 3;
-        private const bool Laptop = false;
+        private const bool Laptop = true;
 
         private IAoiUpdate _trial;
 
@@ -856,17 +856,19 @@ namespace BachelorProject
 
             
             string fileName;
+            long time = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
             // snip wanted area
             if (Laptop)
             {
                 g.CopyFromScreen(80, 0, 0, 0, new System.Drawing.Size((int)this.Width, (int)this.Height), CopyPixelOperation.SourceCopy);
-                fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + TestPerson + "\\Trial" + Id + "-" + _pictureId + "-" + info + ".jpg";
+                fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + TestPerson + "\\" + time + "-Trial" + Id + "-" + _pictureId + "-" + info + ".jpg";
                 mousePos.X = mousePos.X - 80;
             }
             else
             {
                 g.CopyFromScreen(360, 210, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
-                fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + TestPerson + "\\Trial" + Id + "-" + _pictureId + "-" + info + ".jpg";
+                fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + TestPerson + "\\" + time + "-Trial" + Id + "-" + _pictureId + "-" + info + ".jpg";
                 mousePos.X = mousePos.X - 360;
                 mousePos.Y = mousePos.Y - 210;
             }
