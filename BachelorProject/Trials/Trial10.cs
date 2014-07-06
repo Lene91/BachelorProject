@@ -5,7 +5,7 @@
         public Trial10()
         { Id = 10; }
 
-        public override bool CheckActualConstraints()
+        public override void CheckActualConstraints()
         {
 
             if (NotSittingNextToEachOther(P3, P6))
@@ -82,7 +82,7 @@
             else constraintsFullfilled = false;
              */
 
-            return constraintsFullfilled;
+            //return constraintsFullfilled;
         }
     }
 }

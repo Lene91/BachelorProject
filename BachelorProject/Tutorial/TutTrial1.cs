@@ -7,7 +7,7 @@
         public TutTrial1()
         { Id = 1001; }
 
-        public override bool CheckActualConstraints()
+        public override void CheckActualConstraints()
         {
             if (SittingNextToEachOther(P3, P1))
                 UpdateConstraint("c1", true);
@@ -26,7 +26,7 @@
             else constraintsFullfilled = false;
 
 
-            return constraintsFullfilled;
+            //return constraintsFullfilled;
         }
     }
 }

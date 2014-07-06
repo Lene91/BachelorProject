@@ -62,11 +62,13 @@ namespace BachelorProject
 
         protected int Id;
 
-        private ITracker _tracker;
+        protected ITracker _tracker;
 
         public bool Skip = false;
 
         private bool _constraintHelp;
+
+        private bool _constraintDestroyed = false;
 
         private int _hintModus;
 
@@ -95,6 +97,14 @@ namespace BachelorProject
         private PointF _position;
 
         private IList<AreaOfInterest> _aois = new List<AreaOfInterest>();
+
+        private Dictionary<int, bool> _constraintDict = new Dictionary<int, bool>();
+        private Dictionary<string, UIElement> _allConstraints = new Dictionary<string, UIElement>();
+        private Dictionary<string, System.Drawing.Rectangle> _constraintAois = new Dictionary<string,System.Drawing.Rectangle>();
+
+        private AreaOfInterest actualConstraint;
+
+        //public static double _pupilSize;
 
         public ExampleExercise()
         {
@@ -143,6 +153,11 @@ namespace BachelorProject
         public List<Circle> GetPersons()
         {
             return _persons;
+        }
+
+        public Dictionary<string, System.Drawing.Rectangle> GetConstraints()
+        {
+            return _constraintAois;
         }
 
         private void InitializeLeftInterface()
@@ -234,7 +249,7 @@ namespace BachelorProject
             _legendStackPanel = new WrapPanel
             {
                 Name = "LegendPanel",
-                Width = 320,
+                Width = 380,
                 Height = 250,
                 Margin = new Thickness(800, 50, 0, 0)
             };
@@ -250,9 +265,9 @@ namespace BachelorProject
                     Name = "lc" + i,
                     Fill = _brushes[i - 1],
                     Opacity = 0.8,
-                    Width = 50,
-                    Height = 50,
-                    StrokeThickness = 3,
+                    Width = 40,
+                    Height = 40,
+                    StrokeThickness = 2,
                     Stroke = System.Windows.Media.Brushes.Black,
                     Margin = new Thickness(10, 10, 10, 10)
                 };
@@ -263,7 +278,7 @@ namespace BachelorProject
                     Name = "l" + i,
                     Text = _names[i - 1],
                     Background = System.Windows.Media.Brushes.Transparent,
-                    FontSize = 25,
+                    FontSize = 20,
                     Margin = new Thickness(10, 10, 10, 10)
                 };
                 _legendStackPanel.Children.Add(t);
@@ -291,6 +306,7 @@ namespace BachelorProject
                     newString = newString.Replace(i.ToString(), _names[i - 1]);
                 }
                 newConstraints[index] = newString;
+                _constraintDict.Add(index+1, false);
                 index++;
             }
             _singleConstraints = newConstraints;
@@ -301,8 +317,8 @@ namespace BachelorProject
                 Name = "ConstraintPanel",
                 Orientation = System.Windows.Controls.Orientation.Vertical,
                 Width = 400,
-                Height = 550,
-                Margin = new Thickness(800, 260, 0, 0)
+                Height = 620,
+                Margin = new Thickness(800, 180, 0, 0)
             };
             MyCanvas.Children.Add(_constraintStackPanel);
 
@@ -320,6 +336,11 @@ namespace BachelorProject
 
             // einzelne Constraints darstellen
             var constraintCounter = 1;
+            var x = 830;
+            var y = 238;
+            var step = 68;
+            var width = 360;
+            var height = 60;
             foreach (var c in _singleConstraints)
             {
                 var labelName = "c" + constraintCounter;
@@ -333,14 +354,24 @@ namespace BachelorProject
                 var t = new TextBlock
                 {
                     Text = c,
-                    FontSize = 20,
+                    FontSize = 18,
                     MaxWidth = 360,
+                    Height = 60,
+                    Padding = new Thickness(10),
+                    TextAlignment = System.Windows.TextAlignment.Center,
                     TextWrapping = TextWrapping.WrapWithOverflow
                 };
                 constraintCounter++;
                 b.Child = t;
                 _constraintStackPanel.Children.Add(b);
+                _allConstraints.Add(labelName, b);
+                var r = new System.Drawing.Rectangle(x,y,width,height);
+                _constraintAois.Add(labelName, r);
+                y += step;
             }
+
+
+            InitiateRedBrush();
         }
 
         private void InitializeBigCircles()
@@ -432,11 +463,18 @@ namespace BachelorProject
                 if (aoi.Points[0].X < _position.X && aoi.Points[1].X > _position.X && aoi.Points[0].Y < _position.Y &&
                     aoi.Points[1].Y > _position.Y)
                 {
+                    if (aoi.Name.StartsWith("c") && _hintModus == 4)
+                        actualConstraint = aoi;
+
                     Border b = GetConstraint("c1");
                     TextBlock tb = b.Child as TextBlock;
                     tb.Text = aoi.Name;
                 }
+                else if (aoi.Name.StartsWith("c") && _hintModus == 4)
+                    DeHighlightConstraint(aoi.Name);
             }
+            if (actualConstraint != null && _hintModus == 4)
+                HighlightConstraint(actualConstraint.Name);
 
             if (_counter == 300)
             {                
@@ -447,17 +485,22 @@ namespace BachelorProject
             }
             _counter++;
 
-            if (_constraintHelp || _doneButtonKlicked)
+            if (_constraintHelp || _doneButtonKlicked || _hintModus == 3)
             {
                 // Sitzplatzbeziehungen prüfen
                 CalculateSittingOrder();
-                InitiateRedBrush();
+                //InitiateRedBrush();
 
                 constraintsFullfilled = true;
 
                 foreach (var p in _persons.Where(p => !p.Touches(table) && p.GetSeat() == null))
                     constraintsFullfilled = false;
-                constraintsFullfilled = CheckActualConstraints();
+                CheckActualConstraints();
+                foreach (KeyValuePair<int, bool> kvp in _constraintDict)
+                {
+                    if (!kvp.Value)
+                        constraintsFullfilled = false;
+                }
             }
 
             if (_currentCircle == null) return;
@@ -467,9 +510,9 @@ namespace BachelorProject
             }
         }
 
-        public virtual bool CheckActualConstraints()
+        public virtual void CheckActualConstraints()
         {
-            return false;
+            ///return false;
         }
 
         /*
@@ -799,6 +842,16 @@ namespace BachelorProject
             _noClickTimer.Start();
         }
 
+        public void HighlightConstraint(string name)
+        {
+            (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightYellow;
+        }
+
+        public void DeHighlightConstraint(string name)
+        {
+            (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.Transparent;
+        }
+
         /*
          * **********************************************************
          *                                                          *
@@ -810,9 +863,21 @@ namespace BachelorProject
 
         protected void UpdateConstraint(string name, bool fulfilled)
         {
+            var constraintNumber = Int32.Parse(name[1].ToString());
+            if (!fulfilled && _constraintDict[constraintNumber])
+            {
+                _constraintDict[constraintNumber] = false;
+                _constraintDestroyed = true;
+            }
+                    
+            if (fulfilled && !_constraintDict[constraintNumber])
+                _constraintDict[constraintNumber] = true;
+            
+
+            if (!_constraintHelp) return;
+
             var b = GetConstraint(name);
             var tb = b.Child as TextBlock;
-            if (!_constraintHelp) return;
             if (tb != null)
                 tb.Background = fulfilled ? System.Windows.Media.Brushes.LightGreen : System.Windows.Media.Brushes.LightCoral;
         }
@@ -912,6 +977,19 @@ namespace BachelorProject
             b.Child = tb;
             MyCanvas.Children.Add(b);
         }
+
+        public virtual double UpdatePupilSize(double pupilSize, double left, double right)
+        { return -2; }
+
+        /*public void SetPupilSize(double size)
+        {
+            _pupilSize = size;
+        }*/
+
+        /*public double GetPupilSize()
+        {
+            return _pupilSize;
+        }*/
 
 
         /*

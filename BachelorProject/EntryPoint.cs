@@ -19,6 +19,7 @@ namespace BachelorProject
         private static readonly List<string> AllHints = new List<string>();
         private static List<ExampleExercise> _allTrials;
         private static List<int> _hintModi = new List<int>{ 0, 0, 1, 1, 2, 2 };
+        private static double _pupilSize = 0;
         //private static int numberOfTrials = 3;
         
 
@@ -38,20 +39,22 @@ namespace BachelorProject
             ReadConstraints("constraints.txt"); // entsprechend Trialnumber entsprechenden Indexinhalt übergeben
             ReadNames("names.txt"); // shuffle()-Aufruf gibt neu sortierte Liste zurück
             ReadHints("hints.txt");
-            _allTrials = new List<ExampleExercise> { new Trial1(), new Trial2(), new Trial3(), new Trial4(), new Trial5(), new Trial6() };
+            //_allTrials = new List<ExampleExercise> { new Trial1(), new Trial2(), new Trial3(), new Trial4(), new Trial5(), new Trial6() };
             int[] numberOfPersons = { 6, 5, 5, 5, 6, 6 };
 
 
-            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[2], ShuffledNames(), new Trial1(), true, false, false, 2, "Testhinweis"));
-
+            experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[2], ShuffledNames(), new Trial1(), true, false, false, 4, "Testhinweis"));
+           
             // new TrialExampleExercise(Anzahl Personen, Constraints des Trials, Namen für Trial, Trial-Klasse, tracking, timeLimit, constraintHelper, hintModus, hint
             // hintModus:   0 -> no hints
             //              1 -> 20s without click, not before 45s, if not wanted -> start again
             //              2 -> resetButton clicked, or after 2min
+            //              3 -> already fulfilled constraint changes status
+            //              4 -> last viewed constraint is highlighted
 
             // TUTORIAL
 
-            /*experiment.AddTrial(new Introduction(new IntroScreen1()));
+            experiment.AddTrial(new Introduction(new IntroScreen1()));
             experiment.AddTrial(new Introduction(new IntroScreen2()));
             experiment.AddTrial(new Introduction(new IntroScreen3()));
             experiment.AddTrial(new Introduction(new IntroScreen4()));
@@ -63,12 +66,12 @@ namespace BachelorProject
             // 1 Übungsaufgabe
             //experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, 0, ""));
             experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(), true, false, false, 0, ""));
-            //experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(), true, false, false, 0, ""));
+            experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(), true, false, false, 0, ""));
             experiment.AddTrial(new Introduction(new IntroScreen5()));
-            */
+            
             // HAUPTSTUDIE
 
-            _allTrials = ShuffledTrials();
+            /*_allTrials = ShuffledTrials();
             _hintModi = ShuffledHintModi();
 
             var numberOfTutTrials = 2;
@@ -93,7 +96,7 @@ namespace BachelorProject
 
             //experiment.AddTrial(new TrialEndScreen());
 
-
+            */
             experiment.ConfigureTracker();
             experiment.DoCalibration();
 

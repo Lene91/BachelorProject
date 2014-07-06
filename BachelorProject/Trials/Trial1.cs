@@ -7,32 +7,26 @@
         public Trial1()
         { Id = 1; }
 
-        public override bool CheckActualConstraints()
+        public override void CheckActualConstraints()
         {
-            
-            if (SharingFood(P2, P3))
-                UpdateConstraint("c1", true);
-            else constraintsFullfilled = false;
 
-            if (NotSittingNextToEachOther(P2, P5))
-                UpdateConstraint("c2", true);
-            else constraintsFullfilled = false;
+            UpdateConstraint("c1", SharingFood(P2, P3));
+            //else constraintsFullfilled = false;
 
-            if (SittingNextToEachOther(P1, P2))
-                UpdateConstraint("c3", true);
-            else constraintsFullfilled = false;
+            UpdateConstraint("c2", NotSittingNextToEachOther(P2, P5));
+            //else constraintsFullfilled = false;
 
-            if (NotSittingNextToEachOther(P6, P3))
-                UpdateConstraint("c4", true);
-            else constraintsFullfilled = false;
+            UpdateConstraint("c3", SittingNextToEachOther(P1, P2));
+            //else constraintsFullfilled = false;
 
-            if (NotSharingFood(P6, P4))
-                UpdateConstraint("c5", true);
-            else constraintsFullfilled = false;
+            UpdateConstraint("c4", NotSittingNextToEachOther(P6, P3));
+            //else constraintsFullfilled = false;
 
-            if (SittingNextToEachOther(P2, P4))
-                UpdateConstraint("c6", true);
-            else constraintsFullfilled = false;
+            UpdateConstraint("c5", NotSharingFood(P6, P4));
+            //else constraintsFullfilled = false;
+
+            UpdateConstraint("c6", SittingNextToEachOther(P2, P4));
+            //else constraintsFullfilled = false;
             
             /*
             if (sittingNextToEachOther(p1, p2))
@@ -48,7 +42,7 @@
             else constraintsFullfilled = false;
             */
 
-            return constraintsFullfilled;
+            //return constraintsFullfilled;
         }
     }
 }

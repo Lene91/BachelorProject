@@ -5,7 +5,7 @@
         public Trial9()
         { Id = 9; }
 
-        public override bool CheckActualConstraints()
+        public override void CheckActualConstraints()
         {
             if (AtLeastOneNeighbourSharingFood(P3))
                 UpdateConstraint("c1", true);
@@ -65,7 +65,7 @@
             else constraintsFullfilled = false;
             */
 
-            return constraintsFullfilled;
+            //return constraintsFullfilled;
         }
     }
 }

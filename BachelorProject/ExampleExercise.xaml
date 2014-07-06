@@ -18,8 +18,8 @@
             Stroke="Black"
             StrokeThickness="4" />
         <Line
-            X1="800" Y1="260"
-            X2="1200" Y2="260"
+            X1="800" Y1="180"
+            X2="1200" Y2="180"
             Stroke="Black"
             StrokeThickness="4" />
         

@@ -9,6 +9,7 @@ using ExperimentTemplate;
 using Logging;
 using System.Windows;
 using System.Drawing;
+using Eyetracker;
 
 
 namespace BachelorProject
@@ -37,6 +38,8 @@ namespace BachelorProject
         private DispatcherTimer _timer = new DispatcherTimer();
         private DispatcherTimer _timer2 = new DispatcherTimer();
         private DispatcherTimer _hintTimer = new DispatcherTimer();
+        //private static double _averagePupilSize = 0;
+        private static double _pupilSize;
 
         public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp, int hintModus, string hint)
         {
@@ -56,16 +59,21 @@ namespace BachelorProject
             _offsetY = (SystemParameters.FullPrimaryScreenHeight - ScreenHeight) / 2;
 
             _screen.Initialize(this, numberOfPersons, constraints, names, Tracker, constraintHelp, hintModus, hint);
-            CreateAois(_screen.GetPersons());
+            CreateAois(_screen.GetPersons(), _screen.GetConstraints());
             _screen.SendAois(AOIs);
 
         }
 
-        private void CreateAois(IEnumerable<Circle> persons)
+        private void CreateAois(IEnumerable<Circle> persons, Dictionary<string,Rectangle> constraints)
         {
             foreach (var person in persons)
             {
                 AOIs.Add(new MyAoi(person));
+            }
+            foreach (var constraint in constraints)
+            {
+                Rectangle rect = new Rectangle(constraint.Value.X,constraint.Value.Y,constraint.Value.Width,constraint.Value.Height);
+                AOIs.Add(new AreaOfInterest(rect,constraint.Key));
             }
         }
 
@@ -103,6 +111,11 @@ namespace BachelorProject
                 {
                     Tracker.SendMessage(aoi + " contains " + pos);
                 }
+            }
+
+            if (_trialId == 1002) // Tutorialtrial, bei dem durchschnittliche Pupillengröße gemessen werden soll
+            {
+                _pupilSize = _screen.UpdatePupilSize(_pupilSize, e.LeftPupilSize, e.RightPupilSize);
             }
         }
 
@@ -182,6 +195,11 @@ namespace BachelorProject
                     _hintTimer.Start();
                     break;
             }
+
+            //if (_trialId == 1002)
+                //_screen.SetPupilSize(0);
+
+
             var constraintsThread = new Thread(CheckConstraints);
             _constraintsThreadIsRunning = true;
             constraintsThread.Start();
@@ -224,6 +242,8 @@ namespace BachelorProject
             Log.Info("Hiding screen " + _counter + " and Trial " + _trialId + "...");
             _constraintsThreadIsRunning = false;
             DeleteAois();
+            //if (_trialId == 1002)
+                //_pupilSize = _screen.GetPupilSize();
         }
 
         protected override void OnHidden()
@@ -231,6 +251,8 @@ namespace BachelorProject
             Tracker.SendMessage("TRIAL_STOP " + _trialId);
             Log.Info("Screen " + _counter + " and Trial " + _trialId + " hidden.");
             _counter++;
+
+            Debug.WriteLine("pupil " + _pupilSize);
         }
 
         public void UpdateAoi(Circle person)

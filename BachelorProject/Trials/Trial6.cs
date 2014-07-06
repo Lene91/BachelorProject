@@ -5,7 +5,7 @@
         public Trial6()
         { Id = 6; }
 
-        public override bool CheckActualConstraints()
+        public override void CheckActualConstraints()
         {
             if (SittingNextToEachOther(P4,P5))
                 UpdateConstraint("c1", true);
@@ -93,7 +93,7 @@
             else constraintsFullfilled = false;
             */
 
-            return constraintsFullfilled;
+            //return constraintsFullfilled;
         }
     }
 }

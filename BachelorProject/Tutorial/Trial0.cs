@@ -13,7 +13,7 @@ namespace BachelorProject.Tutorial
             InitializeTutorial();
         }
 
-        public override bool CheckActualConstraints()
+        public override void CheckActualConstraints()
         {
             if (SittingNextToEachOther(P2, P4))
                 UpdateConstraint("c1", true);
@@ -27,7 +27,7 @@ namespace BachelorProject.Tutorial
                 UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            return constraintsFullfilled;
+            //return constraintsFullfilled;
         }
 
         public void InitializeTutorial()

@@ -7,7 +7,7 @@
         public TutTrial3()
         { Id = 1003; }
 
-        public override bool CheckActualConstraints()
+        public override void CheckActualConstraints()
         {
             if (OneNeighbourSharingFood(P3))
                 UpdateConstraint("c1", true);
@@ -21,7 +21,7 @@
                 UpdateConstraint("c3", true);
             else constraintsFullfilled = false;
 
-            return constraintsFullfilled;
+            //return constraintsFullfilled;
         }
     }
 }

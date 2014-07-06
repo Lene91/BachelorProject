@@ -5,7 +5,7 @@
         public Trial4()
         { Id = 4; }
 
-        public override bool CheckActualConstraints()
+        public override void CheckActualConstraints()
         {
             if (SharingFood(P2))
                 UpdateConstraint("c1", true);
@@ -90,7 +90,7 @@
             else constraintsFullfilled = false;
             */
 
-            return constraintsFullfilled;
+            //return constraintsFullfilled;
         }
     }
 }
