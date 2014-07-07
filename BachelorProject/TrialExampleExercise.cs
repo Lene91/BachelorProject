@@ -252,7 +252,7 @@ namespace BachelorProject
             Log.Info("Screen " + _counter + " and Trial " + _trialId + " hidden.");
             _counter++;
 
-            Debug.WriteLine("pupil " + _pupilSize);
+            //Debug.WriteLine("pupil " + _pupilSize);
         }
 
         public void UpdateAoi(Circle person)

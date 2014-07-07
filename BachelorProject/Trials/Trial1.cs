@@ -1,11 +1,20 @@
-﻿namespace BachelorProject.Trials
+﻿using System;
+namespace BachelorProject.Trials
 {
     class Trial1 : ExampleExercise
     {
 
 
         public Trial1()
-        { Id = 1; }
+        { 
+            Id = 1;
+            _constraintsWithPersons.Add("c1", new Tuple<string,string>("Person1", "Person3"));
+            _constraintsWithPersons.Add("c2", new Tuple<string,string>("Person2", "Person5"));
+            _constraintsWithPersons.Add("c3", new Tuple<string,string>("Person1", "Person2"));
+            _constraintsWithPersons.Add("c4", new Tuple<string, string>("Person6", "Person3"));
+            _constraintsWithPersons.Add("c5", new Tuple<string, string>("Person6", "Person4"));
+            _constraintsWithPersons.Add("c6", new Tuple<string, string>("Person2", "Person4"));
+        }
 
         public override void CheckActualConstraints()
         {

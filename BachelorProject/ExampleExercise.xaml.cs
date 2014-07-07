@@ -25,8 +25,8 @@ namespace BachelorProject
     public partial class ExampleExercise
     {
         // IMPORTANT!
-        private const int TestPerson = 3;
-        private const bool Laptop = true;
+        private const int TestPerson = 1;
+        private const int Computer = 1;     // 1 -> Laptop, 2 -> Lab, 3 -> Berlin
 
         private IAoiUpdate _trial;
 
@@ -100,9 +100,14 @@ namespace BachelorProject
 
         private Dictionary<int, bool> _constraintDict = new Dictionary<int, bool>();
         private Dictionary<string, UIElement> _allConstraints = new Dictionary<string, UIElement>();
-        private Dictionary<string, System.Drawing.Rectangle> _constraintAois = new Dictionary<string,System.Drawing.Rectangle>();
+        private Dictionary<string, System.Drawing.Rectangle> _constraintAois = new Dictionary<string, System.Drawing.Rectangle>();
 
-        private AreaOfInterest actualConstraint;
+        private AreaOfInterest _constraintHighlighted = null;
+        private AreaOfInterest _constraintTimerStarted = null;
+
+        private DispatcherTimer _highlightTimer = new DispatcherTimer();
+
+        protected Dictionary<string, Tuple<string,string>> _constraintsWithPersons = new Dictionary<string,Tuple<string,string>>();
 
         //public static double _pupilSize;
 
@@ -253,7 +258,7 @@ namespace BachelorProject
                 Height = 250,
                 Margin = new Thickness(800, 50, 0, 0)
             };
-            
+
 
             MyCanvas.Children.Add(_legendStackPanel);
 
@@ -306,7 +311,7 @@ namespace BachelorProject
                     newString = newString.Replace(i.ToString(), _names[i - 1]);
                 }
                 newConstraints[index] = newString;
-                _constraintDict.Add(index+1, false);
+                _constraintDict.Add(index + 1, false);
                 index++;
             }
             _singleConstraints = newConstraints;
@@ -365,7 +370,7 @@ namespace BachelorProject
                 b.Child = t;
                 _constraintStackPanel.Children.Add(b);
                 _allConstraints.Add(labelName, b);
-                var r = new System.Drawing.Rectangle(x,y,width,height);
+                var r = new System.Drawing.Rectangle(x, y, width, height);
                 _constraintAois.Add(labelName, r);
                 y += step;
             }
@@ -454,30 +459,65 @@ namespace BachelorProject
                 if (uie is TextBlock && (uie as TextBlock).Name.Equals("tb"))
                 {
                     (uie as TextBlock).Text = _position.ToString() + ", " + _toShow;
-                    (uie as TextBlock).Margin = new Thickness(_position.X, _position.Y,0,0);
+                    (uie as TextBlock).Margin = new Thickness(_position.X, _position.Y, 0, 0);
                 }
             }
 
+            //int counter = 20;
+            bool _aoiHit = false;
             foreach (var aoi in _aois)
             {
                 if (aoi.Points[0].X < _position.X && aoi.Points[1].X > _position.X && aoi.Points[0].Y < _position.Y &&
                     aoi.Points[1].Y > _position.Y)
                 {
                     if (aoi.Name.StartsWith("c") && _hintModus == 4)
-                        actualConstraint = aoi;
+                    {   // Constraint ausgewählt und soll gehighlighted werden
+                        _aoiHit = true;
+                        if (_constraintHighlighted == null && _constraintTimerStarted == null)
+                        {   // noch nichts passiert
+                            StartTimer(aoi, aoi);
+                        }
+                        else if (_constraintHighlighted == null)
+                        {   // Timer wurde bereits gestartet
+                            if (aoi != _constraintTimerStarted)
+                            { // neuer constraint --> alten timer stoppen und neuen starten
+                                if (_highlightTimer != null)
+                                    _highlightTimer.Stop();
+                                StartTimer(aoi, aoi);
+                            }
+                            // else gleicher constraint --> nichts zu tun
+                        }
+                        else
+                        {   // Timer wurde bereits gestartet und constraint bereits highlighted   
+                            if (aoi != _constraintTimerStarted)
+                            {   // neuer constraint --> timer bei Bedarf stoppen (wenn noch nicht in UpdateHighlighting-Methode gewesen) und neuen starten; aber nur wenn aoi nicht bereits highlighted  
+                                if (_highlightTimer != null)
+                                    _highlightTimer.Stop();
+                                _constraintTimerStarted = null;
+                                if (aoi != _constraintHighlighted)
+                                {
+                                    StartTimer(_constraintHighlighted, aoi);
+                                }
+                            }
+                            // else gleicher constraint --> nichts zu tun
+                        }
+                    }
+
+
 
                     Border b = GetConstraint("c1");
                     TextBlock tb = b.Child as TextBlock;
                     tb.Text = aoi.Name;
                 }
-                else if (aoi.Name.StartsWith("c") && _hintModus == 4)
-                    DeHighlightConstraint(aoi.Name);
             }
-            if (actualConstraint != null && _hintModus == 4)
-                HighlightConstraint(actualConstraint.Name);
+            if (_highlightTimer != null && !_aoiHit)
+            {
+                _highlightTimer.Stop();
+                _constraintTimerStarted = null;
+            }
 
             if (_counter == 300)
-            {                
+            {
                 // Mauskoordinaten speichern
                 var pos = Mouse.GetPosition(null);
                 _tracker.SendMessage("MousePos " + pos.ToString());
@@ -508,6 +548,14 @@ namespace BachelorProject
             {
                 _currentCircle.CheckSitting(p);
             }
+        }
+
+        private void StartTimer(AreaOfInterest oldC, AreaOfInterest newC)
+        {
+            _highlightTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1.5) };
+            _highlightTimer.Tick += (s, args) => UpdateHighlighting(oldC, newC);
+            _highlightTimer.Start();
+            _constraintTimerStarted = newC;
         }
 
         public virtual void CheckActualConstraints()
@@ -765,7 +813,7 @@ namespace BachelorProject
             }
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() => ShowHint(sender,e));
+                Dispatcher.Invoke(() => ShowHint(sender, e));
                 return;
             }
             foreach (var b in MyCanvas.Children.OfType<VirtualizingPanel>().Select(uie => uie))
@@ -773,7 +821,7 @@ namespace BachelorProject
                 if (b.Name.Equals("HintWindow"))
                     _hintWindow = b;
             }
-            
+
             foreach (var tb in _hintWindow.Children.OfType<Border>().Select(x => x).Select(bo => bo.Child as TextBlock))
             {
                 if (tb == null) return;
@@ -788,13 +836,13 @@ namespace BachelorProject
                 tb.Inlines.Add(new Run { Text = _hint });
                 tb.Inlines.Add(new LineBreak());
                 tb.Inlines.Add(new LineBreak());
-                tb.Inlines.Add(new Run{ Text="Ist dieser Hinweis hilfreich?"});
+                tb.Inlines.Add(new Run { Text = "Ist dieser Hinweis hilfreich?" });
                 tb.Inlines.Add(new LineBreak());
                 var btn3 = new System.Windows.Controls.Button
                 {
-                    Name = "Btn3", 
-                    Margin = new Thickness(20), 
-                    FontSize = 25, 
+                    Name = "Btn3",
+                    Margin = new Thickness(20),
+                    FontSize = 25,
                     FontWeight = FontWeights.Bold,
                     Width = 75,
                     Height = 50,
@@ -829,7 +877,7 @@ namespace BachelorProject
             {
                 if (!_infoShown)
                 {
-                    ShowHint(sender,e);
+                    ShowHint(sender, e);
                     _hintThreadIsRunning = false;
                 }
             }
@@ -837,19 +885,50 @@ namespace BachelorProject
 
         public void StartNoClickTimer()
         {
-            _noClickTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(20)};
+            _noClickTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
             _noClickTimer.Tick += ShowHint;
             _noClickTimer.Start();
         }
 
-        public void HighlightConstraint(string name)
+        private void UpdateHighlighting(AreaOfInterest oldC, AreaOfInterest newC)
         {
-            (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightYellow;
+            _highlightTimer.Stop();
+            _constraintTimerStarted = null;
+
+            if (oldC.Name != newC.Name)
+                DeHighlightConstraint(oldC.Name);
+
+            HighlightConstraint(newC.Name);
+            _constraintHighlighted = newC;
+
+            
         }
 
-        public void DeHighlightConstraint(string name)
+        private void HighlightConstraint(string name)
+        {
+            (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightYellow;
+            Tuple<string,string> tuple = _constraintsWithPersons[name];
+            foreach (var circle in _circles)
+            {
+                if (tuple.Item1 != null && circle.Name.Equals(tuple.Item1))
+                    circle.Stroke = System.Windows.Media.Brushes.LightYellow;
+                else if (tuple.Item2 != null && circle.Name.Equals(tuple.Item2))
+                    circle.Stroke = System.Windows.Media.Brushes.LightYellow;
+            }
+
+        }
+
+        private void DeHighlightConstraint(string name)
         {
             (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.Transparent;
+            Tuple<string,string> tuple = _constraintsWithPersons[name];
+            foreach (var circle in _circles)
+            {
+                if (tuple.Item1 != null && circle.Name.Equals(tuple.Item1))
+                    circle.Stroke = System.Windows.Media.Brushes.Black;
+                else if (tuple.Item2 != null && circle.Name.Equals(tuple.Item2))
+                    circle.Stroke = System.Windows.Media.Brushes.Black;
+            }
         }
 
         /*
@@ -869,10 +948,10 @@ namespace BachelorProject
                 _constraintDict[constraintNumber] = false;
                 _constraintDestroyed = true;
             }
-                    
+
             if (fulfilled && !_constraintDict[constraintNumber])
                 _constraintDict[constraintNumber] = true;
-            
+
 
             if (!_constraintHelp) return;
 
@@ -912,26 +991,40 @@ namespace BachelorProject
             }
 
             var mousePos = System.Windows.Forms.Cursor.Position;
-            var screenshot = new Bitmap((int)Width, (int)Height - 30);
-            var g = Graphics.FromImage(screenshot);
 
-            
+
+
             string fileName;
             long time = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            Graphics g;
+            Bitmap screenshot;
 
             // snip wanted area
-            if (Laptop)
+            if (Computer == 1)
             {
+                screenshot = new Bitmap((int)Width, (int)Height - 30);
+                g = Graphics.FromImage(screenshot);
                 g.CopyFromScreen(80, 0, 0, 0, new System.Drawing.Size((int)this.Width, (int)this.Height), CopyPixelOperation.SourceCopy);
                 fileName = "C:\\Users\\Lene\\Desktop\\BA\\Daten\\" + TestPerson + "\\" + time + "-Trial" + Id + "-" + _pictureId + "-" + info + ".jpg";
                 mousePos.X = mousePos.X - 80;
             }
-            else
+            else if (Computer == 2)
             {
+                screenshot = new Bitmap((int)Width, (int)Height - 30);
+                g = Graphics.FromImage(screenshot);
                 g.CopyFromScreen(360, 210, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
                 fileName = "C:\\Users\\lganschow\\Documents\\Daten\\" + TestPerson + "\\" + time + "-Trial" + Id + "-" + _pictureId + "-" + info + ".jpg";
                 mousePos.X = mousePos.X - 360;
                 mousePos.Y = mousePos.Y - 210;
+            }
+            else if (Computer == 3)
+            {
+                screenshot = new Bitmap((int)Width, (int)Height - 10);
+                g = Graphics.FromImage(screenshot);
+                g.CopyFromScreen(360, 150, 0, 0, new System.Drawing.Size((int)this.Width + 50, (int)this.Height + 50), CopyPixelOperation.SourceCopy);
+                fileName = "C:\\Users\\Ganschow\\Documents\\Lene\\Daten\\" + TestPerson + "\\" + time + "-Trial" + Id + "-" + _pictureId + "-" + info + ".jpg";
+                mousePos.X = mousePos.X - 360;
+                mousePos.Y = mousePos.Y - 150;
             }
 
             // Maus Cursor auf Graphics-Objekt zeichnen
@@ -1036,7 +1129,7 @@ namespace BachelorProject
             _tracker.SendMessage("RESET BUTTON PRESSED");
             if (_hintModus == 2)
             {
-                _resetHintTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(4)};
+                _resetHintTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(4) };
                 _resetHintTimer.Tick += ShowHint;
                 _resetHintTimer.Start();
             }
@@ -1115,7 +1208,7 @@ namespace BachelorProject
             System.Windows.Controls.Panel.SetZIndex(_notDonePanel, 100);
             _notDonePanel.Margin = new Thickness(2000, 1000, 0, 0);
             _infoShown = false;
-            
+
             if (_noClickTimer.IsEnabled)
             {
                 _noClickTimer.Stop();
