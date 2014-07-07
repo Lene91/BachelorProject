@@ -4,7 +4,8 @@
     {
 
 
-        public TutTrial1()
+        public TutTrial1(double pupilSize)
+            : base(pupilSize)
         { Id = 1001; }
 
         public override void CheckActualConstraints()

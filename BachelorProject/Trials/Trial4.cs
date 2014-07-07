@@ -1,35 +1,29 @@
-﻿namespace BachelorProject.Trials
+﻿using System;
+
+namespace BachelorProject.Trials
 {
     class Trial4 : ExampleExercise
     {
-        public Trial4()
-        { Id = 4; }
+        public Trial4(double pupilSize)
+            : base(pupilSize)
+        {
+            Id = 4;
+            _constraintsWithPersons.Add("c1", new Tuple<string, string>("Person2", null));
+            _constraintsWithPersons.Add("c2", new Tuple<string, string>("Person4", null));
+            _constraintsWithPersons.Add("c3", new Tuple<string, string>("Person1", null));
+            _constraintsWithPersons.Add("c4", new Tuple<string, string>("Person3", null));
+            _constraintsWithPersons.Add("c5", new Tuple<string, string>("Person1", null));
+            _constraintsWithPersons.Add("c6", new Tuple<string, string>("Person1", "Person2"));
+        }
 
         public override void CheckActualConstraints()
         {
-            if (SharingFood(P2))
-                UpdateConstraint("c1", true);
-            else constraintsFullfilled = false;
-
-            if (SittingOnSomeone(P4))
-                UpdateConstraint("c2", true);
-            else constraintsFullfilled = false;
-
-            if (OneNeighbourSharingFood(P1))
-                UpdateConstraint("c3", true);
-            else constraintsFullfilled = false;
-
-            if (OneNeighbourIsSeat(P3))
-                UpdateConstraint("c4", true);
-            else constraintsFullfilled = false;
-
-            if (OneNeighbourIsSeat(P1))
-                UpdateConstraint("c5", true);
-            else constraintsFullfilled = false;
-
-            if (NotSharingFood(P1,P2))
-                UpdateConstraint("c6", true);
-            else constraintsFullfilled = false;
+            UpdateConstraint("c1", SharingFood(P2));
+            UpdateConstraint("c2", SittingOnSomeone(P4));
+            UpdateConstraint("c3", OneNeighbourSharingFood(P1));
+            UpdateConstraint("c4", OneNeighbourIsSeat(P3));
+            UpdateConstraint("c5", OneNeighbourIsSeat(P1));
+            UpdateConstraint("c6", NotSharingFood(P1,P2));
 
             /*
             if (SittingNextToEachOther(P2, P3))

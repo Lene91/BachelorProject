@@ -39,7 +39,6 @@ namespace BachelorProject
         private DispatcherTimer _timer2 = new DispatcherTimer();
         private DispatcherTimer _hintTimer = new DispatcherTimer();
         //private static double _averagePupilSize = 0;
-        private static double _pupilSize;
 
         public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp, int hintModus, string hint)
         {
@@ -52,6 +51,7 @@ namespace BachelorProject
             _trialId = trial.GetId();
             _timeLimit = timeLimit;
             _hintModus = hintModus;
+
 
             Tracker.SendMessage("Trial " + _trialId + " - " + numberOfPersons + " Persons - HintModus: " + _hintModus);
 
@@ -103,7 +103,8 @@ namespace BachelorProject
 
             var pos = new PointF((float)(e.Position.X - _offsetX), (float)(e.Position.Y - _offsetY));
 
-            _screen.Show(pos, e.LeftPupilSize + ", " + e.RightPupilSize + ", " + sender.ToString());
+            //_screen.Show(pos, e.LeftPupilSize + ", " + e.RightPupilSize + ", " + sender.ToString());
+            _screen.UpdatePos(pos);
             foreach (var aoi in AOIs)
             {
                 if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y &&
@@ -113,10 +114,12 @@ namespace BachelorProject
                 }
             }
 
-            if (_trialId == 1002) // Tutorialtrial, bei dem durchschnittliche Pupillengröße gemessen werden soll
+            if (_trialId == 1002) // Tutorialtrial, bei dem durchschnittliche Pupillengröße ermittelt werden soll
             {
-                _pupilSize = _screen.UpdatePupilSize(_pupilSize, e.LeftPupilSize, e.RightPupilSize);
+                _screen.UpdatePupilSize(e.LeftPupilSize, e.RightPupilSize);
             }
+            else
+                _screen.SendCurrentPupilSize(e.LeftPupilSize, e.RightPupilSize);
         }
 
 
@@ -173,6 +176,8 @@ namespace BachelorProject
 
         protected override void OnShown()
         {
+
+            Debug.WriteLine("info " + _screen.GetPupilSize());
             Log.Info("Screen " + _counter + " and Trial " + _trialId + " are shown.");
 
             if (_timeLimit)

@@ -2,7 +2,8 @@
 {
     class Trial7 : ExampleExercise
     {
-        public Trial7()
+        public Trial7(double pupilSize)
+            : base(pupilSize)
         { Id = 7; }
 
         public override void CheckActualConstraints()

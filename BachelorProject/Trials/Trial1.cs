@@ -5,10 +5,11 @@ namespace BachelorProject.Trials
     {
 
 
-        public Trial1()
+        public Trial1(double pupilSize)
+            : base(pupilSize)
         { 
             Id = 1;
-            _constraintsWithPersons.Add("c1", new Tuple<string,string>("Person1", "Person3"));
+            _constraintsWithPersons.Add("c1", new Tuple<string,string>("Person2", "Person3"));
             _constraintsWithPersons.Add("c2", new Tuple<string,string>("Person2", "Person5"));
             _constraintsWithPersons.Add("c3", new Tuple<string,string>("Person1", "Person2"));
             _constraintsWithPersons.Add("c4", new Tuple<string, string>("Person6", "Person3"));

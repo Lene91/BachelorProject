@@ -1,11 +1,15 @@
-﻿namespace BachelorProject.Tutorial
+﻿using System.Diagnostics;
+
+namespace BachelorProject.Tutorial
 {
     class TutTrial3 : ExampleExercise
     {
 
-
-        public TutTrial3()
-        { Id = 1003; }
+        public TutTrial3(double pupilSize)
+            : base(pupilSize)
+        { 
+            Id = 1003;
+        }
 
         public override void CheckActualConstraints()
         {

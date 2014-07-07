@@ -23,7 +23,7 @@
             Stroke="Black"
             StrokeThickness="4" />
         
-        <TextBlock Name="tb" FontSize="30">Unknown</TextBlock>
+        <!--<TextBlock Name="tb" FontSize="30">Unknown</TextBlock>-->
 
         <Button 
             Width="120"

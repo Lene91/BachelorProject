@@ -4,7 +4,8 @@
     {
 
 
-        public Trial11()
+        public Trial11(double pupilSize)
+            : base(pupilSize)
         { Id = 11; }
 
         public override void CheckActualConstraints()

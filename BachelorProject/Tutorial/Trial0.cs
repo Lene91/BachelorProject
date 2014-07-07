@@ -7,7 +7,8 @@ namespace BachelorProject.Tutorial
 {
     class Trial0 : ExampleExercise
     {
-        public Trial0()
+        public Trial0(double pupilSize)
+            : base(pupilSize)
         { 
             Id = 0;
             InitializeTutorial();

@@ -109,11 +109,17 @@ namespace BachelorProject
 
         protected Dictionary<string, Tuple<string,string>> _constraintsWithPersons = new Dictionary<string,Tuple<string,string>>();
 
-        //public static double _pupilSize;
+        private static double _pupilSize;
+        private object thisLock = new object();
+        private double _pupilCounter = 1;
+        private double _deltaPupilSize = 2.0;
+        private double _borderPupilSize;
+        private double _currentAvgPupilSize;
 
-        public ExampleExercise()
+        public ExampleExercise(double pupilSize)
         {
             InitializeComponent();
+            _pupilSize = pupilSize;
         }
 
         /*
@@ -148,6 +154,8 @@ namespace BachelorProject
             InitializeConstraints();
             InitializeBigCircles();
             InitializeHints();
+
+            
         }
 
         public void SendAois(IList<AreaOfInterest> aois)
@@ -454,14 +462,14 @@ namespace BachelorProject
                 return;
             }
 
-            foreach (UIElement uie in MyCanvas.Children)
+            /*foreach (UIElement uie in MyCanvas.Children)
             {
                 if (uie is TextBlock && (uie as TextBlock).Name.Equals("tb"))
                 {
                     (uie as TextBlock).Text = _position.ToString() + ", " + _toShow;
                     (uie as TextBlock).Margin = new Thickness(_position.X, _position.Y, 0, 0);
                 }
-            }
+            }*/
 
             //int counter = 20;
             bool _aoiHit = false;
@@ -470,7 +478,7 @@ namespace BachelorProject
                 if (aoi.Points[0].X < _position.X && aoi.Points[1].X > _position.X && aoi.Points[0].Y < _position.Y &&
                     aoi.Points[1].Y > _position.Y)
                 {
-                    if (aoi.Name.StartsWith("c") && _hintModus == 4)
+                    if (aoi.Name.StartsWith("c") && (_hintModus == 4 || _hintModus == 5))
                     {   // Constraint ausgewählt und soll gehighlighted werden
                         _aoiHit = true;
                         if (_constraintHighlighted == null && _constraintTimerStarted == null)
@@ -505,15 +513,26 @@ namespace BachelorProject
 
 
 
+                    /*
                     Border b = GetConstraint("c1");
                     TextBlock tb = b.Child as TextBlock;
                     tb.Text = aoi.Name;
+                    */
                 }
             }
             if (_highlightTimer != null && !_aoiHit)
             {
                 _highlightTimer.Stop();
                 _constraintTimerStarted = null;
+            }
+
+            if (_hintModus == 6 && Id != 1002)
+            {
+                _borderPupilSize = _pupilSize + _deltaPupilSize;
+                if (_currentAvgPupilSize > _borderPupilSize)
+                    Show(new PointF(100, 100), "große Pupille");
+                else
+                    _deltaPupilSize -= 0.01;
             }
 
             if (_counter == 300)
@@ -907,13 +926,16 @@ namespace BachelorProject
         private void HighlightConstraint(string name)
         {
             (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightYellow;
-            Tuple<string,string> tuple = _constraintsWithPersons[name];
-            foreach (var circle in _circles)
+            if (_hintModus == 5)
             {
-                if (tuple.Item1 != null && circle.Name.Equals(tuple.Item1))
-                    circle.Stroke = System.Windows.Media.Brushes.LightYellow;
-                else if (tuple.Item2 != null && circle.Name.Equals(tuple.Item2))
-                    circle.Stroke = System.Windows.Media.Brushes.LightYellow;
+                Tuple<string, string> tuple = _constraintsWithPersons[name];
+                foreach (var circle in _circles)
+                {
+                    if (tuple.Item1 != null && circle.Name.Equals(tuple.Item1))
+                        circle.Stroke = System.Windows.Media.Brushes.LightYellow;
+                    else if (tuple.Item2 != null && circle.Name.Equals(tuple.Item2))
+                        circle.Stroke = System.Windows.Media.Brushes.LightYellow;
+                }
             }
 
         }
@@ -921,13 +943,16 @@ namespace BachelorProject
         private void DeHighlightConstraint(string name)
         {
             (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.Transparent;
-            Tuple<string,string> tuple = _constraintsWithPersons[name];
-            foreach (var circle in _circles)
+            if (_hintModus == 5)
             {
-                if (tuple.Item1 != null && circle.Name.Equals(tuple.Item1))
-                    circle.Stroke = System.Windows.Media.Brushes.Black;
-                else if (tuple.Item2 != null && circle.Name.Equals(tuple.Item2))
-                    circle.Stroke = System.Windows.Media.Brushes.Black;
+                Tuple<string, string> tuple = _constraintsWithPersons[name];
+                foreach (var circle in _circles)
+                {
+                    if (tuple.Item1 != null && circle.Name.Equals(tuple.Item1))
+                        circle.Stroke = System.Windows.Media.Brushes.Black;
+                    else if (tuple.Item2 != null && circle.Name.Equals(tuple.Item2))
+                        circle.Stroke = System.Windows.Media.Brushes.Black;
+                }
             }
         }
 
@@ -1071,18 +1096,51 @@ namespace BachelorProject
             MyCanvas.Children.Add(b);
         }
 
-        public virtual double UpdatePupilSize(double pupilSize, double left, double right)
-        { return -2; }
+        /*
+        * **********************************************************
+        *                                                          *
+        *              PUPIL SIZE                                  *
+        *                                                          *
+        ************************************************************
+        */
+
+        public void SendCurrentPupilSize(double left, double right)
+        {
+            double avg = (left + right) / 2;
+            _currentAvgPupilSize = avg;
+        }
+
+        public void UpdatePupilSize(double left, double right)
+        {
+            lock (thisLock)
+            {
+                //if (_counter == 0)
+                //pupilSize = 0;
+                if (left != 0 && right != 0)
+                {
+                    double avg = (left + right) / 2.0;
+                    _pupilSize += avg;
+
+                    if (_pupilCounter > 2)
+                        _pupilSize = _pupilSize / 2;
+                    else
+                    {
+                        _pupilSize = _pupilSize / _pupilCounter;
+                        _pupilCounter++;
+                    }
+                }
+            }
+        }
 
         /*public void SetPupilSize(double size)
         {
             _pupilSize = size;
         }*/
 
-        /*public double GetPupilSize()
+        public double GetPupilSize()
         {
             return _pupilSize;
-        }*/
+        }
 
 
         /*
@@ -1348,6 +1406,11 @@ namespace BachelorProject
         {
             _position = p;
             _toShow = s;
+        }
+
+        public void UpdatePos(PointF p)
+        {
+            _position = p;
         }
     }
 
