@@ -89,6 +89,7 @@ namespace BachelorProject
 
         private DispatcherTimer _noClickTimer = new DispatcherTimer();
         private DispatcherTimer _resetHintTimer = new DispatcherTimer();
+        private DispatcherTimer _constraintsVisitedTimer = new DispatcherTimer();
 
         private string _hint;
         private bool _hintThreadIsRunning = false;
@@ -115,6 +116,9 @@ namespace BachelorProject
         private double _deltaPupilSize = 2.0;
         private double _borderPupilSize;
         private double _currentAvgPupilSize;
+
+        private Dictionary<string,int> _visitedConstraints = new Dictionary<string,int>();
+        private bool _constraintsVisited = false;
 
         public ExampleExercise(double pupilSize)
         {
@@ -430,6 +434,13 @@ namespace BachelorProject
                 newHint = newHint.Replace(i.ToString(), _names[i - 1]);
             }
             _hint = newHint;
+
+            var constraintNumber = _singleConstraints.Count();
+            for (var i = 1; i <= constraintNumber; ++i)
+            {
+                var c = "c" + i;
+                _visitedConstraints.Add(c, 0);
+            }
         }
 
         public int GetId()
@@ -472,6 +483,14 @@ namespace BachelorProject
             }*/
 
             //int counter = 20;
+            if (_constraintsVisited)
+            {
+                _constraintsVisitedTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+                _constraintsVisitedTimer.Tick += (s, args) => ShowHint(s, args);
+                _constraintsVisitedTimer.Start();
+            }
+
+
             bool _aoiHit = false;
             foreach (var aoi in _aois)
             {
@@ -524,6 +543,17 @@ namespace BachelorProject
             {
                 _highlightTimer.Stop();
                 _constraintTimerStarted = null;
+            }
+
+            if (!_constraintsVisited)
+            {
+                var visited = true;
+                foreach (var entry in _visitedConstraints)
+                {
+                    if (entry.Value < 2)
+                        visited = false;
+                }
+                _constraintsVisited = visited;
             }
 
             if (_hintModus == 6 && Id != 1002)
@@ -830,6 +860,8 @@ namespace BachelorProject
                 hintThread.Start();
                 return;
             }
+            if (_constraintsVisitedTimer.IsEnabled)
+                _constraintsVisitedTimer.Stop();
             if (!Dispatcher.CheckAccess())
             {
                 Dispatcher.Invoke(() => ShowHint(sender, e));
@@ -920,7 +952,7 @@ namespace BachelorProject
             HighlightConstraint(newC.Name);
             _constraintHighlighted = newC;
 
-            
+            _visitedConstraints[newC.Name]++;
         }
 
         private void HighlightConstraint(string name)

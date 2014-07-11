@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System;
 
 namespace BachelorProject.Tutorial
 {
@@ -9,24 +10,19 @@ namespace BachelorProject.Tutorial
     {
         public Trial0(double pupilSize)
             : base(pupilSize)
-        { 
+        {
             Id = 0;
             InitializeTutorial();
+            _constraintsWithPersons.Add("c1", new Tuple<string, string>("Person2", "Person4"));
+            _constraintsWithPersons.Add("c2", new Tuple<string, string>("Person3", "Person2"));
+            _constraintsWithPersons.Add("c3", new Tuple<string, string>("Person1", "Person4"));
         }
 
         public override void CheckActualConstraints()
         {
-            if (SittingNextToEachOther(P2, P4))
-                UpdateConstraint("c1", true);
-            else constraintsFullfilled = false;
-
-            if (SittingOn(P3, P2))
-                UpdateConstraint("c2", true);
-            else constraintsFullfilled = false;
-
-            if (SharingFood(P1,P4))
-                UpdateConstraint("c3", true);
-            else constraintsFullfilled = false;
+            UpdateConstraint("c1", SittingNextToEachOther(P2, P4));
+            UpdateConstraint("c2", SittingOn(P3, P2));
+            UpdateConstraint("c3", SharingFood(P1,P4));
 
             //return constraintsFullfilled;
         }
