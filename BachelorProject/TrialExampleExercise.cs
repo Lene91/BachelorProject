@@ -66,6 +66,8 @@ namespace BachelorProject
 
         private void CreateAois(IEnumerable<Circle> persons, Dictionary<string,Rectangle> constraints)
         {
+            
+
             foreach (var person in persons)
             {
                 AOIs.Add(new MyAoi(person));
@@ -75,6 +77,18 @@ namespace BachelorProject
                 Rectangle rect = new Rectangle(constraint.Value.X,constraint.Value.Y,constraint.Value.Width,constraint.Value.Height);
                 AOIs.Add(new AreaOfInterest(rect,constraint.Key));
             }
+
+            // mainPanel
+            var mainRect = new Rectangle(0, 0, 800, 800);
+            AOIs.Add(new AreaOfInterest(mainRect, "rMain"));
+
+            // legendPanel
+            var legendRect = new Rectangle(800, 0, 400, 180);
+            AOIs.Add(new AreaOfInterest(legendRect, "rLegend"));
+
+            // constraintPanel
+            var constraintRect = new Rectangle(800, 180, 400, 620);
+            AOIs.Add(new AreaOfInterest(constraintRect, "rConstraints"));
         }
 
         private void DeleteAois()
@@ -218,7 +232,7 @@ namespace BachelorProject
 
         private void ShowHint(object sender, EventArgs e)
         {
-            _screen.ShowHint(sender,e);
+            _screen.ShowHint();
             _hintTimer.Stop();
         }
 

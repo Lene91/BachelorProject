@@ -120,6 +120,10 @@ namespace BachelorProject
         private Dictionary<string,int> _visitedConstraints = new Dictionary<string,int>();
         private bool _constraintsVisited = false;
 
+        private string _lastVisitedConstraint = null;
+
+        private bool _lastConstraintFulfilled = false;
+
         public ExampleExercise(double pupilSize)
         {
             InitializeComponent();
@@ -486,7 +490,7 @@ namespace BachelorProject
             if (_constraintsVisited)
             {
                 _constraintsVisitedTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
-                _constraintsVisitedTimer.Tick += (s, args) => ShowHint(s, args);
+                _constraintsVisitedTimer.Tick += (s, args) => ShowHint();
                 _constraintsVisitedTimer.Start();
             }
 
@@ -497,7 +501,17 @@ namespace BachelorProject
                 if (aoi.Points[0].X < _position.X && aoi.Points[1].X > _position.X && aoi.Points[0].Y < _position.Y &&
                     aoi.Points[1].Y > _position.Y)
                 {
-                    if (aoi.Name.StartsWith("c") && (_hintModus == 4 || _hintModus == 5))
+                    if (_lastConstraintFulfilled && aoi.Name.Equals("rConstraints"))
+                    {
+                        // TODO: TIMER (1s), stop Timer in ShowHint
+                        // richtige Hinweise anzeigen
+                        // OK-Button updaten
+
+                        _lastConstraintFulfilled = false;
+                        _lastVisitedConstraint = null;
+                        ShowHint();
+                    }
+                    if (aoi.Name.StartsWith("c") && (_hintModus == 4 || _hintModus == 5 || _hintModus == 8))
                     {   // Constraint ausgewählt und soll gehighlighted werden
                         _aoiHit = true;
                         if (_constraintHighlighted == null && _constraintTimerStarted == null)
@@ -574,7 +588,7 @@ namespace BachelorProject
             }
             _counter++;
 
-            if (_constraintHelp || _doneButtonKlicked || _hintModus == 3)
+            if (_constraintHelp || _doneButtonKlicked || _hintModus == 3 || _hintModus == 8)
             {
                 // Sitzplatzbeziehungen prüfen
                 CalculateSittingOrder();
@@ -850,12 +864,12 @@ namespace BachelorProject
          ************************************************************
          */
 
-        public void ShowHint(object sender, EventArgs e)
+        public void ShowHint()
         {
-            if (_hintDelivered) return;
+            //if (_hintDelivered) return;
             if (_infoShown)
             {
-                var hintThread = new Thread(() => CheckInfoShown(sender, e));
+                var hintThread = new Thread(() => CheckInfoShown());
                 _hintThreadIsRunning = true;
                 hintThread.Start();
                 return;
@@ -864,9 +878,10 @@ namespace BachelorProject
                 _constraintsVisitedTimer.Stop();
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() => ShowHint(sender, e));
+                Dispatcher.Invoke(() => ShowHint());
                 return;
             }
+
             foreach (var b in MyCanvas.Children.OfType<VirtualizingPanel>().Select(uie => uie))
             {
                 if (b.Name.Equals("HintWindow"))
@@ -876,6 +891,7 @@ namespace BachelorProject
             foreach (var tb in _hintWindow.Children.OfType<Border>().Select(x => x).Select(bo => bo.Child as TextBlock))
             {
                 if (tb == null) return;
+                tb.Inlines.Clear();
                 tb.Inlines.Add(new Run
                 {
                     FontSize = 30,
@@ -887,7 +903,7 @@ namespace BachelorProject
                 tb.Inlines.Add(new Run { Text = _hint });
                 tb.Inlines.Add(new LineBreak());
                 tb.Inlines.Add(new LineBreak());
-                tb.Inlines.Add(new Run { Text = "Ist dieser Hinweis hilfreich?" });
+                //tb.Inlines.Add(new Run { Text = "Ist dieser Hinweis hilfreich?" });
                 tb.Inlines.Add(new LineBreak());
                 var btn3 = new System.Windows.Controls.Button
                 {
@@ -898,11 +914,11 @@ namespace BachelorProject
                     Width = 75,
                     Height = 50,
                     Cursor = System.Windows.Input.Cursors.Hand,
-                    Content = "Ja"
+                    Content = "OK"
                 };
                 btn3.Click += Helpful_Button_MouseDown;
                 tb.Inlines.Add(btn3);
-                var btn4 = new System.Windows.Controls.Button
+                /*var btn4 = new System.Windows.Controls.Button
                 {
                     Name = "Btn4",
                     Margin = new Thickness(20),
@@ -914,21 +930,22 @@ namespace BachelorProject
                     Content = "Nein"
                 };
                 btn4.Click += Not_Helpful_Button_MouseDown;
-                tb.Inlines.Add(btn4);
+                tb.Inlines.Add(btn4);*/
+                
             }
-            _hintWindow.Margin = new Thickness(20, 490, 0, 0);
+            _hintWindow.Margin = new Thickness(200, 200, 0, 0);
             System.Windows.Controls.Panel.SetZIndex(_hintWindow, 100);
             _tracker.SendMessage("HINT SHOWN");
             _hintDelivered = true;
         }
 
-        private void CheckInfoShown(object sender, EventArgs e)
+        private void CheckInfoShown()
         {
             while (_hintThreadIsRunning)
             {
                 if (!_infoShown)
                 {
-                    ShowHint(sender, e);
+                    ShowHint();
                     _hintThreadIsRunning = false;
                 }
             }
@@ -937,7 +954,7 @@ namespace BachelorProject
         public void StartNoClickTimer()
         {
             _noClickTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
-            _noClickTimer.Tick += ShowHint;
+            _noClickTimer.Tick += (s,args) => ShowHint();
             _noClickTimer.Start();
         }
 
@@ -957,6 +974,7 @@ namespace BachelorProject
 
         private void HighlightConstraint(string name)
         {
+            _lastVisitedConstraint = name;
             (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightYellow;
             if (_hintModus == 5)
             {
@@ -999,6 +1017,8 @@ namespace BachelorProject
 
         protected void UpdateConstraint(string name, bool fulfilled)
         {
+            if (_lastVisitedConstraint != null && _lastVisitedConstraint.Equals(name) && fulfilled)
+                _lastConstraintFulfilled = true;
             var constraintNumber = Int32.Parse(name[1].ToString());
             if (!fulfilled && _constraintDict[constraintNumber])
             {
@@ -1217,12 +1237,12 @@ namespace BachelorProject
                 el.UpdateRadius(CircleRadius);
             }
             _tracker.SendMessage("RESET BUTTON PRESSED");
-            if (_hintModus == 2)
+            /*if (_hintModus == 2)
             {
                 _resetHintTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(4) };
                 _resetHintTimer.Tick += ShowHint;
                 _resetHintTimer.Start();
-            }
+            }*/
         }
 
         private void Continue_Button_MouseDown(object sender, MouseButtonEventArgs e)
