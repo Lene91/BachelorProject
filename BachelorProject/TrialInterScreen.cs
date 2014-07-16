@@ -1,5 +1,6 @@
 ﻿using ExperimentTemplate;
 using Logging;
+using Eyetracker.EyeTribe;
 
 namespace BachelorProject
 {
@@ -18,6 +19,8 @@ namespace BachelorProject
         protected override void OnShowing()
         {
             Tracker.SendMessage("SHOW INTERSCREEN");
+            if (Tracker is EyeTribeTracker)
+                Tracker.Disconnect();
         }
 
         protected override void OnHidden()
