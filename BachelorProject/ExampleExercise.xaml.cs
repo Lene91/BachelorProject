@@ -99,7 +99,7 @@ namespace BachelorProject
 
         private IList<AreaOfInterest> _aois = new List<AreaOfInterest>();
 
-        private Dictionary<int, bool> _constraintDict = new Dictionary<int, bool>();
+        private Dictionary<int, bool> _constraintDict = new Dictionary<int, bool>();    // Zahl des Constraints und Angabe, ob erfüllt (true) oder nicht (false)
         private Dictionary<string, UIElement> _allConstraints = new Dictionary<string, UIElement>();
         private Dictionary<string, System.Drawing.Rectangle> _constraintAois = new Dictionary<string, System.Drawing.Rectangle>();
 
@@ -504,7 +504,6 @@ namespace BachelorProject
                     if (_lastConstraintFulfilled && aoi.Name.Equals("rConstraints"))
                     {
                         // TODO: TIMER (1s), stop Timer in ShowHint
-                        // richtige Hinweise anzeigen
                         // OK-Button updaten
 
                         _lastConstraintFulfilled = false;
@@ -891,6 +890,24 @@ namespace BachelorProject
             foreach (var tb in _hintWindow.Children.OfType<Border>().Select(x => x).Select(bo => bo.Child as TextBlock))
             {
                 if (tb == null) return;
+
+                // finde ersten noch nicht erfüllten Constraint
+                int constraintNumber = 0;
+                string hint = "";
+                foreach (var entry in _constraintDict)
+                {
+                    if (!entry.Value)
+                    {
+                        constraintNumber = entry.Key;
+                        break;
+                    }
+                }
+                if (!(constraintNumber == 0))
+                    hint = _singleConstraints[constraintNumber - 1];
+                else
+                    hint = _hint;
+                _lastVisitedConstraint = "c" + constraintNumber;
+
                 tb.Inlines.Clear();
                 tb.Inlines.Add(new Run
                 {
@@ -900,7 +917,7 @@ namespace BachelorProject
                 });
                 tb.Inlines.Add(new LineBreak());
                 tb.Inlines.Add(new LineBreak());
-                tb.Inlines.Add(new Run { Text = _hint });
+                tb.Inlines.Add(new Run { Text = hint });
                 tb.Inlines.Add(new LineBreak());
                 tb.Inlines.Add(new LineBreak());
                 //tb.Inlines.Add(new Run { Text = "Ist dieser Hinweis hilfreich?" });
@@ -916,7 +933,7 @@ namespace BachelorProject
                     Cursor = System.Windows.Input.Cursors.Hand,
                     Content = "OK"
                 };
-                btn3.Click += Helpful_Button_MouseDown;
+                btn3.Click += Ok_Button_MouseDown;
                 tb.Inlines.Add(btn3);
                 /*var btn4 = new System.Windows.Controls.Button
                 {
@@ -1017,9 +1034,11 @@ namespace BachelorProject
 
         protected void UpdateConstraint(string name, bool fulfilled)
         {
-            if (_lastVisitedConstraint != null && _lastVisitedConstraint.Equals(name) && fulfilled)
-                _lastConstraintFulfilled = true;
             var constraintNumber = Int32.Parse(name[1].ToString());
+           
+            if (_lastVisitedConstraint != null && _lastVisitedConstraint.Equals(name) && fulfilled && !_constraintDict[constraintNumber])
+                _lastConstraintFulfilled = true;
+
             if (!fulfilled && _constraintDict[constraintNumber])
             {
                 _constraintDict[constraintNumber] = false;
@@ -1351,19 +1370,20 @@ namespace BachelorProject
         }
         `*/
 
-        private void Helpful_Button_MouseDown(object sender, RoutedEventArgs e)
+        private void Ok_Button_MouseDown(object sender, RoutedEventArgs e)
         {
-            _tracker.SendMessage("HELPFUL");
+            _tracker.SendMessage("HINT CLOSED");
 
             _hintWindow.Margin = new Thickness(2000, 4900, 0, 0);
         }
 
+        /*
         private void Not_Helpful_Button_MouseDown(object sender, RoutedEventArgs e)
         {
             _tracker.SendMessage("NOT HELPFUL");
 
             _hintWindow.Margin = new Thickness(2000, 4900, 0, 0);
-        }
+        }*/
 
 
 
