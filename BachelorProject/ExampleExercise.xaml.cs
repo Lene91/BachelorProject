@@ -504,7 +504,7 @@ namespace BachelorProject
                     if (_lastConstraintFulfilled && aoi.Name.Equals("rConstraints"))
                     {
                         // TODO: TIMER (1s), stop Timer in ShowHint
-                        // OK-Button updaten
+                        // irgendwann special hint zeigen?
 
                         _lastConstraintFulfilled = false;
                         _lastVisitedConstraint = null;
@@ -913,7 +913,7 @@ namespace BachelorProject
                 {
                     FontSize = 30,
                     FontWeight = FontWeights.Bold,
-                    Text = "Hinweis"
+                    Text = "Tipp"
                 });
                 tb.Inlines.Add(new LineBreak());
                 tb.Inlines.Add(new LineBreak());
