@@ -65,7 +65,8 @@ namespace BachelorProject
             //              5 -> 4 + corresponding persons highlighted
             //              6 -> hint when pupil size bigger than normal
             //              7 -> 4 or 5 and hint is delivered, when each constraint is looked at 2 times (?), and 2s waiting time are elapsed
-            //              8 -> hint when constraint focused, constraint solved and again constraintlist focused
+            //              8 -> hint when constraint focused, constraint solved and again constraintlist focused (hint: popup window)
+            //              9 -> hint when constraint focused, constraint solved and again constraintlist focused (hint: highlighting) 
 
             // TUTORIAL
 
@@ -75,10 +76,10 @@ namespace BachelorProject
             experiment.AddTrial(new Introduction(new IntroScreen4()));
             
             // Tutorial mit Ausprobieren
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), new Trial0(_pupilSize), true, false, false, 8, "special hint"));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), new Trial0(_pupilSize), true, false, false, 9, "special hint"));
             // 1 Übungsaufgabe
             //experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, 0, ""));
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(_pupilSize), true, false, false, 5, ""));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(_pupilSize), true, false, false, 9, ""));
             //experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(_pupilSize), true, false, false, 1, ""));
             //experiment.AddTrial(new Introduction(new IntroScreen5()));
             

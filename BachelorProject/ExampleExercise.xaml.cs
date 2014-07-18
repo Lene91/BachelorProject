@@ -124,6 +124,8 @@ namespace BachelorProject
 
         private bool _lastConstraintFulfilled = false;
 
+        private string _highlightedConstraint = null;
+
         public ExampleExercise(double pupilSize)
         {
             InitializeComponent();
@@ -508,9 +510,12 @@ namespace BachelorProject
 
                         _lastConstraintFulfilled = false;
                         _lastVisitedConstraint = null;
-                        ShowHint();
+                        if (_hintModus == 9)
+                            Highlight();
+                        else if (_hintModus == 8)
+                            ShowHint();
                     }
-                    if (aoi.Name.StartsWith("c") && (_hintModus == 4 || _hintModus == 5 || _hintModus == 8))
+                    if (aoi.Name.StartsWith("c") && (_hintModus == 4 || _hintModus == 5 || _hintModus == 8 || _hintModus == 9))
                     {   // Constraint ausgewählt und soll gehighlighted werden
                         _aoiHit = true;
                         if (_constraintHighlighted == null && _constraintTimerStarted == null)
@@ -587,7 +592,7 @@ namespace BachelorProject
             }
             _counter++;
 
-            if (_constraintHelp || _doneButtonKlicked || _hintModus == 3 || _hintModus == 8)
+            if (_constraintHelp || _doneButtonKlicked || _hintModus == 3 || _hintModus == 8 || _hintModus == 9)
             {
                 // Sitzplatzbeziehungen prüfen
                 CalculateSittingOrder();
@@ -891,22 +896,7 @@ namespace BachelorProject
             {
                 if (tb == null) return;
 
-                // finde ersten noch nicht erfüllten Constraint
-                int constraintNumber = 0;
-                string hint = "";
-                foreach (var entry in _constraintDict)
-                {
-                    if (!entry.Value)
-                    {
-                        constraintNumber = entry.Key;
-                        break;
-                    }
-                }
-                if (!(constraintNumber == 0))
-                    hint = _singleConstraints[constraintNumber - 1];
-                else
-                    hint = _hint;
-                _lastVisitedConstraint = "c" + constraintNumber;
+                string hint = _singleConstraints[GetNextConstraintNumber()-1];
 
                 tb.Inlines.Clear();
                 tb.Inlines.Add(new Run
@@ -956,6 +946,40 @@ namespace BachelorProject
             _hintDelivered = true;
         }
 
+        private int GetNextConstraintNumber()
+        {
+            // finde ersten noch nicht erfüllten Constraint TODO: randomisieren
+            int hint = -1;
+            var listWithFalseConstraints = new List<int>();
+            foreach (var entry in _constraintDict)
+            {
+                if (!entry.Value)
+                    listWithFalseConstraints.Add(entry.Key);
+            }
+            var shuffledListWithFalseConstraints = Shuffle(listWithFalseConstraints);
+
+            if (shuffledListWithFalseConstraints.Count > 0)
+                hint = shuffledListWithFalseConstraints[0];
+
+            _lastVisitedConstraint = "c" + hint;
+            return hint;
+        }
+
+        private static List<int> Shuffle(List<int> l)
+        {
+            var n = l.Count;
+            var rnd = new Random();
+            while (n > 1)
+            {
+                var k = (rnd.Next(0, n) % n);
+                n--;
+                var value = l[k];
+                l[k] = l[n];
+                l[n] = value;
+            }
+            return l;
+        }
+
         private void CheckInfoShown()
         {
             while (_hintThreadIsRunning)
@@ -973,6 +997,26 @@ namespace BachelorProject
             _noClickTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
             _noClickTimer.Tick += (s,args) => ShowHint();
             _noClickTimer.Start();
+        }
+
+        private void Highlight()
+        {
+            var number = GetNextConstraintNumber();
+            var name = "c" + number;
+            if (!name.Equals(_highlightedConstraint))
+                DeHighlight(_highlightedConstraint);
+            if (number > 0)
+            {
+                (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightYellow;
+                _highlightedConstraint = name;
+            }
+ 
+        }
+
+        private void DeHighlight(string name)
+        {
+            if(name != null)
+                (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.Transparent;
         }
 
         private void UpdateHighlighting(AreaOfInterest oldC, AreaOfInterest newC)
