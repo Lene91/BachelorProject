@@ -79,7 +79,7 @@ namespace BachelorProject
             experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), new Trial0(_pupilSize), true, false, false, 9, "special hint"));
             // 1 Übungsaufgabe
             //experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, 0, ""));
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(_pupilSize), true, false, false, 9, ""));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(_pupilSize), true, false, false, 8, ""));
             //experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(_pupilSize), true, false, false, 1, ""));
             //experiment.AddTrial(new Introduction(new IntroScreen5()));
             

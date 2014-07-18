@@ -895,7 +895,8 @@ namespace BachelorProject
             foreach (var tb in _hintWindow.Children.OfType<Border>().Select(x => x).Select(bo => bo.Child as TextBlock))
             {
                 if (tb == null) return;
-
+                var nextConst = GetNextConstraintNumber();
+                if (nextConst < 0) return;
                 string hint = _singleConstraints[GetNextConstraintNumber()-1];
 
                 tb.Inlines.Clear();
