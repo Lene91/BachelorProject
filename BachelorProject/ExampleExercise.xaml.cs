@@ -1009,6 +1009,8 @@ namespace BachelorProject
             if (number > 0)
             {
                 (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightYellow;
+                //(_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.Black;
+                //((_allConstraints[name] as Border).Child as TextBlock).Foreground = System.Windows.Media.Brushes.LightGray;
                 _highlightedConstraint = name;
             }
  
@@ -1016,8 +1018,11 @@ namespace BachelorProject
 
         private void DeHighlight(string name)
         {
-            if(name != null)
+            if (name != null)
+            {
                 (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.Transparent;
+                //((_allConstraints[name] as Border).Child as TextBlock).Foreground = System.Windows.Media.Brushes.Black;
+            }
         }
 
         private void UpdateHighlighting(AreaOfInterest oldC, AreaOfInterest newC)
@@ -1037,16 +1042,16 @@ namespace BachelorProject
         private void HighlightConstraint(string name)
         {
             _lastVisitedConstraint = name;
-            (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightYellow;
+            (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightGreen;
             if (_hintModus == 5)
             {
                 Tuple<string, string> tuple = _constraintsWithPersons[name];
                 foreach (var circle in _circles)
                 {
                     if (tuple.Item1 != null && circle.Name.Equals(tuple.Item1))
-                        circle.Stroke = System.Windows.Media.Brushes.LightYellow;
+                        circle.Stroke = System.Windows.Media.Brushes.LightGreen;
                     else if (tuple.Item2 != null && circle.Name.Equals(tuple.Item2))
-                        circle.Stroke = System.Windows.Media.Brushes.LightYellow;
+                        circle.Stroke = System.Windows.Media.Brushes.LightGreen;
                 }
             }
 
