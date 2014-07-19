@@ -26,7 +26,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 1;
-        private const int Computer = 1;     // 1 -> Laptop, 2 -> Lab, 3 -> Berlin
+        private const int Computer = 2;     // 1 -> Laptop, 2 -> Lab, 3 -> Berlin
 
         private IAoiUpdate _trial;
 
@@ -125,6 +125,8 @@ namespace BachelorProject
         private bool _lastConstraintFulfilled = false;
 
         private string _highlightedConstraint = null;
+
+        private bool _help = false;
 
         public ExampleExercise(double pupilSize)
         {
@@ -491,9 +493,12 @@ namespace BachelorProject
             //int counter = 20;
             if (_constraintsVisited)
             {
-                _constraintsVisitedTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
-                _constraintsVisitedTimer.Tick += (s, args) => ShowHint();
-                _constraintsVisitedTimer.Start();
+                if (_hintModus == 7)
+                {
+                    _constraintsVisitedTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+                    _constraintsVisitedTimer.Tick += (s, args) => ShowHint();
+                    _constraintsVisitedTimer.Start();
+                }
             }
 
 
@@ -619,10 +624,10 @@ namespace BachelorProject
 
         private void StartTimer(AreaOfInterest oldC, AreaOfInterest newC)
         {
-            _highlightTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1.5) };
-            _highlightTimer.Tick += (s, args) => UpdateHighlighting(oldC, newC);
-            _highlightTimer.Start();
-            _constraintTimerStarted = newC;
+                _highlightTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.3) };
+                _highlightTimer.Tick += (s, args) => UpdateHighlighting(oldC, newC);
+                _highlightTimer.Start();
+                _constraintTimerStarted = newC;
         }
 
         public virtual void CheckActualConstraints()
@@ -1042,7 +1047,8 @@ namespace BachelorProject
         private void HighlightConstraint(string name)
         {
             _lastVisitedConstraint = name;
-            (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightGreen;
+            if (_hintModus == 4 || _hintModus == 5)
+                (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.LightGreen;
             if (_hintModus == 5)
             {
                 Tuple<string, string> tuple = _constraintsWithPersons[name];
@@ -1059,7 +1065,8 @@ namespace BachelorProject
 
         private void DeHighlightConstraint(string name)
         {
-            (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.Transparent;
+            if(_hintModus == 4 || _hintModus == 5)
+                (_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.Transparent;
             if (_hintModus == 5)
             {
                 Tuple<string, string> tuple = _constraintsWithPersons[name];
@@ -1526,13 +1533,29 @@ namespace BachelorProject
 
         public void Show(PointF p, String s)
         {
+            
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Show(p,s));
+                return;
+            }
+            if (!_help)
+            {
+                MyCanvas.Children.Add(new Ellipse() { Name = "ellipse", Fill = System.Windows.Media.Brushes.Black, Margin = new Thickness(p.X, p.Y-30, 0, 0), Width = 20, Height = 20 });
+                _help = true;
+            }
+            foreach (var child in MyCanvas.Children)
+            {
+                if (child is Ellipse && (child as Ellipse).Name.Equals("ellipse"))
+                    (child as Ellipse).Margin = new Thickness(p.X, p.Y-30, 0, 0);
+            }
             _position = p;
             _toShow = s;
         }
 
         public void UpdatePos(PointF p)
         {
-            _position = p;
+            _position = new PointF(p.X,p.Y-30);
         }
     }
 

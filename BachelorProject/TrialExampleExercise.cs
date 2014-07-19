@@ -117,6 +117,7 @@ namespace BachelorProject
 
             var pos = new PointF((float)(e.Position.X - _offsetX), (float)(e.Position.Y - _offsetY));
 
+            
             //_screen.Show(pos, e.LeftPupilSize + ", " + e.RightPupilSize + ", " + sender.ToString());
             _screen.UpdatePos(pos);
             foreach (var aoi in AOIs)
