@@ -16,6 +16,11 @@ namespace BachelorProject
             Tracker.DoCalibration(); 
         }
 
+        protected override void OnShowing()
+        {
+            Tracker.Connect();
+        }
+
         private void Tracker_CalibrationFinished(object sender, EventArgs args)
         {
             Tracker.CalibrationFinished -= Tracker_CalibrationFinished;
