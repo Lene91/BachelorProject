@@ -40,7 +40,7 @@ namespace BachelorProject
         private DispatcherTimer _hintTimer = new DispatcherTimer();
         //private static double _averagePupilSize = 0;
 
-        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp, int hintModus, string hint)
+        public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp, int hintModus, int rnd)
         {
             Name = "TrialExampleExercise";
             TrackingRequired = tracking;
@@ -52,13 +52,12 @@ namespace BachelorProject
             _timeLimit = timeLimit;
             _hintModus = hintModus;
 
-            OpenEyesOutput.Filename = "test2.oey";
             Tracker.SendMessage("Trial " + _trialId + " - " + numberOfPersons + " Persons - HintModus: " + _hintModus);
 
             _offsetX = (SystemParameters.FullPrimaryScreenWidth - ScreenWidth) / 2;
             _offsetY = (SystemParameters.FullPrimaryScreenHeight - ScreenHeight) / 2;
 
-            _screen.Initialize(this, numberOfPersons, constraints, names, Tracker, constraintHelp, hintModus, hint);
+            _screen.Initialize(this, numberOfPersons, constraints, names, Tracker, constraintHelp, hintModus, rnd);
             CreateAois(_screen.GetPersons(), _screen.GetConstraints());
             _screen.SendAois(AOIs);
 
@@ -107,18 +106,22 @@ namespace BachelorProject
                 Tracker.FixationStart += Tracker_FixationStart;
                 //Tracker.FixationEnd += Tracker_FixationEnd;
             }
+            
         }
 
 
         private void Tracker_GazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
         {
             //Tracker.SendMessage(e.Position.ToString());
-            
 
-            var pos = new PointF((float)(e.Position.X - _offsetX), (float)(e.Position.Y - _offsetY));
 
+            //var pos = new PointF((float)(e.Position.X - _offsetX), (float)(e.Position.Y - _offsetY));
+
+            var offsetX = (1920-1200)/2; //360
+            var offsetY = (1200-800)/2; //200
+            var pos = new PointF((float)(e.Position.X-offsetX), (float)(e.Position.Y-offsetY)); //960 //600
             
-            //_screen.Show(pos, e.LeftPupilSize + ", " + e.RightPupilSize + ", " + sender.ToString());
+            _screen.Show(pos, e.LeftPupilSize + ", " + e.RightPupilSize + ", " + sender.ToString());
             _screen.UpdatePos(pos);
             foreach (var aoi in AOIs)
             {

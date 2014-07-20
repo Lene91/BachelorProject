@@ -26,7 +26,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 1;
-        private const int Computer = 1;     // 1 -> Laptop, 2 -> Lab, 3 -> Berlin
+        private const int Computer = 2;     // 1 -> Laptop, 2 -> Lab, 3 -> Berlin
 
         private IAoiUpdate _trial;
 
@@ -91,7 +91,7 @@ namespace BachelorProject
         private DispatcherTimer _resetHintTimer = new DispatcherTimer();
         private DispatcherTimer _constraintsVisitedTimer = new DispatcherTimer();
 
-        private string _hint;
+        private string _hint = "";
         private bool _hintThreadIsRunning = false;
 
         private string _toShow;
@@ -126,7 +126,27 @@ namespace BachelorProject
 
         private string _highlightedConstraint = null;
 
-        private bool _help = false;
+        private bool _firstRun = false;
+
+        System.Windows.Media.Brush[] _allBrushes =
+            {
+                System.Windows.Media.Brushes.White,
+                System.Windows.Media.Brushes.Gold,
+                System.Windows.Media.Brushes.OrangeRed,
+                System.Windows.Media.Brushes.Red,
+                System.Windows.Media.Brushes.YellowGreen,
+                System.Windows.Media.Brushes.DarkGreen,
+                System.Windows.Media.Brushes.LightSkyBlue,
+                System.Windows.Media.Brushes.DarkBlue,
+                System.Windows.Media.Brushes.Peru,
+                System.Windows.Media.Brushes.MediumOrchid,
+                System.Windows.Media.Brushes.MediumSeaGreen,
+                System.Windows.Media.Brushes.RoyalBlue,
+                System.Windows.Media.Brushes.DarkRed,
+                System.Windows.Media.Brushes.HotPink
+            };
+
+        private int _rnd;
 
         public ExampleExercise(double pupilSize)
         {
@@ -142,7 +162,7 @@ namespace BachelorProject
          ************************************************************
          */
 
-        public void Initialize(IAoiUpdate trial, int numberOfPersons, string constraints, List<string> names, ITracker tracker, bool constraintHelp, int hintModus, string hint)
+        public void Initialize(IAoiUpdate trial, int numberOfPersons, string constraints, List<string> names, ITracker tracker, bool constraintHelp, int hintModus, int rnd)
         {
             _trial = trial;
             _numberOfPersons = numberOfPersons;
@@ -151,7 +171,7 @@ namespace BachelorProject
             _tracker = tracker;
             _constraintHelp = constraintHelp;
             _hintModus = hintModus;
-            _hint = hint;
+            _rnd = rnd;
 
             _circleNames = new List<string> { "Person1", "Person2", "Person3", "Person4", "Person5", "Person6" };
             _persons = new List<Circle>();
@@ -159,14 +179,13 @@ namespace BachelorProject
             _circles = new List<Ellipse>();
             names = new List<string>();
             _sittingOrder = new List<KeyValuePair<Circle, double>>();
-
+            
             InitializeColors();
             InitializeLegend();
             InitializeLeftInterface();
             InitializeConstraints();
             InitializeBigCircles();
             InitializeHints();
-
             
         }
 
@@ -219,7 +238,7 @@ namespace BachelorProject
 
         private void InitializeColors()
         {
-            System.Windows.Media.Brush[] allBrushes =
+            /*System.Windows.Media.Brush[] _allBrushes =
             {
                 System.Windows.Media.Brushes.White,
                 System.Windows.Media.Brushes.Gold,
@@ -235,16 +254,21 @@ namespace BachelorProject
                 System.Windows.Media.Brushes.RoyalBlue,
                 System.Windows.Media.Brushes.DarkRed,
                 System.Windows.Media.Brushes.HotPink
-            };
+            };*/
 
-            foreach (System.Windows.Media.Brush b in allBrushes)
+            foreach (System.Windows.Media.Brush b in _allBrushes)
                 b.Freeze();
 
-            var r = new Random();
+            
+        }
+
+        private void ShuffleColors()
+        {
+            var r = new Random(_rnd);
             while (_brushes.Count < _numberOfPersons)
             {
-                var rNumber = r.Next(allBrushes.Length);
-                var brush = allBrushes[rNumber];
+                var rNumber = r.Next(_allBrushes.Length);
+                var brush = _allBrushes[rNumber];
                 if (!_brushes.Contains(brush))
                     _brushes.Add(brush);
             }
@@ -274,7 +298,7 @@ namespace BachelorProject
             _legendStackPanel = new WrapPanel
             {
                 Name = "LegendPanel",
-                Width = 380,
+                Width = 400,
                 Height = 250,
                 Margin = new Thickness(800, 50, 0, 0)
             };
@@ -283,6 +307,7 @@ namespace BachelorProject
             MyCanvas.Children.Add(_legendStackPanel);
 
             // Legendeneinträge bestehend aus Kreis und Name
+            ShuffleColors();
             for (int i = 1; i <= _numberOfPersons; ++i)
             {
                 var e = new Ellipse
@@ -1539,15 +1564,21 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => Show(p,s));
                 return;
             }
-            if (!_help)
+            if (!_firstRun)
             {
-                MyCanvas.Children.Add(new Ellipse() { Name = "ellipse", Fill = System.Windows.Media.Brushes.Black, Margin = new Thickness(p.X, p.Y-30, 0, 0), Width = 20, Height = 20 });
-                _help = true;
+                //MyCanvas.Children.Add(new Ellipse() { Name = "ellipse", Fill = System.Windows.Media.Brushes.Black, Margin = new Thickness(p.X, p.Y, 0, 0), Width = 20, Height = 20 });
+                MyCanvas.Children.Add(new TextBlock() { Name = "tb", Margin = new Thickness(p.X, p.Y, 0, 0), Text = p.ToString() });
+                _firstRun = true;
             }
             foreach (var child in MyCanvas.Children)
             {
                 if (child is Ellipse && (child as Ellipse).Name.Equals("ellipse"))
-                    (child as Ellipse).Margin = new Thickness(p.X, p.Y-30, 0, 0);
+                    (child as Ellipse).Margin = new Thickness(p.X, p.Y, 0, 0);
+                if (child is TextBlock && (child as TextBlock).Name.Equals("tb"))
+                {
+                    (child as TextBlock).Margin = new Thickness(p.X, p.Y, 0, 0);
+                    (child as TextBlock).Text = p.ToString();
+                }
             }
             _position = p;
             _toShow = s;
@@ -1555,7 +1586,7 @@ namespace BachelorProject
 
         public void UpdatePos(PointF p)
         {
-            _position = new PointF(p.X,p.Y-30);
+            _position = new PointF(p.X,p.Y);
         }
     }
 
