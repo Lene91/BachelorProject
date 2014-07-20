@@ -52,7 +52,7 @@ namespace BachelorProject
             _timeLimit = timeLimit;
             _hintModus = hintModus;
 
-
+            OpenEyesOutput.Filename = "test2.oey";
             Tracker.SendMessage("Trial " + _trialId + " - " + numberOfPersons + " Persons - HintModus: " + _hintModus);
 
             _offsetX = (SystemParameters.FullPrimaryScreenWidth - ScreenWidth) / 2;

@@ -7,7 +7,6 @@
       Width="1200" Height="800" Background="LightGray">
 
     <Canvas>
-        <TextBlock Name="T1" Text="Fülle nun bitte den Fragebogen aus." Background="Transparent" TextWrapping="WrapWithOverflow" FontSize="40" Width="800" Margin="200,250"/>
-        <TextBlock Name="T2" Text="Hast du den Fragebogen ausgefüllt, so gelangst du mit der Leertaste zur nächsten Aufgabe." Background="Transparent"  TextWrapping="WrapWithOverflow" FontSize="40" Width="800" Margin="200,400"/>
+        <TextBlock Name="T1" Text="Fülle nun bitte den Fragebogen aus." Background="Transparent" TextWrapping="WrapWithOverflow" FontSize="40" Width="800" Margin="260,300"/>
     </Canvas>
 </UserControl>

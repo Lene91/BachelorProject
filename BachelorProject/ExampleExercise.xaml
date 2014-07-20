@@ -198,8 +198,6 @@
                     <LineBreak/>
                     Du hast leider noch nicht alle Wünsche erfüllt. Klicke auf den Button, um zurück zur Aufgabe zu gelangen.
                     <LineBreak/>
-                    Möchtest du sehen, welche Wünsche du bereits erfüllt hast, klicke auf den Hilfe-Button. Wenn du nicht mehr weiter weißt, klicke auf den Weiter-Button und du gelangst zur nächsten Aufgabe.
-                    <LineBreak/>
                     <LineBreak/>
                     <Button Width="120"
                         Height="60"

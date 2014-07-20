@@ -26,7 +26,7 @@ namespace BachelorProject
     {
         // IMPORTANT!
         private const int TestPerson = 1;
-        private const int Computer = 2;     // 1 -> Laptop, 2 -> Lab, 3 -> Berlin
+        private const int Computer = 1;     // 1 -> Laptop, 2 -> Lab, 3 -> Berlin
 
         private IAoiUpdate _trial;
 

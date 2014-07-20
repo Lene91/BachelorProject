@@ -91,7 +91,7 @@ namespace BachelorProject.Tutorial
                                         " automatisch. Sitzt ein Kind auf dem Schoß eines Erwachsenen, so sitzen die beiden nicht" +
                                         " nebeneinander, haben jedoch die gleichen Nachbarn. \n \n" +
                                         " Eine Person kann sich entweder ein Essen teilen oder bei einer anderen auf dem Schoß sitzen" +
-                                        " bzw. jemanden auf dem Schoß sitzen haben. Beides gleichzeitig ist nicht vorgesehen.\n \n" +
+                                        " bzw. jemanden auf dem Schoß sitzen haben. Beides gleichzeitig ist nicht erlaubt.\n \n" +
                                         " Du kannst alle deine Änderungen rückgängig machen," +
                                         " indem du auf den Reset-Button klickst. \n \n" +
                                         "Wenn du keine Lösung findest, kannst" +

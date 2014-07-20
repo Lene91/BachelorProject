@@ -18,8 +18,7 @@ namespace BachelorProject
         private static readonly List<string> AllNames = new List<string>();
         private static readonly List<string> AllHints = new List<string>();
         private static List<ExampleExercise> _allTrials;
-        //private static List<int> _hintModi = new List<int> { 0, 0, 1, 1, 5, 5 };
-        private static List<int> _hintModi = new List<int> { 8, 8, 8, 9, 9, 9 };
+        private static List<int> _hintModi = new List<int> { 0, 0, 8, 8, 9, 9 };
         //public static double _pupilSize = 0;
         //private static int numberOfTrials = 3;
         
@@ -27,13 +26,13 @@ namespace BachelorProject
         [STAThread]
         static void Main()
         {
-            //var experiment = new Experiment(new MouseTracker())
-            var experiment = new Experiment(new EyeTribeTracker())
+            var experiment = new Experiment(new MouseTracker())
+            //var experiment = new Experiment(new EyeTribeTracker())
             {
                 ShowDefaultStartScreen = false,
                 ShowDebugEndScreen = false,
                 HideMouseCursor = false,
-                OpenEyesOutputFilename = "lene.oey"
+                //OpenEyesOutputFilename = "log.oey"
             };
 
 
@@ -71,21 +70,22 @@ namespace BachelorProject
 
             // TUTORIAL
 
-            /*experiment.AddTrial(new Introduction(new IntroScreen1()));
+            experiment.AddTrial(new Introduction(new IntroScreen1()));
             experiment.AddTrial(new Introduction(new IntroScreen2()));
             experiment.AddTrial(new Introduction(new IntroScreen3()));
-            experiment.AddTrial(new Introduction(new IntroScreen4()));*/
+            experiment.AddTrial(new Introduction(new IntroScreen4()));
             
             // Tutorial mit Ausprobieren
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), new Trial0(_pupilSize), true, false, false, 8, "special hint"));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), new Trial0(_pupilSize), true, false, false, 0, ""));
 
             // 1 Übungsaufgabe
             //experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, 0, ""));
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(_pupilSize), true, false, false, 9, ""));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(_pupilSize), true, false, false, 0, ""));
             //experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(_pupilSize), true, false, false, 1, ""));
-            //experiment.AddTrial(new Introduction(new IntroScreen5()));
+            experiment.AddTrial(new Introduction(new IntroScreen5()));
             
-            // HAUPTSTUDIE
+
+            // HAUPTTEIL
 
             _allTrials = ShuffledTrials();
             _hintModi = ShuffledHintModi();

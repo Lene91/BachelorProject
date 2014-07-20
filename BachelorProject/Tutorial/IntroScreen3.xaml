@@ -18,11 +18,11 @@
             X2="1200" Y2="270"
             Stroke="Black"
             StrokeThickness="4" />
-        <Border BorderThickness="4" BorderBrush="Black" Margin="75,200">
+        <Border BorderThickness="4" BorderBrush="Black" Margin="35,40">
             <TextBlock
             Padding="10"
-            Width="650"
-            Height="400"
+            Width="725"
+            Height="720"
             Background="White"
             FontSize="30"
             TextAlignment="Center"
@@ -34,7 +34,13 @@
                 Hier siehst du die Wünsche der Gäste. Jede Textbox steht für einen Wunsch, den du erfüllen musst.
             <LineBreak/>
             <LineBreak/>
-            <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>
+            <Run FontSize="40" FontWeight="Bold">Hinweise</Run>
+            <LineBreak/>
+            <LineBreak/>
+                Zur Unterstützung erhältst du ab und zu Hinweise, in denen dir vorgeschlagen wird, welchen Sitzplatzwunsch du als nächstes beachten sollst. Diesen Hinweis erhältst du entweder indem ein neues Fenster erscheint oder die betreffende Textbox auf der rechten Seite wird gehighlighted.
+            <LineBreak/>
+            <LineBreak/>
+                <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>
             </TextBlock>
         </Border>
 
