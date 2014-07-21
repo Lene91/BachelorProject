@@ -608,7 +608,8 @@ namespace BachelorProject
             {
                 _borderPupilSize = _pupilSize + _deltaPupilSize;
                 if (_currentAvgPupilSize > _borderPupilSize)
-                    Show(new PointF(100, 100), "große Pupille");
+                    //Show(new PointF(100, 100), "große Pupille");
+                    ;
                 else
                     _deltaPupilSize -= 0.01;
             }
@@ -1259,12 +1260,24 @@ namespace BachelorProject
 
         public void SendCurrentPupilSize(double left, double right)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => SendCurrentPupilSize(left, right));
+                return;
+            }
+
             double avg = (left + right) / 2;
             _currentAvgPupilSize = avg;
         }
 
         public void UpdatePupilSize(double left, double right)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => UpdatePupilSize(left, right));
+                return;
+            }
+
             lock (thisLock)
             {
                 //if (_counter == 0)
@@ -1292,6 +1305,12 @@ namespace BachelorProject
 
         public double GetPupilSize()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                double result = Dispatcher.Invoke(() => GetPupilSize());
+                return result;
+            }
+
             return _pupilSize;
         }
 
@@ -1306,6 +1325,12 @@ namespace BachelorProject
 
         private void Reset_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Reset_Button_MouseDown(sender, e));
+                return;
+            }
+
             TakePicture("resetButton");
 
             foreach (var el in _persons)
@@ -1348,6 +1373,12 @@ namespace BachelorProject
 
         private void Continue_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Continue_Button_MouseDown(sender, e));
+                return;
+            }
+
             TakePicture("continueButton");
             _tracker.SendMessage("CONTINUE BUTTON PRESSED");
             Skip = true;
@@ -1362,6 +1393,12 @@ namespace BachelorProject
 
         private void Done_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Done_Button_MouseDown(sender, e));
+                return;
+            }
+
             _infoShown = true;
             _doneButtonKlicked = true;
             var done = ConstraintsFullfilled();
@@ -1410,6 +1447,12 @@ namespace BachelorProject
         // -> zurück zur aktuellen Aufgabe
         private void Done_Back_Button_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Done_Back_Button_MouseDown(sender, e));
+                return;
+            }
+
             /*foreach (UIElement uie in MyCanvas.Children)
             {
                 uie.Opacity = 1;
@@ -1454,6 +1497,12 @@ namespace BachelorProject
 
         private void Ok_Button_MouseDown(object sender, RoutedEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Ok_Button_MouseDown(sender, e));
+                return;
+            }
+
             _tracker.SendMessage("HINT CLOSED");
 
             _hintWindow.Margin = new Thickness(2000, 4900, 0, 0);
@@ -1480,6 +1529,12 @@ namespace BachelorProject
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Canvas_MouseDown(sender, e));
+                return;
+            }
+
             if (_noClickTimer.IsEnabled && _hintModus == 1)
             {
                 _noClickTimer.Stop();
@@ -1493,6 +1548,12 @@ namespace BachelorProject
 
         private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Canvas_MouseUp(sender, e));
+                return;
+            }
+
             if (_current.InputElement != null)
             {
                 _current.IsDragging = false;
@@ -1506,6 +1567,12 @@ namespace BachelorProject
 
         private void Canvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Canvas_MouseMove(sender, e));
+                return;
+            }
+
             // if mouse is down when its moving, then it's dragging current
             if (e.LeftButton == MouseButtonState.Pressed)
                 _current.IsDragging = true;
@@ -1534,6 +1601,12 @@ namespace BachelorProject
 
         private void ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => ellipse_MouseLeftButtonDown(sender, e));
+                return;
+            }
+
             _current.InputElement = (IInputElement)sender;
             foreach (Circle c in _persons.Where(c => c.GetName().Equals(((Ellipse)sender).Name)))
             {
@@ -1546,6 +1619,12 @@ namespace BachelorProject
 
         private void UpdatePosition()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(UpdatePosition);
+                return;
+            }
+
             var el = _current.InputElement as Ellipse;
             if (el == null) return;
             var generalTransform1 = MyCanvas.TransformToVisual(el);
@@ -1564,6 +1643,7 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => Show(p,s));
                 return;
             }
+
             if (!_firstRun)
             {
                 //MyCanvas.Children.Add(new Ellipse() { Name = "ellipse", Fill = System.Windows.Media.Brushes.Black, Margin = new Thickness(p.X, p.Y, 0, 0), Width = 20, Height = 20 });
@@ -1572,20 +1652,27 @@ namespace BachelorProject
             }
             foreach (var child in MyCanvas.Children)
             {
-                if (child is Ellipse && (child as Ellipse).Name.Equals("ellipse"))
-                    (child as Ellipse).Margin = new Thickness(p.X, p.Y, 0, 0);
+                //if (child is Ellipse && (child as Ellipse).Name.Equals("ellipse"))
+                //    (child as Ellipse).Margin = new Thickness(p.X, p.Y, 0, 0);
                 if (child is TextBlock && (child as TextBlock).Name.Equals("tb"))
                 {
                     (child as TextBlock).Margin = new Thickness(p.X, p.Y, 0, 0);
                     (child as TextBlock).Text = p.ToString();
                 }
             }
+
             _position = p;
             _toShow = s;
         }
 
         public void UpdatePos(PointF p)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => UpdatePos(p));
+                return;
+            }
+
             _position = new PointF(p.X,p.Y);
         }
     }

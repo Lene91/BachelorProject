@@ -25,6 +25,7 @@ namespace BachelorProject
 
         protected override void OnHidden()
         {
+            Tracker.Connect();
             Tracker.SendMessage("STOP INTERSCREEN");
         }
     }

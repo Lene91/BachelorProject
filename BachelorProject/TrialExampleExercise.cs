@@ -51,6 +51,7 @@ namespace BachelorProject
             _trialId = trial.GetId();
             _timeLimit = timeLimit;
             _hintModus = hintModus;
+            AOIs = new List<AreaOfInterest>();
 
             Tracker.SendMessage("Trial " + _trialId + " - " + numberOfPersons + " Persons - HintModus: " + _hintModus);
 
@@ -102,15 +103,15 @@ namespace BachelorProject
 
             if (Tracker != null)
             {
-                Tracker.GazeTick += Tracker_GazeTick;
-                Tracker.FixationStart += Tracker_FixationStart;
+                Tracker.GazeTick += Tracker_MyOwnGazeTick;
+                //Tracker.FixationStart += Tracker_FixationStart;
                 //Tracker.FixationEnd += Tracker_FixationEnd;
             }
             
         }
 
 
-        private void Tracker_GazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
+        private void Tracker_MyOwnGazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
         {
             //Tracker.SendMessage(e.Position.ToString());
 
@@ -120,7 +121,7 @@ namespace BachelorProject
             var offsetX = (1920-1200)/2; //360
             var offsetY = (1200-800)/2; //200
             var pos = new PointF((float)(e.Position.X-offsetX), (float)(e.Position.Y-offsetY)); //960 //600
-            
+
             _screen.Show(pos, e.LeftPupilSize + ", " + e.RightPupilSize + ", " + sender.ToString());
             _screen.UpdatePos(pos);
             foreach (var aoi in AOIs)
@@ -170,9 +171,10 @@ namespace BachelorProject
         }
          */
 
-        private void EndTrial(object sender, EventArgs e)
+        private void MyOwnEndTrial(object sender, EventArgs e)
         {
             _timer.Stop();
+            _timer.Tick -= MyOwnEndTrial;
             _screen.TakePicture("timeElapsed");
             _screen.ShowExerciseEnd();
             _timer2 = new DispatcherTimer {Interval = TimeSpan.FromSeconds(3)};
@@ -187,7 +189,10 @@ namespace BachelorProject
             if (_hintTimer.IsEnabled)
                 _hintTimer.Stop();
             if (_timer2.IsEnabled)
+            {
                 _timer2.Stop();
+                _timer2.Tick -= Skip;
+            }
             Tracker.SendMessage("TIME ELAPSED.");
             SkipTrial();
         }
@@ -201,7 +206,7 @@ namespace BachelorProject
             if (_timeLimit)
             {
                 _timer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(5) };
-                _timer.Tick += EndTrial;
+                _timer.Tick += MyOwnEndTrial;
                 _timer.Start();
             }
 

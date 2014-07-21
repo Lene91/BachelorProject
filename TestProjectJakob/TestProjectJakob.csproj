@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{64B3E56C-1596-4460-B29C-EED69FB121DA}</ProjectGuid>
+    <ProjectGuid>{35FDE065-D2BF-4547-8827-58B096BAF55D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BachelorProject</RootNamespace>
-    <AssemblyName>BachelorProject</AssemblyName>
+    <RootNamespace>TestProjectJakob</RootNamespace>
+    <AssemblyName>TestProjectJakob</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -37,7 +37,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -48,57 +47,14 @@
     </Reference>
     <Reference Include="TETCSharpClient, Version=0.9.27.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\code\Eyetracker\EyeTribe\lib\TETCSharpClient.dll</HintPath>
+      <HintPath>..\BachelorProject\bin\Debug\TETCSharpClient.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalibrationTrial.cs" />
-    <Compile Include="EndScreen.xaml.cs">
-      <DependentUpon>EndScreen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ExampleWindow.xaml.cs">
-      <DependentUpon>ExampleWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Helper\Circle.cs" />
-    <Compile Include="Helper\Element.cs" />
     <Compile Include="EntryPoint.cs" />
-    <Compile Include="ExampleExercise.xaml.cs">
-      <DependentUpon>ExampleExercise.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="HintExampleWindow.cs" />
-    <Compile Include="InterScreen.xaml.cs">
-      <DependentUpon>InterScreen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Helper\MyAOI.cs" />
-    <Compile Include="StartScreen.xaml.cs">
-      <DependentUpon>StartScreen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TrialStartScreen.cs" />
-    <Compile Include="Trials\Trial10.cs" />
-    <Compile Include="Trials\Trial11.cs" />
-    <Compile Include="Trials\Trial4.cs" />
-    <Compile Include="Trials\Trial5.cs" />
-    <Compile Include="Trials\Trial6.cs" />
-    <Compile Include="Trials\Trial7.cs" />
-    <Compile Include="Trials\Trial8.cs" />
-    <Compile Include="Trials\Trial9.cs" />
-    <Compile Include="TrialInterScreen.cs" />
-    <Compile Include="Tutorial\Introduction.cs" />
-    <Compile Include="Tutorial\IntroScreen1.xaml.cs">
-      <DependentUpon>IntroScreen1.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tutorial\IntroScreen2.xaml.cs">
-      <DependentUpon>IntroScreen2.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tutorial\IntroScreen3.xaml.cs">
-      <DependentUpon>IntroScreen3.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tutorial\IntroScreen4.xaml.cs">
-      <DependentUpon>IntroScreen4.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -112,18 +68,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Tutorial\IntroScreen5.xaml.cs">
-      <DependentUpon>IntroScreen5.xaml</DependentUpon>
+    <Compile Include="TestTrial1.cs" />
+    <Compile Include="UserControl1.xaml.cs">
+      <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tutorial\Trial0.cs" />
-    <Compile Include="Trials\Trial1.cs" />
-    <Compile Include="Trials\Trial2.cs" />
-    <Compile Include="Trials\Trial3.cs" />
-    <Compile Include="TrialEndScreen.cs" />
-    <Compile Include="TrialExampleExercise.cs" />
-    <Compile Include="Tutorial\TutTrial1.cs" />
-    <Compile Include="Tutorial\TutTrial2.cs" />
-    <Compile Include="Tutorial\TutTrial3.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -133,48 +81,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="EndScreen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ExampleExercise.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ExampleWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="InterScreen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StartScreen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tutorial\IntroScreen1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tutorial\IntroScreen2.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tutorial\IntroScreen3.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tutorial\IntroScreen4.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tutorial\IntroScreen5.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\code\ExperimentTemplate\ExperimentTemplate.csproj">
@@ -189,6 +95,12 @@
       <Project>{50f77cdb-d70c-40f0-a668-c864cbef675d}</Project>
       <Name>Logging</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UserControl1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

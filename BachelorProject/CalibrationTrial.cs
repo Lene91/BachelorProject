@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using ExperimentTemplate;
 
 namespace BachelorProject
 {
     class CalibrationTrial : Trial
     {
+        protected override bool DriftCorrectRequired
+        {
+            get { return false; }
+        }
 
         protected override void OnShown()
         {
@@ -16,15 +22,9 @@ namespace BachelorProject
             Tracker.DoCalibration(); 
         }
 
-        protected override void OnShowing()
-        {
-            Tracker.Connect();
-        }
-
         private void Tracker_CalibrationFinished(object sender, EventArgs args)
         {
             Tracker.CalibrationFinished -= Tracker_CalibrationFinished;
-            //EndTrial();
         }
     }
 }
