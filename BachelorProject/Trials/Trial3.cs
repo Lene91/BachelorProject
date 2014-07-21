@@ -11,7 +11,7 @@ namespace BachelorProject.Trials
         {
             Id = 3;
             _constraintsWithPersons.Add("c1", new Tuple<string, string>("Person3", null));
-            _constraintsWithPersons.Add("c2", new Tuple<string, string>("Person1", "Person4"));
+            _constraintsWithPersons.Add("c2", new Tuple<string, string>("Person1", null));
             _constraintsWithPersons.Add("c3", new Tuple<string, string>("Person2", "Person3"));
             _constraintsWithPersons.Add("c4", new Tuple<string, string>("Person5", null));
             _constraintsWithPersons.Add("c5", new Tuple<string, string>("Person4", null));
@@ -22,8 +22,8 @@ namespace BachelorProject.Trials
 
         public override void CheckActualConstraints()
         {
-            UpdateConstraint("c1", AtLeastOneNeighbourSharingFood(P3));
-            UpdateConstraint("c2", NotSharingFood(P1, P4));
+            UpdateConstraint("c1", IsSeat(P3));
+            UpdateConstraint("c2", NotSittingOnSomeone(P1));
             UpdateConstraint("c3", NotSittingNextToEachOther(P2, P3));
             UpdateConstraint("c4", SharingFood(P5));
             UpdateConstraint("c5", SharingFood(P4));

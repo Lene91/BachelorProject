@@ -834,7 +834,7 @@ namespace BachelorProject
             return c2.Touches(table) && c1.SitsOn(c2);
         }
 
-        protected bool NotSittingOn(Circle c1, Circle c2)
+        protected bool NotSittingOn(Circle c1, Circle c2) // c1 darf nicht auf dem Schoß von c2 sitzen
         {
             return c1.Touches(table) && c2.Touches(table) && !c1.SitsOn(c2);
         }
