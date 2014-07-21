@@ -8,26 +8,26 @@ namespace BachelorProject.Trials
             : base(pupilSize)
         {
             Id = 6;
-            _constraintsWithPersons.Add("c1", new Tuple<string, string>("Person4", "Person5"));
-            _constraintsWithPersons.Add("c2", new Tuple<string, string>("Person3", null));
-            _constraintsWithPersons.Add("c3", new Tuple<string, string>("Person6", "Person2"));
-            _constraintsWithPersons.Add("c4", new Tuple<string, string>(null, null));
-            _constraintsWithPersons.Add("c5", new Tuple<string, string>("Person1", "Person5"));
-            _constraintsWithPersons.Add("c6", new Tuple<string, string>("Person1", null));
-            _constraintsWithPersons.Add("c7", new Tuple<string, string>("Person6", null));
-            _constraintsWithPersons.Add("c8", new Tuple<string, string>("Person4", "Person2"));
+            _constraintsWithPersons.Add("c1", new Tuple<string, string>(null, null));
+            _constraintsWithPersons.Add("c2", new Tuple<string, string>("Person5", "Person6"));
+            _constraintsWithPersons.Add("c3", new Tuple<string, string>("Person1", "Person4"));
+            _constraintsWithPersons.Add("c4", new Tuple<string, string>("Person2", "Person5"));
+            _constraintsWithPersons.Add("c5", new Tuple<string, string>("Person4", null));
+            _constraintsWithPersons.Add("c6", new Tuple<string, string>("Person2", null));
+            _constraintsWithPersons.Add("c7", new Tuple<string, string>("Person5", null));
+            _constraintsWithPersons.Add("c8", new Tuple<string, string>("Person3", "Person4"));
         }
 
         public override void CheckActualConstraints()
         {
-            UpdateConstraint("c1", SittingNextToEachOther(P4,P5));
-            UpdateConstraint("c2", IsSeat(P3));
-            UpdateConstraint("c3", SittingNextToEachOther(P6,P2));
-            UpdateConstraint("c4", NumberSharingFood(2));
-            UpdateConstraint("c5", SittingNextToEachOther(P1,P5));
-            UpdateConstraint("c6", SharingFood(P1));
-            UpdateConstraint("c7", NotSharingFood(P6));
-            UpdateConstraint("c8", NotSharingFood(P4, P2));
+            UpdateConstraint("c1", NumberSharingFood(2));
+            UpdateConstraint("c2", SittingNextToEachOther(P5,P6));
+            UpdateConstraint("c3", NotSittingNextToEachOther(P1,P4));
+            UpdateConstraint("c4", NotSittingNextToEachOther(P2, P5));
+            UpdateConstraint("c5", NoNeighbourIsSeat(P4));
+            UpdateConstraint("c6", IsSeat(P2));
+            UpdateConstraint("c7", NoNeighbourIsSeat(P5));
+            UpdateConstraint("c8", SharingFood(P3, P4));
             
 
             /*if (NotSittingOnSomeone(P1))
