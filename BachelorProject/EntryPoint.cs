@@ -76,11 +76,11 @@ namespace BachelorProject
             experiment.AddTrial(new Introduction(new IntroScreen4()));
             
             // Tutorial mit Ausprobieren
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), new Trial0(_pupilSize), true, false, false, 9, 0));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[0], ShuffledNames(), new Trial0(_pupilSize), true, false, false, 0, 0));
 
             // 1 Übungsaufgabe
             //experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, 0, ""));
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(_pupilSize), true, false, false, 9, 0));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(_pupilSize), true, false, false, 0, 0));
             //experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(_pupilSize), true, false, false, 1, ""));
             experiment.AddTrial(new Introduction(new IntroScreen5()));
             

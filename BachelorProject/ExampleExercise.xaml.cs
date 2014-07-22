@@ -944,12 +944,13 @@ namespace BachelorProject
             }
 
             string hint = "";
+            int nextConst = -1;
             foreach (var tb in _hintWindow.Children.OfType<Border>().Select(x => x).Select(bo => bo.Child as TextBlock))
             {
                 if (tb == null) return;
-                var nextConst = GetNextConstraintNumber();
+                nextConst = GetNextConstraintNumber();
                 if (nextConst < 0) return;
-                hint = _singleConstraints[GetNextConstraintNumber()-1];
+                hint = _singleConstraints[nextConst-1];
 
                 tb.Inlines.Clear();
                 tb.Inlines.Add(new Run
@@ -981,7 +982,8 @@ namespace BachelorProject
 
             _hintWindow.Margin = new Thickness(200, 200, 0, 0);
             System.Windows.Controls.Panel.SetZIndex(_hintWindow, 100);
-            _tracker.SendMessage("HINT (WINDOW) SHOWN - " + hint);
+            if(nextConst > 0)
+                _tracker.SendMessage("HINT (WINDOW) SHOWN - " + _constraintsWithPersons["c"+nextConst].Item1 +"," + _constraintsWithPersons["c" + nextConst].Item2 +  " - " + hint);
             _hintDelivered = true;
         }
 
@@ -1056,7 +1058,7 @@ namespace BachelorProject
                 //(_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.Black;
                 //((_allConstraints[name] as Border).Child as TextBlock).Foreground = System.Windows.Media.Brushes.LightGray;
                 _highlightedConstraint = name;
-                _tracker.SendMessage("HINT (HIGHLIGHT) SHOWN - " + ((_allConstraints[name] as Border).Child as TextBlock).Text);
+                _tracker.SendMessage("HINT (HIGHLIGHT) SHOWN - " + _constraintsWithPersons["c" + number].Item1 + "," + _constraintsWithPersons["c" + number].Item2 + " - " + ((_allConstraints[name] as Border).Child as TextBlock).Text);
             }
             
  

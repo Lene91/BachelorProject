@@ -306,8 +306,8 @@ namespace BachelorProject
         {
             var updatedAoi = GetUpdatedAoi(person);
 
-            Debug.WriteLine(updatedAoi.Name);
-            Debug.WriteLine("hallo " + (int)person.GetPosition().X);
+            //Debug.WriteLine(updatedAoi.Name);
+            //Debug.WriteLine("hallo " + (int)person.GetPosition().X);
             updatedAoi.Set((int)person.GetPosition().X, (int)person.GetPosition().Y, person.GetRadius());
         }
 
