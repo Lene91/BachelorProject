@@ -6,7 +6,7 @@
             : base(pupilSize)
         { Id = 10; }
 
-        public override void CheckActualConstraints()
+        protected override void CheckActualConstraints()
         {
 
             if (NotSittingNextToEachOther(P3, P6))

@@ -19,7 +19,7 @@ namespace BachelorProject.Trials
             _constraintsWithPersons.Add("c8", new Tuple<string, string>("Person6", null));
         }
 
-        public override void CheckActualConstraints()
+        protected override void CheckActualConstraints()
         {
 
             UpdateConstraint("c1", SharingFood(P2));

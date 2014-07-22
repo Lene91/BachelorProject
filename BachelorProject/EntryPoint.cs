@@ -80,7 +80,7 @@ namespace BachelorProject
 
             // 1 Übungsaufgabe
             //experiment.AddTrial(new TrialExampleExercise(3, AllConstraints[1], ShuffledNames(), new TutTrial1(), true, false, false, 0, ""));
-            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(_pupilSize), true, false, false, 0, 0));
+            experiment.AddTrial(new TrialExampleExercise(5, AllConstraints[1], ShuffledNames(), new TutTrial2(_pupilSize), true, false, false, 9, 0));
             //experiment.AddTrial(new TrialExampleExercise(4, AllConstraints[3], ShuffledNames(), new TutTrial3(_pupilSize), true, false, false, 1, ""));
             experiment.AddTrial(new Introduction(new IntroScreen5()));
             
@@ -104,7 +104,7 @@ namespace BachelorProject
                 var constraintIndex = index + numberOfTutTrials;
                 //var rnd = new Random();
                 //var hintModus = rnd.Next(0, 3);
-                experiment.AddTrial(new TrialExampleExercise(numberOfPersons[index], AllConstraints[constraintIndex], ShuffledNames(), trial, true, true, false, _hintModi[index], i));
+                experiment.AddTrial(new TrialExampleExercise(6, AllConstraints[constraintIndex], ShuffledNames(), trial, true, true, false, _hintModi[index], i));
                 
                 //Zwischenscreen -> Fragebogen
                 experiment.AddTrial(new TrialInterScreen());

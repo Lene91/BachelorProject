@@ -18,7 +18,7 @@ namespace BachelorProject.Tutorial
             _constraintsWithPersons.Add("c3", new Tuple<string, string>("Person1", "Person4"));
         }
 
-        public override void CheckActualConstraints()
+        protected override void CheckActualConstraints()
         {
             UpdateConstraint("c1", SittingNextToEachOther(P2, P4));
             UpdateConstraint("c2", SittingOn(P3, P2));
@@ -75,8 +75,7 @@ namespace BachelorProject.Tutorial
         {
             const string tutorialText = "Hier siehst du nun alle Komponenten, die" +
                                         " du benötigst, um eine Aufgabe zu erfüllen. \n \n Die Aufgabe" +
-                                        " kann nur gelöst werden, wenn" +
-                                        " alle Personen am Tisch sitzen. \n \n Möchten zwei Personen nebeneinander" +
+                                        " kann nur gelöst werden, wenn alle Personen am Tisch sitzen. \n \n Möchten zwei Personen nebeneinander" +
                                         " sitzen, so darf sich keine Person zwischen ihnen befinden." +
                                         " Sitzen beispielsweise nur zwei Personen am Tisch, so sitzen diese immer" +
                                         " nebeneinander. \n \n Wenn sich zwei Personen ein Essen teilen" +

@@ -90,6 +90,7 @@ namespace BachelorProject
         private DispatcherTimer _noClickTimer = new DispatcherTimer();
         private DispatcherTimer _resetHintTimer = new DispatcherTimer();
         private DispatcherTimer _constraintsVisitedTimer = new DispatcherTimer();
+        private DispatcherTimer _hintTimer = new DispatcherTimer();
 
         private string _hint = "";
         private bool _hintThreadIsRunning = false;
@@ -522,7 +523,7 @@ namespace BachelorProject
                 {
                     _constraintsVisitedTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
                     _constraintsVisitedTimer.Tick += (s, args) => ShowHint();
-                    _constraintsVisitedTimer.Start();
+                    //_constraintsVisitedTimer.Start();
                 }
             }
 
@@ -535,15 +536,16 @@ namespace BachelorProject
                 {
                     if (_lastConstraintFulfilled && aoi.Name.Equals("rConstraints"))
                     {
-                        // TODO: TIMER (1s), stop Timer in ShowHint
-                        // irgendwann special hint zeigen?
-
                         _lastConstraintFulfilled = false;
                         _lastVisitedConstraint = null;
+                        _hintTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.5) };
+                        
                         if (_hintModus == 9)
-                            Highlight();
+                            _hintTimer.Tick += Highlight;
                         else if (_hintModus == 8)
-                            ShowHint();
+                            _hintTimer.Tick += ShowHint;
+
+                        _hintTimer.Start();
                     }
                     if (aoi.Name.StartsWith("c") && (_hintModus == 4 || _hintModus == 5 || _hintModus == 8 || _hintModus == 9))
                     {   // Constraint ausgewählt und soll gehighlighted werden
@@ -648,6 +650,17 @@ namespace BachelorProject
             }
         }
 
+        private void ShowHint(object sender, EventArgs e)
+        {
+            
+            ShowHint();
+        }
+
+        private void Highlight(object sender, EventArgs e)
+        {
+            Highlight();
+        }
+
         private void StartTimer(AreaOfInterest oldC, AreaOfInterest newC)
         {
                 _highlightTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.3) };
@@ -656,9 +669,9 @@ namespace BachelorProject
                 _constraintTimerStarted = newC;
         }
 
-        public virtual void CheckActualConstraints()
+        protected virtual void CheckActualConstraints()
         {
-            ///return false;
+            //return false;
         }
 
         /*
@@ -901,6 +914,11 @@ namespace BachelorProject
 
         public void ShowHint()
         {
+            if (_hintTimer.IsEnabled)
+            {
+                _hintTimer.Stop();
+                _hintTimer.Tick -= ShowHint;
+            }
             //if (_hintDelivered) return;
             if (_infoShown)
             {
@@ -910,7 +928,9 @@ namespace BachelorProject
                 return;
             }
             if (_constraintsVisitedTimer.IsEnabled)
+            {
                 _constraintsVisitedTimer.Stop();
+            }
             if (!Dispatcher.CheckAccess())
             {
                 Dispatcher.Invoke(() => ShowHint());
@@ -923,12 +943,13 @@ namespace BachelorProject
                     _hintWindow = b;
             }
 
+            string hint = "";
             foreach (var tb in _hintWindow.Children.OfType<Border>().Select(x => x).Select(bo => bo.Child as TextBlock))
             {
                 if (tb == null) return;
                 var nextConst = GetNextConstraintNumber();
                 if (nextConst < 0) return;
-                string hint = _singleConstraints[GetNextConstraintNumber()-1];
+                hint = _singleConstraints[GetNextConstraintNumber()-1];
 
                 tb.Inlines.Clear();
                 tb.Inlines.Add(new Run
@@ -942,7 +963,6 @@ namespace BachelorProject
                 tb.Inlines.Add(new Run { Text = hint });
                 tb.Inlines.Add(new LineBreak());
                 tb.Inlines.Add(new LineBreak());
-                //tb.Inlines.Add(new Run { Text = "Ist dieser Hinweis hilfreich?" });
                 tb.Inlines.Add(new LineBreak());
                 var btn3 = new System.Windows.Controls.Button
                 {
@@ -957,30 +977,17 @@ namespace BachelorProject
                 };
                 btn3.Click += Ok_Button_MouseDown;
                 tb.Inlines.Add(btn3);
-                /*var btn4 = new System.Windows.Controls.Button
-                {
-                    Name = "Btn4",
-                    Margin = new Thickness(20),
-                    FontSize = 25,
-                    FontWeight = FontWeights.Bold,
-                    Width = 75,
-                    Height = 50,
-                    Cursor = System.Windows.Input.Cursors.Hand,
-                    Content = "Nein"
-                };
-                btn4.Click += Not_Helpful_Button_MouseDown;
-                tb.Inlines.Add(btn4);*/
-                
             }
+
             _hintWindow.Margin = new Thickness(200, 200, 0, 0);
             System.Windows.Controls.Panel.SetZIndex(_hintWindow, 100);
-            _tracker.SendMessage("HINT SHOWN");
+            _tracker.SendMessage("HINT (WINDOW) SHOWN - " + hint);
             _hintDelivered = true;
         }
 
         private int GetNextConstraintNumber()
         {
-            // finde ersten noch nicht erfüllten Constraint TODO: randomisieren
+            // finde nächsten noch nicht erfüllten Constraint (random)
             int hint = -1;
             var listWithFalseConstraints = new List<int>();
             foreach (var entry in _constraintDict)
@@ -993,7 +1000,7 @@ namespace BachelorProject
             if (shuffledListWithFalseConstraints.Count > 0)
                 hint = shuffledListWithFalseConstraints[0];
 
-            _lastVisitedConstraint = "c" + hint;
+            //_lastVisitedConstraint = "c" + hint;
             return hint;
         }
 
@@ -1028,11 +1035,17 @@ namespace BachelorProject
         {
             _noClickTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
             _noClickTimer.Tick += (s,args) => ShowHint();
-            _noClickTimer.Start();
+            //_noClickTimer.Start();
         }
 
         private void Highlight()
         {
+            if (_hintTimer.IsEnabled)
+            {
+                _hintTimer.Stop();
+                _hintTimer.Tick -= Highlight;
+            }
+
             var number = GetNextConstraintNumber();
             var name = "c" + number;
             if (!name.Equals(_highlightedConstraint))
@@ -1043,7 +1056,9 @@ namespace BachelorProject
                 //(_allConstraints[name] as Border).Background = System.Windows.Media.Brushes.Black;
                 //((_allConstraints[name] as Border).Child as TextBlock).Foreground = System.Windows.Media.Brushes.LightGray;
                 _highlightedConstraint = name;
+                _tracker.SendMessage("HINT (HIGHLIGHT) SHOWN - " + ((_allConstraints[name] as Border).Child as TextBlock).Text);
             }
+            
  
         }
 
@@ -1118,8 +1133,11 @@ namespace BachelorProject
         protected void UpdateConstraint(string name, bool fulfilled)
         {
             var constraintNumber = Int32.Parse(name[1].ToString());
-           
-            if (_lastVisitedConstraint != null && _lastVisitedConstraint.Equals(name) && fulfilled && !_constraintDict[constraintNumber])
+
+            if (fulfilled && constraintNumber > 0)
+                DeHighlight("c"+constraintNumber);
+            if (_lastVisitedConstraint != null && _lastVisitedConstraint.Equals(name) && fulfilled &&
+                !_constraintDict[constraintNumber])
                 _lastConstraintFulfilled = true;
 
             if (!fulfilled && _constraintDict[constraintNumber])
@@ -1151,7 +1169,7 @@ namespace BachelorProject
         {
             for (var i = 1; i <= _singleConstraints.Count(); ++i)
             {
-                var name = "c" + i.ToString();
+                var name = "c" + i;
                 UpdateConstraint(name, false);
             }
         }
@@ -1227,7 +1245,7 @@ namespace BachelorProject
                 Dispatcher.Invoke(() => ShowExerciseEnd());
                 return;
             }
-
+            _infoShown = true;
             var b = new Border
             {
                 BorderThickness = new Thickness(3),
@@ -1538,6 +1556,7 @@ namespace BachelorProject
             if (_noClickTimer.IsEnabled && _hintModus == 1)
             {
                 _noClickTimer.Stop();
+                _noClickTimer.Tick -= ShowHint;
                 StartNoClickTimer();
             }
             if (_current.InputElement == null) return;

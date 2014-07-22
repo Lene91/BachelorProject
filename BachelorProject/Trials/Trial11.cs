@@ -8,7 +8,7 @@
             : base(pupilSize)
         { Id = 11; }
 
-        public override void CheckActualConstraints()
+        protected override void CheckActualConstraints()
         {
             if (OneNeighbourSharingFood(P1))
                 UpdateConstraint("c1", true);

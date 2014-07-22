@@ -20,7 +20,7 @@ namespace BachelorProject.Trials
             _constraintsWithPersons.Add("c8", new Tuple<string, string>("Person5", "Person3"));
         }
 
-        public override void CheckActualConstraints()
+        protected override void CheckActualConstraints()
         {
             UpdateConstraint("c1", IsSeat(P3));
             UpdateConstraint("c2", NotSittingOnSomeone(P1));

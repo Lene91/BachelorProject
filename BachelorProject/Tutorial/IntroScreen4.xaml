@@ -34,7 +34,7 @@
                 Hier siehst du die Legende. In der Legende werden die Namen der Personen aus den Sitzplatzwünschen den farbigen Kreisen im Übersichtsbildschirm zugeordnet.
             <LineBreak/>
             <LineBreak/>
-            <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>
+            <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste gelangst du zu einer Übungsaufgabe und weiteren Hinweisen.</Run>
             </TextBlock>
         </Border>
 

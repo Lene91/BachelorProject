@@ -36,9 +36,9 @@
             <LineBreak/>
             Hier siehst du den Tisch, der als großer grauer Kreis dargestellt ist, und die Personen, die durch kleinere bunte Kreise symbolisiert werden.
             <LineBreak/>
-            Die Personenkreise kannst du mithilfe der Maus verschieben.
-            <LineBreak/>
             Soll eine Person am Tisch sitzen, so musst du sie so verschieben, dass sich die Kreisränder der Person und des Tisches berühren (beispielhaft am grünen Kreis erkennbar).
+            <LineBreak/>
+            Die Personenkreise kannst du mithilfe der Maus verschieben.
             <LineBreak/>
             <LineBreak/>
             <Run FontStyle="Italic" FontSize="25">Durch Drücken der Leertaste kommst du zum nächsten Bildschirm.</Run>

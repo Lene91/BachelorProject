@@ -11,6 +11,11 @@ namespace BachelorProject
 {
     class CalibrationTrial : Trial
     {
+        public CalibrationTrial()
+        {
+            Screen = new UserControl();
+        }
+
         protected override bool DriftCorrectRequired
         {
             get { return false; }
