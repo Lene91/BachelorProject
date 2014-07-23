@@ -39,6 +39,8 @@ namespace BachelorProject
         private DispatcherTimer _timer2 = new DispatcherTimer();
         private DispatcherTimer _hintTimer = new DispatcherTimer();
         //private static double _averagePupilSize = 0;
+        private object thisLock = new object();
+        private bool end = false;
 
         public TrialExampleExercise(int numberOfPersons, string constraints, List<string> names, ExampleExercise trial, bool tracking, bool timeLimit, bool constraintHelp, int hintModus, int rnd)
         {
@@ -114,7 +116,7 @@ namespace BachelorProject
         private void Tracker_MyOwnGazeTick(object sender, Eyetracker.EyeEvents.GazeTickEventArgs e)
         {
             //Tracker.SendMessage(e.Position.ToString());
-
+            if (end) return;
 
             //var pos = new PointF((float)(e.Position.X - _offsetX), (float)(e.Position.Y - _offsetY));
 
@@ -124,12 +126,15 @@ namespace BachelorProject
 
             //_screen.Show(pos, e.LeftPupilSize + ", " + e.RightPupilSize + ", " + sender.ToString());
             _screen.UpdatePos(pos);
-            foreach (var aoi in AOIs)
+            lock (thisLock)
             {
-                if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y &&
-                    aoi.Points[1].Y > pos.Y)
+                foreach (var aoi in AOIs)
                 {
-                    Tracker.SendMessage(aoi + " contains " + pos);
+                    if (aoi.Points[0].X < pos.X && aoi.Points[1].X > pos.X && aoi.Points[0].Y < pos.Y &&
+                        aoi.Points[1].Y > pos.Y)
+                    {
+                        Tracker.SendMessage(aoi + " contains " + pos);
+                    }
                 }
             }
 
@@ -173,6 +178,7 @@ namespace BachelorProject
 
         private void MyOwnEndTrial(object sender, EventArgs e)
         {
+            end = true;
             _timer.Stop();
             _timer.Tick -= MyOwnEndTrial;
             _screen.TakePicture("timeElapsed");
@@ -308,7 +314,8 @@ namespace BachelorProject
 
             //Debug.WriteLine(updatedAoi.Name);
             //Debug.WriteLine("hallo " + (int)person.GetPosition().X);
-            updatedAoi.Set((int)person.GetPosition().X, (int)person.GetPosition().Y, person.GetRadius());
+            if(updatedAoi != null)
+                updatedAoi.Set((int)person.GetPosition().X, (int)person.GetPosition().Y, person.GetRadius());
         }
 
         private MyAoi GetUpdatedAoi(Circle person)

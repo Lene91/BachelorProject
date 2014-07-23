@@ -80,7 +80,8 @@ namespace BachelorProject.Tutorial
                                         " Sitzen beispielsweise nur zwei Personen am Tisch, so sitzen diese immer" +
                                         " nebeneinander. \n \n Wenn sich zwei Personen ein Essen teilen" +
                                         " möchten, müssen sie am Tisch sitzen und die Kreise der Personen" +
-                                        " müssen sich überschneiden. Es können sich nicht mehr als zwei Personen ein Essen teilen," +
+                                        " müssen sich überschneiden. Zwei Personen, die sich ein Essen teilen," +
+                                        " sitzen immer nebeneinander. Es können sich nicht mehr als zwei Personen ein Essen teilen," +
                                         " es ist jedoch möglich, dass es mehrere Paare gibt, die sich jeweils zu zweit ein" +
                                         " Essen teilen möchten. \n \n An der Feier nehmen auch ein paar Kleinkinder teil," +
                                         " die keinen eigenen Stuhl brauchen, sondern auf dem Schoß eines Elternteils platziert" +
@@ -94,7 +95,8 @@ namespace BachelorProject.Tutorial
                                         " Du kannst alle deine Änderungen rückgängig machen," +
                                         " indem du auf den Reset-Button klickst. \n \n" +
                                         "Wenn du keine Lösung findest, kannst" +
-                                        " du auf den Weiter-Button klicken und du gelangst zur nächsten Aufgabe. \n \n";
+                                        " du auf den Weiter-Button klicken und du gelangst zur nächsten Aufgabe. \n \n" +
+                                        " Auch in den kommenden Aufgaben kannst du jederzeit auf den Hilfe-Button klicken, wenn du diese Hinweise erneut lesen möchtest. \n \n";
             return tutorialText;
         }
     }

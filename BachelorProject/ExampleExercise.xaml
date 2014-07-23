@@ -33,7 +33,8 @@
             FontSize="30"
             FontWeight="Bold"
             Cursor="Hand"
-            PreviewMouseDown="Reset_Button_MouseDown"/>
+            PreviewMouseDown="Reset_Button_MouseDown"
+            Focusable="False"/>
 
         <Button 
             Width="120"
@@ -43,7 +44,19 @@
             FontSize="30"
             FontWeight="Bold"
             Cursor="Hand"
-            PreviewMouseDown="Continue_Button_MouseDown"/>
+            PreviewMouseDown="Continue_Button_MouseDown"
+            Focusable="False"/>
+
+        <Button 
+            Width="120"
+            Height="60"
+            Margin="280,720"
+            Content="Hilfe"
+            FontSize="30"
+            FontWeight="Bold"
+            Cursor="Hand"
+            PreviewMouseDown="Help_Button_MouseDown"
+            Focusable="False"/>
 
         <!--<Button 
             Width="120"
@@ -63,7 +76,8 @@
             FontSize="30"
             FontWeight="Bold"
             Cursor="Hand"
-            PreviewMouseDown="Done_Button_MouseDown"/>
+            PreviewMouseDown="Done_Button_MouseDown"
+            Focusable="False"/>
 
         <Ellipse
             Name="Table"
@@ -179,7 +193,8 @@
                         FontSize="30"
                         FontWeight="Bold"
                         Cursor="Hand"
-                        PreviewMouseDown="Done_Continue_Button_MouseDown"/>
+                        PreviewMouseDown="Done_Continue_Button_MouseDown"
+                        Focusable="False"/>
                     <LineBreak/>
                 </TextBlock>
         </Border>
@@ -205,7 +220,8 @@
                         FontSize="30"
                         FontWeight="Bold"
                         Cursor="Hand"
-                        PreviewMouseDown="Done_Back_Button_MouseDown"/>
+                        PreviewMouseDown="Done_Back_Button_MouseDown"
+                        Focusable="False"/>
                     <LineBreak/>
                 </TextBlock>
                 
@@ -282,8 +298,56 @@
                 </TextBlock>
             </Border>
             </VirtualizingStackPanel>
-        
 
+
+        <VirtualizingStackPanel Name="Help" Margin="1000,5000" ZIndex="200">
+            <Border BorderBrush="Black" BorderThickness="4" Background="White">
+                <ScrollViewer Width="1000" Height="700" VerticalScrollBarVisibility="Visible">
+                <TextBlock FontSize="25" 
+                           Padding="50"
+                           TextWrapping="WrapWithOverflow" 
+                           TextAlignment="Center">
+                    <Run FontWeight="Bold" FontSize="35" Text="Hilfe"/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    Die Aufgabe kann nur gelöst werden, wenn alle Personen am Tisch sitzen.
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run FontWeight="Bold" FontSize="25" Text="Nebeneinander sitzen"/> Möchten zwei Personen nebeneinander sitzen, so darf sich keine Person zwischen ihnen befinden. Sitzen beispielsweise nur zwei Personen am Tisch, so sitzen diese immer
+                    nebeneinander.
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run FontWeight="Bold" FontSize="25" Text="Essen teilen"/> Wenn sich zwei Personen ein Essen teilen möchten, müssen sie am Tisch sitzen und die Kreise der Personen müssen sich überschneiden. Zwei Personen, die sich ein Essen teilen,
+                     sitzen immer nebeneinander. Es können sich nicht mehr als zwei Personen ein Essen teilen, es ist jedoch möglich, dass es mehrere Paare gibt, die sich jeweils zu zweit ein
+                    Essen teilen möchten.
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run FontWeight="Bold" FontSize="25" Text="Auf dem Schoß sitzen"/> An der Feier nehmen auch ein paar Kleinkinder teil, die keinen eigenen Stuhl brauchen, sondern auf dem Schoß eines Elternteils platziert werden müssen. 
+                    Möchte ein Kind auf dem Schoß einer Person sitzen, so musst du den Kreis des Kindes auf den der Person ziehen. Der Kreis des Kindes verkleinert sich dann automatisch. 
+                    Sitzt ein Kind auf dem Schoß eines Erwachsenen, so sitzen die beiden nicht nebeneinander, haben jedoch die gleichen Nachbarn.
+                    <LineBreak/>
+                    <LineBreak/>
+                    Eine Person kann sich entweder ein Essen teilen oder bei einer anderen auf dem Schoß sitzen bzw. jemanden auf dem Schoß sitzen haben. Beides gleichzeitig ist nicht erlaubt.
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run FontWeight="Bold" FontSize="25" Text="Buttons"/> Du kannst alle deine Änderungen rückgängig machen, indem du auf den Reset-Button klickst.
+                    Wenn du keine Lösung findest, kannst du auf den Weiter-Button klicken und du gelangst zur nächsten Aufgabe.
+                    <LineBreak/>
+                    <LineBreak/>
+                <Button Width="120"
+                        Height="60"
+                        Content="OK"
+                        FontSize="30"
+                        FontWeight="Bold"
+                        Cursor="Hand"
+                        PreviewMouseDown="Help_Continue_Button_MouseDown"
+                        Focusable="False"/>
+                    <LineBreak/>
+                </TextBlock>
+                </ScrollViewer>
+            </Border>
+        </VirtualizingStackPanel>
+        
         <!-- <TextBox Name="l0" Text="Legende" Background="Transparent" BorderThickness="0" FontWeight="Bold" FontSize="30" Margin="820,20"/>
         <Ellipse
             Name="Legend1"

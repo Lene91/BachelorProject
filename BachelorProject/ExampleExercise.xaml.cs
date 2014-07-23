@@ -134,15 +134,12 @@ namespace BachelorProject
                 System.Windows.Media.Brushes.White,
                 System.Windows.Media.Brushes.Gold,
                 System.Windows.Media.Brushes.OrangeRed,
-                System.Windows.Media.Brushes.Red,
                 System.Windows.Media.Brushes.YellowGreen,
                 System.Windows.Media.Brushes.DarkGreen,
                 System.Windows.Media.Brushes.LightSkyBlue,
                 System.Windows.Media.Brushes.DarkBlue,
                 System.Windows.Media.Brushes.Peru,
                 System.Windows.Media.Brushes.MediumOrchid,
-                System.Windows.Media.Brushes.MediumSeaGreen,
-                System.Windows.Media.Brushes.RoyalBlue,
                 System.Windows.Media.Brushes.DarkRed,
                 System.Windows.Media.Brushes.HotPink
             };
@@ -1134,6 +1131,12 @@ namespace BachelorProject
 
         protected void UpdateConstraint(string name, bool fulfilled)
         {
+            int counter = 0;
+            foreach (KeyValuePair<int, bool> kvp in _constraintDict)
+            {
+                if (kvp.Value) counter++;
+            }
+            _tracker.SendMessage("CONSTRAINTS FULFILLED: " + counter);
             var constraintNumber = Int32.Parse(name[1].ToString());
 
             if (fulfilled && constraintNumber > 0)
@@ -1402,6 +1405,47 @@ namespace BachelorProject
             TakePicture("continueButton");
             _tracker.SendMessage("CONTINUE BUTTON PRESSED");
             Skip = true;
+        }
+
+        private void Help_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Help_Button_MouseDown(sender, e));
+                return;
+            }
+
+            _infoShown = true;
+            foreach (UIElement uie in MyCanvas.Children)
+            {
+                if (uie is VirtualizingPanel)
+                {
+                    var vp = uie as VirtualizingPanel;
+                    if (vp.Name.Equals("Help"))
+                        vp.Margin = new Thickness(100,50,0,0);
+                }
+            }
+            _tracker.SendMessage("HELP BUTTON PRESSED");
+        }
+
+        private void Help_Continue_Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => Help_Continue_Button_MouseDown(sender, e));
+                return;
+            }
+            _infoShown = false;
+            foreach (UIElement uie in MyCanvas.Children)
+            {
+                if (uie is VirtualizingPanel)
+                {
+                    var vp = uie as VirtualizingPanel;
+                    if (vp.Name.Equals("Help"))
+                        vp.Margin = new Thickness(1000, 5000, 0, 0);
+                }
+            }
+            _tracker.SendMessage("HELP-OK BUTTON PRESSED");
         }
 
         /*private void Help_Button_MouseDown(object sender, MouseButtonEventArgs e)
