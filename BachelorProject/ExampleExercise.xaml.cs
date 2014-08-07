@@ -25,7 +25,7 @@ namespace BachelorProject
     public partial class ExampleExercise
     {
         // IMPORTANT!
-        private const int TestPerson = 1;
+        private const int TestPerson = 27;
         private const int Computer = 2;     // 1 -> Laptop, 2 -> Lab, 3 -> Berlin
 
         private IAoiUpdate _trial;
@@ -1136,7 +1136,7 @@ namespace BachelorProject
             {
                 if (kvp.Value) counter++;
             }
-            _tracker.SendMessage("CONSTRAINTS FULFILLED: " + counter);
+            //_tracker.SendMessage("CONSTRAINTS FULFILLED: " + counter);
             var constraintNumber = Int32.Parse(name[1].ToString());
 
             if (fulfilled && constraintNumber > 0)
